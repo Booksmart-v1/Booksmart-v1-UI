@@ -1,0 +1,138 @@
+ion-content {
+  overflow-y: hidden;
+}
+.bg {
+  --background: url("../../images/login_bg1.jpg") !important;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 750vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.login-text{
+  font-size: 20px;
+  color: white;
+  font-family: "Montserrat-B";
+  margin-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+ion-input {
+  font-family: "Montserrat-B";
+}
+ion-item {
+  font-family: "Montserrat-B";
+}
+.mainc {
+  background: var(--bs-red2);
+  height: 80%;
+  width: 100%;
+  border-bottom-left-radius: 80% 30%;
+  border-bottom-right-radius: 80% 30%;
+}
+
+.mainc1 {
+  background: var(--bs-red1);
+  height: 92%;
+  width: 100%;
+  border-bottom-left-radius: 80% 30%;
+  border-bottom-right-radius: 80% 30%;
+}
+
+.mainc2 {
+  background: var(--bs-red);
+  height: 94%;
+  width: 100%;
+  border-bottom-left-radius: 80% 30%;
+  border-bottom-right-radius: 80% 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.head {
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  color: white;
+}
+
+.bod {
+  margin-top: 100px !important;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  margin-bottom: 20px;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  min-height: 40%;
+  color: white;
+}
+
+
+.number {
+    
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  justify-content: space-around;
+  align-items: flex-start;
+  width: 70%;
+  min-height: 70px;
+  color: white;
+}
+
+.number1 {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  justify-content: center;
+  align-items: flex-end;
+  width: 60%;
+  min-height: 40px;
+  color: black;
+}
+
+.numinp {
+  /* margin-top: 10px; */
+  border-radius: 10px;
+  font-family: "Montserrat-SB" !important;
+}
+
+.bottomc {
+  background: var(--bs-red2);
+  height: 20%;
+  width: 60%;
+  border-bottom-left-radius: 80% 30%;
+  border-top-right-radius: 80% 30%;
+  border-top-left-radius: 80% 30%;
+}
+
+.bottomc1 {
+  background: var(--bs-red1);
+  height: 90%;
+  width: 90%;
+  border-bottom-left-radius: 80% 30%;
+  border-top-right-radius: 80% 30%;
+  border-top-left-radius: 80% 30%;
+}
+
+.bottomc2 {
+  background: var(--bs-red);
+  height: 90%;
+  width: 90%;
+  border-bottom-left-radius: 80% 30%;
+  border-top-right-radius: 80% 30%;
+  border-top-left-radius: 80% 30%;
+}

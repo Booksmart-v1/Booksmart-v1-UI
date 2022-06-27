@@ -1,0 +1,110 @@
+* {
+  /* background: url(../../images/background.png) no-repeat center center fixed; */
+  /* overflow: hidden !important; Hide scrollbars */
+  margin: 0px;
+}
+ion-page {
+  overflow-y: hidden;
+}
+
+ion-content {
+  font-family: "Montserrat-SB" !important;
+  --ion-background: #d0f9d0;
+  /* font-size: 20px; */
+  overflow-y: hidden !important;
+  height: 100%;
+}
+.over {
+  overflow-y: hidden;
+}
+.square {
+  width: 100px;
+  height: 100px;
+  background: rgba(0, 0, 255, 0.5);
+  margin: 10px;
+}
+ion-page {
+  background-color: #d0f9d0;
+}
+.smart {
+  color: var(--bs-primary);
+  width: 100%;
+  font-size: 50px;
+  text-align: center;
+  margin-right: 10px;
+  font-family: "Montserrat-B";
+}
+.tagline {
+  color: var(--bs-secondary);
+  width: 100%;
+  margin-right: 10px;
+  font-size: 24px;
+  /* margin-left: 45px; */
+  text-align: center;
+  font-family: "Montserrat-M";
+}
+
+.tagline1 {
+  color: var(--bs-secondary);
+  width: 100%;
+  font-size: 24px;
+  margin-right: 10px;
+  line-height: 30px;
+  /* margin-left: 30px; */
+  text-align: center;
+  font-family: "Montserrat-M";
+}
+.sign-in {
+  margin-bottom: 10px;
+  font-family: "Montserrat-SB" !important;
+  font-size: 18px;
+  color: #caa472;
+  margin: 20px;
+  --background: var(--bs-sBg) !important;
+}
+.sign-up {
+  font-family: "Montserrat-B" !important;
+  font-size: 18px;
+  color: #815438;
+  margin: 20px;
+  --background: var(--bs-pBg) !important;
+}
+
+.ellipse {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.woman {
+  position: absolute;
+  height: 50%;
+  width: auto;
+  bottom: 0;
+  margin-bottom: 60px;
+  border-radius: 10px;
+  /* margin-bottom: 3px; */
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 1;
+  box-shadow: 2px solid black;
+}
+
+.leaf {
+  position: absolute;
+  width: auto;
+  height: 39%;
+  left: 0;
+  /* margin-left: 0; */
+  z-index: 2;
+  margin-bottom: 35%;
+  bottom: 0;
+}

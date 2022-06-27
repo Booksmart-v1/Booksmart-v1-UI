@@ -1,0 +1,117 @@
+.header {
+  font-family: "Montserrat-SB" !important;
+  padding: 0;
+  box-shadow: 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.toolbar {
+  --background: var(--bs-sBg) !important;
+  font-family: "Montserrat-SB" !important;
+  padding: 0;
+  margin: 0px;
+  padding: 5px;
+  height: 25vh;
+  border-radius: 0 0 25px 25px;
+ 
+}
+
+ion-searchbar {
+  text-align: center;
+  height: 50px;
+  position: fixed;
+  color: black !important;
+  font-family: "Montserrat-SB" !important;
+  --background: white !important;
+}
+
+.boola {
+  --background: var(--bs-sBg) !important;
+  font-family: "Montserrat-SB" !important;
+  position: fixed;
+  overflow-y: hidden;
+}
+
+.oola {
+  border-radius: 25px 25px 0 0;
+  background: var(--ion-color-medium-contrast) !important;
+  border: none;
+  height: 73.5%;
+  padding: 10px;
+  overflow-y: scroll;
+}
+
+.chips {
+  position: fixed;
+  top: 21.5vh;
+  z-index: 20;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  border-radius: 5px;
+  font-family: "Montserrat-SB" !important;
+}
+.chip {
+  z-index: 20;
+  position: sticky;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26vw;
+  height: 4.5vh;
+  text-align: center;
+  font-family: "Asap" !important;
+  background-color: #ecdbc1;
+  border-radius: 15px;
+}
+.card {
+  margin: 0.5em;
+  box-shadow: none;
+  height: fit-content;
+  min-height: 26vh;
+  height: 200px;
+  border-radius: 15px;
+  border: 1px solid #e5af48;
+  box-shadow: 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.image {
+  display: inline;
+}
+
+.ava {
+  height: 1.8vh;
+  margin: 5px;
+  margin-bottom: 0;
+  width: auto;
+}
+
+.searchbar-input {
+  color: black !important;
+}
+
+.pic {
+  height: 70%;
+  width: auto;
+  border-radius: 15px;
+  box-shadow: 1px 4px #888888;
+}
+
+.img {
+  height: 95%;
+  margin-left: 0;
+}
+
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 95%;
+}
+.long-cta{
+  color: white;
+  font-family: "Montserrat-SB" !important;
+  
+}

@@ -1,0 +1,74 @@
+.follow-button {
+  --background: var(--bs-sBg);
+  color: var(--bs-secondary);
+  font-family: 'Montserrat-SB';
+}
+.follow-button {
+  --background-activated: transparent;
+  --background-focused: transparent;
+  --background-hover: transparent;
+}
+
+.message-button {
+  --background: var(--bs-pBg);
+  color: var(--bs-primary);
+  font-family: 'Montserrat-B';
+  --background-activated: transparent;
+  --background-focused: transparent;
+  --background-hover: transparent;
+}
+
+.profileName {
+  font-family: 'Montserrat-B';
+  color: var(--bs-pText);
+  font-size: 25px;
+}
+
+.profileStatus {
+  font-family: 'Montserrat-SB';
+  color: var(--bs-primary);
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-heading {
+  font-family: 'Montserrat-SB';
+  color: var(--bs-pText);
+  font-size: 18px;
+  text-transform: none;
+}
+
+.set-status {
+  font-size: 20px;
+  border-radius: 15px;
+}
+
+.profile-purchases {
+  font-family: 'Montserrat-SB' !important;
+  color: var(--bs-pText);
+  font-size: 20px;
+}
+.profile-orders {
+  font-family: 'Montserrat-SB' !important;
+  color: var(--bs-pText);
+  font-size: 20px;
+}
+
+/* .div .set-status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+} */

@@ -1,0 +1,240 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/react/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/react/css/normalize.css";
+@import "@ionic/react/css/structure.css";
+@import "@ionic/react/css/typography.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/react/css/padding.css";
+@import "@ionic/react/css/float-elements.css";
+@import "@ionic/react/css/text-alignment.css";
+@import "@ionic/react/css/text-transformation.css";
+@import "@ionic/react/css/flex-utils.css";
+@import "@ionic/react/css/display.css";
+
+// @import './theme/variables.css';
+
+:root[mode="ios"] .Montserrat,
+:root[mode="md"] .Montserrat {
+  --ion-font-family: "Montserrat" !important;
+  font-family: "Montserrat" !important;
+}
+
+body {
+  background-color: var(--ion-background-color);
+}
+
+.white-header {
+  box-shadow: none;
+}
+
+.header-md::after {
+  display: none;
+}
+.inner-header {
+  box-shadow: none;
+  background-color: var(--bs-primary);
+}
+
+/* Header CSS */
+.mainHeader {
+  background-color: #0d8b85;
+  color: #fff;
+  text-align: center;
+  margin: auto;
+  overflow: hidden;
+  max-height: 7vh;
+  text-overflow: ellipsis;
+}
+.headerName {
+  text-align: center;
+  color: #fff;
+  font-family: "Montserrat-SB";
+  margin: auto;
+  font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.headerRow {
+  margin: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.commonIcon {
+  font-size: 29px;
+  font-weight: bold;
+}
+.searchIcon {
+  font-size: 24px;
+}
+
+ion-tab-bar {
+  background-image: url("https://textures.world/wp-content/uploads/2018/10/Dark-Wood-Seamless-Background-Texture-1-copy.jpg");
+}
+
+ion-header ion-toolbar:first-of-type {
+  padding-top: 0px;
+}
+
+// ion-toolbar {
+//   --background: white;
+// }
+ion-page {
+  --background: white;
+}
+
+.headerIcon {
+  color: #ffffff;
+  margin-right: 10px !important;
+  margin-left: 10px !important;
+}
+
+.headerHeading {
+  font-family: "Montserrat-SB";
+  color: #ffffff;
+  font-size: 18px;
+}
+.header-countdown {
+  font-family: "Montserrat-SB";
+  color: #ffffff;
+  font-size: 14px;
+}
+
+ion-button {
+  --border-radius: 8px;
+  --background: var(--bs-primary);
+  --color: #ffffff;
+  height: 50px;
+  text-transform: initial;
+  font-size: 13px;
+  font-family: "Montserrat-SB";
+  --box-shadow: none;
+  width: 80%;
+}
+
+.footer-md::before {
+  display: none;
+}
+
+ion-input {
+  border: 1px solid rgb(133, 133, 133);
+  border-radius: 10px;
+  --ion-font-family: "Montserrat-SB", sans-serif;
+}
+.input-text {
+  padding: 9px 13px !important;
+}
+
+//Modals
+.modal-heading {
+  font-family: "Montserrat-SB";
+  color: var(--ec-secondary);
+  font-size: 19px;
+  margin-left: 15px;
+}
+.modal-header {
+  --background: #dff9fc;
+}
+.modal-icon {
+  color: var(--ec-secondary);
+}
+.edit-profile {
+  .modal-wrapper {
+    max-height: 300px !important;
+    position: absolute;
+    width: 100% !important;
+    border-radius: 15px 15px 0px 0px;
+    bottom: 0px;
+  }
+}
+
+.add-address {
+  .modal-wrapper {
+    max-height: 500px !important;
+    position: absolute;
+    width: 100% !important;
+    border-radius: 15px 15px 0px 0px;
+    bottom: 0px;
+  }
+}
+
+.product-detail {
+  .modal-wrapper {
+    max-height: 80vh !important;
+    position: absolute;
+    width: 100% !important;
+    border-radius: 15px 15px 0px 0px;
+    bottom: 0px;
+  }
+}
+
+.select-payment {
+  .modal-wrapper {
+    max-height: 280px !important;
+    position: absolute;
+    width: 100% !important;
+    border-radius: 15px 15px 0px 0px;
+    bottom: 0px;
+  }
+}
+
+.select-location {
+  .modal-wrapper {
+    max-height: 580px !important;
+    position: absolute;
+    width: 100% !important;
+    border-radius: 15px 15px 0px 0px;
+    bottom: 0px;
+  }
+}
+
+.choose-category {
+  .modal-wrapper {
+    max-height: 600px !important;
+    position: absolute;
+    width: 100% !important;
+    border-radius: 15px 15px 0px 0px;
+    bottom: 0px;
+  }
+}
+
+.wallet-detail {
+  .modal-wrapper {
+    max-height: 550px !important;
+    position: absolute;
+    width: 100% !important;
+    border-radius: 15px 15px 0px 0px;
+    bottom: 0px;
+  }
+}
+
+.footer-bg {
+  background-color: #fff;
+  height: 80px;
+}
+.account-footer-bg {
+  background-color: #f7f7f7;
+}
+.footer-cart {
+  box-shadow: none;
+  background-color: var(--ec-primary);
+  padding: 10px 30px;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+.footer-text {
+  color: #fff;
+  font-family: "Montserrat-B";
+}

@@ -1,0 +1,7 @@
+{
+  "name": "book-smart",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

@@ -1,0 +1,75 @@
+.header-interest {
+  height: 60px;
+  width: 100%;
+  /* background: var(--bs-pBg) !important; */
+}
+
+.cards1 {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  height: 150px !important;
+  justify-content: space-between;
+  border-radius: 25px 25px 0 0;
+}
+.card1 {
+  height: 150px !important;
+  width: 180px;
+  border-radius: 6px;
+  margin-left: 17px;
+  margin-top: 10px;
+  margin-bottom: 100px !important;
+}
+ion-text {
+  font-family: "Montserrat-B";
+  font-size: 25px;
+  color: #2a1820;
+  align-items: center;
+  text-align: center;
+}
+.pi-toolbar {
+  --background: #d3dbe1;
+  height: 110px;
+}
+.long-cta {
+  --background: var(--bs-pText) !important;
+  color: #ffffff;
+  font-family: "Montserrat-SB";
+  text-align: center;
+  padding: 20px 20px;
+  border-radius: 10px;
+  display: inline;
+  width: 90%;
+  margin-left: 20px;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+.subtitle1 {
+  font-family: "Montserrat-SB" !important;
+  font-size: 18px;
+  margin-bottom: 10px !important;
+  color: var(--bs-primary);
+  text-align: center;
+  margin: 10px !important;
+  --background: var(--bs-sBg) !important;
+}
+
+.grid {
+  height: 130px !important;
+}
+.title {
+  font-family: "Montserrat-B" !important;
+  font-size: 25px;
+  text-align: center;
+  color: var(--bs-primary);
+  margin: 32px;
+  --background: var(--bs-sBg) !important;
+}
+.top-card {
+  height: 140px;
+  width: 90%;
+  margin-right: 10px;
+  margin-left: 20px;
+  margin-top: 20px;
+  background: var(--bs-pBg) !important;
+}

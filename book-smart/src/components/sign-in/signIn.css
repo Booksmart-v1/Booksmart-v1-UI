@@ -1,0 +1,12 @@
+.login{
+    --background: var(--bs-sBg) !important;
+    font-family: 'Montserrat-SB' !important;
+   
+    margin: 5px;
+
+}
+
+.header{
+    font-family: "Montserrat-SB";
+    font-size: 10px;
+}

@@ -1,0 +1,66 @@
+ion-page {
+  background: white !important;
+  font-family: 'Montserrat-SB' !important;
+}
+
+.recent {
+  font-family: 'Montserrat-SB' !important;
+  font-size: 20px;
+  margin-top: 10px;
+  margin-left: 20px;
+  color: var(--bs-pText);
+}
+
+.searched-items {
+  font-family: 'Montserrat-B' !important;
+  font-size: 16px;
+  /* margin-left: 10px; */
+  padding: 15px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  color: var(--bs-pText);
+  background: var(--bs-pBg);
+  white-space: nowrap;
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  /* width: 200px; */
+}
+
+.searched-chips {
+  display: grid;
+  /* grid-template-rows: 30px 30px; */
+  grid-template-columns: 1fr 1fr;
+  row-gap: 2%;
+  padding: 5px;
+  margin-left: 20px;
+  margin-top: 10px;
+  font-family: 'Montserrat-SB' !important;
+  font-size: 16px;
+
+  /* flex-wrap: wrap; */
+  /* justify-content: space-around; */
+}
+
+.search-card {
+  /* width: 40%;
+  height: 30%;
+  margin: 20px; */
+}
+.cards {
+  margin: 10px;
+}
+
+ion-item-divider {
+  --background: var(--bs-sText);
+  width: 30vw;
+  height: 4px;
+  border-radius: 27px;
+  margin-left: 20px;
+  margin-top: 5px;
+  min-height: 8px;
+}

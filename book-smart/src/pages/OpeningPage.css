@@ -1,0 +1,10 @@
+ion-content {
+  /* --background: var(--bs-pText) !important; */
+
+  overflow: hidden;
+  overflow: unset;
+}
+
+iframe {
+  background-color: transparent;
+}
