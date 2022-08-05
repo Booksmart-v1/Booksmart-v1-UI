@@ -27,6 +27,7 @@ import {
 // import ellipse from "../../images/ellipse.png";
 // import SignIn from '../../components/sign-in/SignIn';
 // import SignUp from '../../components/sign-up/SignUp';
+import React from "react";
 import { RouteComponentProps, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Onboard.css";
@@ -50,7 +51,7 @@ import { channelReducer } from "stream-chat-react/dist/components/Channel/channe
 interface UserDetailPageProps
   extends RouteComponentProps<{
     page: string;
-  }> {}
+  }> { }
 
 const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
   const [page, setPage] = useState("signup");
@@ -62,11 +63,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
   const [id, setID] = useState(null);
   // const [present, dismiss] = useIonToast();
   const [showToast1, setShowToast1] = useState(false);
-  const [showToast2, setShowToast2] = useState(false);
-  const [showToast3, setShowToast3] = useState(false);
   const [msg, setMsg] = useState("");
-  const [msg2, setMsg2] = useState("");
-  const [msg3, setMsg3] = useState("");
   // const [showToast2, setShowToast2] = useState(false);
   const handleChange = (num: string) => setOtp(num);
   const history = useHistory();
@@ -207,7 +204,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                 </IonText>
 
                 <IonItemDivider
-                  style={{ width: "85%", marginTop: "0px" }}
+                  style={{ width: "85%", margin: "12px auto" }}
                 ></IonItemDivider>
                 {page === "signup" ? (
                   <>

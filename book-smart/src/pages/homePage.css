@@ -38,6 +38,8 @@ ion-searchbar {
   height: 73.5%;
   padding: 10px;
   overflow-y: scroll;
+  /* max-width: 95%;
+  margin: 0 auto; */
 }
 
 .chips {

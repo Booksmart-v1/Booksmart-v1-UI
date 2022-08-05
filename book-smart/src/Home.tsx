@@ -1,4 +1,4 @@
-import React, { Profiler } from "react";
+import React, { Profiler, useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
@@ -87,7 +87,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
             <Sell />
           </Route> */}
             </IonRouterOutlet>
-
+            {/* Tabs at the bottom are handled over here */}
             <IonTabBar
               slot="bottom"
               style={{
