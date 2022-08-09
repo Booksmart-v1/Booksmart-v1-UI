@@ -382,61 +382,6 @@ const Profile = () => {
               </IonToolbar>
             </IonHeader>
             <IonContent class="ion-padding">
-
-              {/* Previous Design (Before Accordian) */}
-              {/* <div style={{ padding: "15px 0", fontFamily: "Montserrat-B" }}>
-                <p style={{ padding: "0 15px" }}>Notification Settings</p>
-                <IonItemDivider></IonItemDivider>
-                <IonList>
-                  <IonItem style={{ marginTop: "10px", width: "95%" }}>
-                    <IonLabel style={{ fontFamily: "Montserrat-SB" }}>Application Notifications</IonLabel>
-                    <IonToggle value="AppNotify" checked={checked1} onIonChange={e => setChecked1(e.detail.checked)} />
-                  </IonItem>
-                  <IonItem style={{ marginTop: "10px", width: "95%" }}>
-                    <IonLabel style={{ fontFamily: "Montserrat-SB" }}>SMS and Email Notification</IonLabel>
-                    <IonToggle value="SMSEmailNotify" checked={checked2} onIonChange={e => setChecked2(e.detail.checked)} />
-                  </IonItem>
-                  <IonItem style={{ marginTop: "10px", width: "95%" }}>
-                    <IonLabel style={{ fontFamily: "Montserrat-SB" }}>Special Offer</IonLabel>
-                    <IonToggle value="SplOffer" checked={checked3} onIonChange={e => setChecked3(e.detail.checked)} />
-                  </IonItem>
-                  <IonItem style={{ marginTop: "10px", width: "95%" }}>
-                    <IonLabel style={{ fontFamily: "Montserrat-SB" }}>Read Reminder</IonLabel>
-                    <IonToggle value="ReadRemind" checked={checked4} onIonChange={e => setChecked4(e.detail.checked)} />
-                  </IonItem>
-                </IonList>
-              </div> */}
-              {/* {/* <div style={{ padding: "15px 0", fontFamily: "Montserrat-B" }}>
-                <p style={{ padding: "0 20px" }}>User Settings</p>
-                <IonItemDivider></IonItemDivider>
-                <IonItem style={{ marginTop: "15px", width: "95%", fontFamily: "Montserrat-SB" }}>
-                  <IonInput type="text" placeholder="Change Name" value={changeName} onIonChange={(e: any) => { setChangeName(e.target.value) }}></IonInput>
-                  {editName ? (
-                    <IonButton style={{ height: "25px" }} onClick={() => setEditName(false)}>{"Save"}</IonButton>
-                  ) : (
-                    <IonIcon
-                      onClick={() => setEditName(true)}
-                      icon={createOutline}
-                      className="set-status"
-                      color="dark"
-                    ></IonIcon>
-                  )}
-                </IonItem>
-                <IonItem style={{ marginTop: "15px", width: "95%", fontFamily: "Montserrat-SB" }}>
-                  <IonInput type="text" placeholder="Change Username" value={changeUsername} onIonChange={(e: any) => { setChangeUsername(e.target.value) }}></IonInput>
-                  {editUserName ? (
-                    <IonButton style={{ height: "25px" }} onClick={() => setEditUserName(false)}>{"Save"}</IonButton>
-                  ) : (
-                    <IonIcon
-                      onClick={() => setEditUserName(true)}
-                      icon={createOutline}
-                      className="set-status"
-                      color="dark"
-                    ></IonIcon>
-                  )}
-                </IonItem>
-              </div> */}
-
               <IonToast
                 isOpen={showToast1}
                 onDidDismiss={() => setShowToast1(false)}
@@ -542,47 +487,47 @@ const Profile = () => {
                   </IonItem>
                   <div className="ion-padding" slot="content" style={{ textAlign: "center" }}>
                     <IonLabel style={{ fontFamily: "Montserrat-SB", padding: "0 10px" }} > <a href="/pickinterests" style={{ textDecoration: "none", color: "black" }}>Pick Your Interests</a></IonLabel>
-                </div>
-              </IonAccordion>
-            </IonAccordionGroup>
+                  </div>
+                </IonAccordion>
+              </IonAccordionGroup>
 
-          </IonContent>
-          <IonFooter>
-            <button className='long-cta' onClick={handleSaveChange}>Save Changes</button>
-          </IonFooter>
-        </IonModal>
-        <IonRow className="profileActionContainer">
-          <IonCol size="12">
-            <IonCard className="profileActionCard" onClick={() => setShowModal(true)}>
-              <IonCardContent>
-                <IonRow className="ion-justify-content-between">
-                  <IonCardSubtitle>Settings</IonCardSubtitle>
-                  <IonIcon icon={settingsOutline} />
-                </IonRow>
-              </IonCardContent>
-            </IonCard>
-          </IonCol>
-        </IonRow>
+            </IonContent>
+            <IonFooter>
+              <button className='long-cta' onClick={handleSaveChange}>Save Changes</button>
+            </IonFooter>
+          </IonModal>
+          <IonRow className="profileActionContainer">
+            <IonCol size="12">
+              <IonCard className="profileActionCard" onClick={() => setShowModal(true)}>
+                <IonCardContent>
+                  <IonRow className="ion-justify-content-between">
+                    <IonCardSubtitle>Settings</IonCardSubtitle>
+                    <IonIcon icon={settingsOutline} />
+                  </IonRow>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
 
 
-        <IonRow className="profileActionContainer">
-          <IonCol size="12">
-            <IonCard className="profileActionCard">
-              <IonCardContent
-                onClick={() => {
-                  // localStorage.removeItem("user");
-                }}
-              >
-                <IonRow className="ion-justify-content-between">
-                  <IonCardSubtitle>Logout</IonCardSubtitle>
-                  <IonIcon icon={logOutOutline} />
-                </IonRow>
-              </IonCardContent>
-            </IonCard>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
-    </IonContent >
+          <IonRow className="profileActionContainer">
+            <IonCol size="12">
+              <IonCard className="profileActionCard">
+                <IonCardContent
+                  onClick={() => {
+                    // localStorage.removeItem("user");
+                  }}
+                >
+                  <IonRow className="ion-justify-content-between">
+                    <IonCardSubtitle>Logout</IonCardSubtitle>
+                    <IonIcon icon={logOutOutline} />
+                  </IonRow>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+      </IonContent >
     </IonPage >
   );
 };

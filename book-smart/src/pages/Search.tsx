@@ -1,10 +1,6 @@
 import {
   IonCard,
-  IonCardContent,
   IonItemDivider,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonChip,
   IonCol,
   IonContent,
@@ -18,12 +14,15 @@ import {
   IonToolbar,
   IonSlides,
   IonSlide,
-  IonButton,
+  IonModal,
+  IonButtons,
+  IonToast,
 } from "@ionic/react";
-import { chevronForwardOutline, closeCircle, pin } from "ionicons/icons";
-import React from "react";
-import ExploreContainer from "../components/ExploreContainer";
+import { chevronForwardOutline, closeCircle, pin, chevronBackOutline, addCircle, search } from "ionicons/icons";
+import React, { useState } from "react";
 import "./search.css";
+import catLogo from "../images/logo.png"
+
 
 const Search: React.FC = () => {
   const [chipData, setChipData] = React.useState([
@@ -40,6 +39,8 @@ const Search: React.FC = () => {
   const [screen, setScreen] = React.useState("choose");
   const [refresh, setRefresh] = React.useState(false);
 
+  const [showSearchModal, setShowSearchModal] = useState(false);
+
   const hideRecent = (i: number) => {
     let chips = chipData;
     chips[i].hide = true;
@@ -48,9 +49,30 @@ const Search: React.FC = () => {
     setRefresh(!refresh);
   };
 
-  //  const handleDelete = (chipToDelete) => () => {
-  //   setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-  // };
+  // Trending Books Modal
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [showAddBookToast, setShowAddBookToast] = useState(false);
+
+  function handleCategoryChange(e: any) {
+    setSelectedCategory(e.target.value);
+  }
+  var defaultBooks = [
+    { name: "The Alchemist", category: "Fiction", price: 99, booksCount: 0 },
+    { name: "Dracula", category: "Horror", price: 149, booksCount: 0 },
+    { name: "The Proposal", category: "Love", price: 199, booksCount: 0 },
+    { name: "Atomic Habits", category: "Health", price: 49, booksCount: 0 },
+  ]
+
+  var categoryValues = [
+    { value: "All" },
+    { value: "Horror" },
+    { value: "Fiction" },
+    { value: "Love" },
+    { value: "Health" },
+  ]
+
+  if (selectedCategory === "" || selectedCategory === "All") { var filteredList = defaultBooks }
+  else { filteredList = defaultBooks.filter((item) => item.category === selectedCategory); }
 
   return (
     <IonPage>
@@ -127,7 +149,6 @@ const Search: React.FC = () => {
             )
           )}
         </div>
-
         <IonRow style={{ marginTop: "20px" }}>
           <IonCol size="8">
             <p className="text-align-left recent">Trending Books</p>
@@ -135,7 +156,7 @@ const Search: React.FC = () => {
           </IonCol>
           <IonCol size="4">
             <IonRow>
-              <p
+              <button
                 className="text-align-right"
                 style={{
                   marginLeft: "20px",
@@ -143,11 +164,15 @@ const Search: React.FC = () => {
                   color: "#002D62",
                   fontFamily: "Montserrat-SB",
                   fontSize: "16px",
+                  backgroundColor: "transparent"
+                }}
+                onClick={() => {
+                  setShowSearchModal(true);
                 }}
               >
                 View All
-              </p>
-              <span style={{ marginTop: "11px", marginLeft: "3px" }}>
+              </button>
+              <span style={{ marginTop: "13px" }}>
                 <IonIcon
                   style={{ backgroundColor: "lightgrey", borderRadius: "15px" }}
                   icon={chevronForwardOutline}
@@ -156,6 +181,60 @@ const Search: React.FC = () => {
             </IonRow>
           </IonCol>
         </IonRow>
+
+
+        {/* View All Modal */}
+        <IonModal isOpen={showSearchModal}>
+          <IonHeader>
+            <IonToolbar style={{ padding: "10px" }}>
+              <IonTitle>
+                <h2 style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "20px" }}>Trending Books</h2>
+              </IonTitle>
+              <IonButtons slot="start">
+                <IonIcon style={{ backgroundColor: "light gray", borderRadius: "15px", marginLeft: "10px", fontSize: "20px" }} icon={chevronBackOutline} onClick={() => setShowSearchModal(false)}></IonIcon>
+              </IonButtons>
+              <IonButtons slot="end">
+                <IonIcon icon={search} onClick={() => { setShowAddBookToast(true) }} style={{ fontSize: "20px" }} />
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <div className='search-area'>
+              <div className='category-area'>
+                {categoryValues.map((item) =>
+                  <div style={{ textAlign: "center" }}>
+                    <button className='category-btn' onClick={(e) => handleCategoryChange(e)} value={item.value} style={{ backgroundImage: `url(${catLogo})` }}></button>
+                    <p>{item.value}</p>
+                  </div>)}
+              </div>
+              <div className='trending-area'>
+                <IonToast
+                  isOpen={showAddBookToast}
+                  onDidDismiss={() => setShowAddBookToast(false)}
+                  message="Book added to cart."
+                  duration={200}
+                  position="top"
+                />
+                {filteredList.map((item, index) =>
+                  <IonCard key={index} className="trend-card">
+                    <h5 style={{ fontFamily: "Montserrat-B", fontSize: "15px", margin: "5px 0" }}>{item.name}</h5>
+                    <img
+                      alt="ex"
+                      src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
+                    ></img>
+                    <p style={{ fontFamily: "Montserrat-SB", fontSize: "14px" }}>{item.category}</p>
+                    <div style={{ width: "100%", display: "flex", justifyContent: "space-evenly", alignItems: "center", fontSize: "20px", fontFamily: "Monserrat-SB" }}>
+                      <p>₹ {item.price}</p>
+                      <IonIcon icon={addCircle} onClick={() => { setShowAddBookToast(true) }} />
+                    </div>
+                  </IonCard>
+                )}
+              </div>
+            </div>
+          </IonContent>
+        </IonModal>
+
+
         <div className="cards">
           <IonSlides pager={true} options={slideOpts}>
             <IonSlide>
@@ -168,6 +247,7 @@ const Search: React.FC = () => {
                         width: "80%",
                         borderRadius: "10px",
                       }}
+                      alt="ex"
                       src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
                     ></img>
                   </IonCard>
@@ -180,6 +260,7 @@ const Search: React.FC = () => {
                         width: "80%",
                         borderRadius: "10px",
                       }}
+                      alt="ex"
                       src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
                     ></img>
                   </IonCard>
@@ -192,6 +273,7 @@ const Search: React.FC = () => {
                         width: "80%",
                         borderRadius: "10px",
                       }}
+                      alt="ex"
                       src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
                     ></img>
                   </IonCard>
@@ -204,6 +286,7 @@ const Search: React.FC = () => {
                         width: "80%",
                         borderRadius: "10px",
                       }}
+                      alt="ex"
                       src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
                     ></img>
                   </IonCard>
@@ -240,6 +323,7 @@ const Search: React.FC = () => {
                         width: "80%",
                         borderRadius: "10px",
                       }}
+                      alt="ex"
                       src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
                     ></img>
                   </IonCard>
@@ -252,6 +336,7 @@ const Search: React.FC = () => {
                         width: "80%",
                         borderRadius: "10px",
                       }}
+                      alt="ex"
                       src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
                     ></img>
                   </IonCard>
@@ -264,6 +349,7 @@ const Search: React.FC = () => {
                         width: "80%",
                         borderRadius: "10px",
                       }}
+                      alt="ex"
                       src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
                     ></img>
                   </IonCard>
@@ -276,6 +362,7 @@ const Search: React.FC = () => {
                         width: "80%",
                         borderRadius: "10px",
                       }}
+                      alt="ex"
                       src="https://media.istockphoto.com/photos/flying-color-books-on-pastel-yellow-background-picture-id1304915362?b=1&k=20&m=1304915362&s=170667a&w=0&h=1oBLMT9JLYt6Ju3LbSppu8Fga92YfvSHiPu7zQlculg="
                     ></img>
                   </IonCard>
