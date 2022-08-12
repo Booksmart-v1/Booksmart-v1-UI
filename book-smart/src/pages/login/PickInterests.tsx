@@ -6,26 +6,22 @@ import {
   IonCol,
   IonHeader,
   IonPage,
-  IonTitle,
   IonToolbar,
-  IonButton,
-  IonImg,
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonCardContent,
-  IonGrid,
-  IonFooter,
+  IonIcon,
   IonRippleEffect,
   IonToast,
 } from "@ionic/react";
-import ExploreContainer from "../../components/ExploreContainer";
+
 import "./pickInterests.css";
 import logo from "../../images/history.jpg";
 import { useHistory } from "react-router";
-import { informationCircle } from "ionicons/icons";
-
+import { informationCircle, checkmarkOutline } from "ionicons/icons";
+import Rectangle1 from "../../images/Rectangle1.png"
+import Rectangle2 from "../../images/Rectangle2.png"
+import Rectangle3 from "../../images/Rectangle3.png"
+import Rectangle4 from "../../images/Rectangle4.png"
+import Rectangle5 from "../../images/Rectangle5.png"
+import Rectangle6 from "../../images/Rectangle6.png"
 const interests = [
   {
     id: 0,
@@ -69,8 +65,6 @@ const PickInterests: React.FC = () => {
   const history = useHistory();
   const [pickedInterests, setPickedInterests] = React.useState<boolean[]>(vals);
   const [showToast1, setShowToast1] = React.useState(false);
-
-  // 1. const [cards, setCards] = React.useState<boolean[]>(vals);
   const [checkBoxState, setcheckBoxState] = useState(vals)
 
   const toggleSelection = (id: number) => {
@@ -89,11 +83,11 @@ const PickInterests: React.FC = () => {
     if (c >= 3) {
       console.log("go to homepage");
       history.push("/homepage");
-    } else {
+    }
+    else {
       setShowToast1(true);
     }
   };
-
   return (
     <IonPage>
       <IonHeader>
@@ -107,57 +101,51 @@ const PickInterests: React.FC = () => {
       <IonContent>
         <div style={{ height: "100%", display: "flex", justifyContent: "space-evenly", alignItems: "center", flexDirection: "column", padding: "10px" }}>
           <IonRow>
-            <IonCol className={checkBoxState[0] ? "pickInterestCard scale" : "pickInterestCard"} onClick={() => toggleSelection(interests[0].id)}>
-              <p style={{ fontSize: "16px" }}>Text</p>
-              <img
-                alt={interests[0].name}
-                src={interests[0].src}
-                style={{ width: "50%", height: "120px" }}
-              ></img>
+            <IonCol style={{ background: `url(${Rectangle1})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[0] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[0].id)}>
+              <div className={checkBoxState[0] ? "tick-box" : ""}>
+                {checkBoxState[0] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
             </IonCol>
-            <IonCol className={checkBoxState[1] ? "pickInterestCard scale" : "pickInterestCard"} onClick={() => toggleSelection(interests[1].id)}>
-              <p style={{ fontSize: "16px" }}>Text</p>
-              <img
-                alt={interests[1].name}
-                src={interests[1].src}
-                style={{ width: "50%", height: "120px" }}
-              ></img>
+            <IonCol style={{ background: `url(${Rectangle2})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[1] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[1].id)}>
+              <div className={checkBoxState[1] ? "tick-box" : ""}>
+                {checkBoxState[1] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol className={checkBoxState[2] ? "pickInterestCard scale" : "pickInterestCard"} onClick={() => toggleSelection(interests[2].id)}>
-              <p style={{ fontSize: "16px" }}>Text</p>
-              <img
-                alt={interests[2].name}
-                src={interests[2].src}
-                style={{ width: "50%", height: "120px" }}
-              ></img>
+            <IonCol style={{ background: `url(${Rectangle3})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[2] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[2].id)}>
+              <div className={checkBoxState[2] ? "tick-box" : ""}>
+                {checkBoxState[2] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
             </IonCol>
-            <IonCol className={checkBoxState[3] ? "pickInterestCard scale" : "pickInterestCard"} onClick={() => toggleSelection(interests[3].id)}>
-              <p style={{ fontSize: "16px" }}>Text</p>
-              <img
-                alt={interests[3].name}
-                src={interests[3].src}
-                style={{ width: "50%", height: "120px" }}
-              ></img>
+            <IonCol style={{ background: `url(${Rectangle4})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[3] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[3].id)}>
+              <div className={checkBoxState[3] ? "tick-box" : ""}>
+                {checkBoxState[3] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol className={checkBoxState[4] ? "pickInterestCard scale" : "pickInterestCard"} onClick={() => toggleSelection(interests[4].id)}>
-              <p style={{ fontSize: "16px" }}>Text</p>
-              <img
-                alt={interests[4].name}
-                src={interests[4].src}
-                style={{ width: "50%", height: "120px" }}
-              ></img>
+            <IonCol style={{ background: `url(${Rectangle5})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[4] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[4].id)}>
+              <div className={checkBoxState[4] ? "tick-box" : ""}>
+                {checkBoxState[4] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
             </IonCol>
-            <IonCol className={checkBoxState[5] ? "pickInterestCard scale" : "pickInterestCard"} onClick={() => toggleSelection(interests[5].id)}>
-              <p style={{ fontSize: "16px" }}>Text</p>
-              <img
-                alt={interests[5].name}
-                src={interests[5].src}
-                style={{ width: "50%", height: "120px" }}
-              ></img>
+            <IonCol style={{ background: `url(${Rectangle6})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[5] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[5].id)}>
+              <div className={checkBoxState[5] ? "tick-box" : ""}>
+                {checkBoxState[5] && <IonIcon icon={checkmarkOutline} color="white"></IonIcon>}
+              </div>
             </IonCol>
           </IonRow>
         </div>

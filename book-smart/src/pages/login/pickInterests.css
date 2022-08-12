@@ -75,15 +75,14 @@
 }
 
 .pickInterestCard {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: gold;
   box-shadow: 0 0 5px 0;
+  border: 2px solid black;
   text-align: center;
-  height: 150px;
-  margin: 0 10px;
+  width: 150px;
+  height: 175px;
+  margin: 0 15px;
   transition: transform 1s;
+  border-radius: 20px;
 }
 
 .scale {
@@ -95,7 +94,13 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 15px;
-  height: 15px;
+  width: 35px;
+  height: 35px;
+  border-radius: 0 20px 0 0;
   background-color: white;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scale: 1.2;
 }
