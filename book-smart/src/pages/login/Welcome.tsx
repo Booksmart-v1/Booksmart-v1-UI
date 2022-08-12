@@ -52,7 +52,7 @@ const Welcome: React.FC = () => {
         ..
       </CreateAnimation> */}
       <IonContent className="ion-padding over" scrollY={false}>
-        <IonRow style={{ width: "100vw" }}>
+        <IonRow style={{ width: "100%" }}>
           <IonCol className="ion-text-center smart">𝐁𝐎𝐎𝐊𝐒𝐌𝐀𝐑𝐓</IonCol>
           <div className="tagline">
             Making every home, <p className="tagline1"> A library.</p>

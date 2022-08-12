@@ -94,7 +94,8 @@ const App: React.FC = () => {
               {showLoading ? (
                 <div className="loaderDiv-outer">
                   <div className="loaderDiv-inner">
-                    <img src={Logo} alt="LogoLoading" />
+                    <h1 style={{ fontSize: "47px", fontFamily: "Serif", fontWeight: "light" }}>BOOKSMART</h1>
+                    <p style={{ fontSize: "16px", fontFamily: "Montserrat-sb",letterSpacing: "-0.02rem", wordSpacing: "0.04rem"}}>MAKING EVERY HOME, A LIBRARY</p>
                   </div>
                 </div>
               ) : (<Welcome />)}
