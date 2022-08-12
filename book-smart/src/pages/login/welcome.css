@@ -3,6 +3,7 @@
   /* overflow: hidden !important; Hide scrollbars */
   margin: 0px;
 }
+
 ion-page {
   overflow-y: hidden;
 }
@@ -14,26 +15,30 @@ ion-content {
   overflow-y: hidden !important;
   height: 100%;
 }
+
 .over {
   overflow-y: hidden;
 }
+
 .square {
   width: 100px;
   height: 100px;
   background: rgba(0, 0, 255, 0.5);
   margin: 10px;
 }
+
 ion-page {
   background-color: #d0f9d0;
 }
+
 .smart {
   color: var(--bs-primary);
   width: 100%;
   font-size: 50px;
   text-align: center;
-  margin-right: 10px;
   font-family: "Montserrat-B";
 }
+
 .tagline {
   color: var(--bs-secondary);
   width: 100%;
@@ -54,6 +59,7 @@ ion-page {
   text-align: center;
   font-family: "Montserrat-M";
 }
+
 .sign-in {
   margin-bottom: 10px;
   font-family: "Montserrat-SB" !important;
@@ -62,6 +68,7 @@ ion-page {
   margin: 20px;
   --background: var(--bs-sBg) !important;
 }
+
 .sign-up {
   font-family: "Montserrat-B" !important;
   font-size: 18px;
@@ -81,6 +88,7 @@ ion-page {
   right: 0;
   text-align: center;
 }
+
 .woman {
   position: absolute;
   height: 50%;

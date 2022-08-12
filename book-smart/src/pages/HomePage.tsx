@@ -255,15 +255,7 @@ const Tab1: React.FC = () => {
           <IonGrid className="chips">
             <span className="chip">
               <IonChip color="warning">
-                <IonLabel
-                // onClick={() => {
-                //   <IonModal isOpen={true} swipeToClose={true}>
-                //     <IonContent>Modal Content</IonContent>
-                //   </IonModal>;
-                // }}
-                >
-                  Top 200
-                </IonLabel>
+                <IonLabel>Top 200</IonLabel>
               </IonChip>
             </span>
             <span className="chip">
@@ -340,11 +332,10 @@ const Tab1: React.FC = () => {
                     color: `${sellerDeets.negotiable ? "green" : "red"}`,
                     marginBottom: "3px",
                   }}
-                >{`${
-                  sellerDeets.negotiable
-                    ? "Negotiable Price!"
-                    : "Not Negotiable!"
-                }`}</p>
+                >{`${sellerDeets.negotiable
+                  ? "Negotiable Price!"
+                  : "Not Negotiable!"
+                  }`}</p>
                 <h2
                   style={{
                     alignSelf: "center",

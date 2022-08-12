@@ -97,6 +97,15 @@ const SellCardDettails = [
     rating: "3.8",
     cost: "200",
   },
+  {
+    pic: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    bookName: "The Great Gatsby",
+    descr:
+      "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
+    rating: "3.8",
+    cost: "200",
+  }
 ];
 const Sell: React.FC = () => {
   const [info, setInfo] = useState(SellCardDettails);
@@ -295,18 +304,18 @@ const Sell: React.FC = () => {
                     >
                       <IonGrid>
                         <IonRow>
-                          <IonCol size="6">
+                          <IonCol size="5">
                             {photos.map((photo, index) => (
-                              <IonCol size="6" key={index}>
+                              <IonCol size="4" key={index}>
                                 {/* <IonImg src={photo.webviewPath} /> */}
                                 <IonImg src={element.pic} />
                               </IonCol>
                             ))}
                           </IonCol>
 
-                          <IonCol size="6">
+                          <IonCol size="7">
                             <IonCardHeader>
-                              <IonCardTitle className="title">
+                              <IonCardTitle className="title" style={{fontSize: "18px"}}>
                                 {element.bookName}
                               </IonCardTitle>
                             </IonCardHeader>

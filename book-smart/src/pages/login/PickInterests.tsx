@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonContent,
   IonText,
@@ -6,26 +6,22 @@ import {
   IonCol,
   IonHeader,
   IonPage,
-  IonTitle,
   IonToolbar,
-  IonButton,
-  IonImg,
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonCardContent,
-  IonGrid,
-  IonFooter,
+  IonIcon,
   IonRippleEffect,
   IonToast,
 } from "@ionic/react";
-import ExploreContainer from "../../components/ExploreContainer";
+
 import "./pickInterests.css";
 import logo from "../../images/history.jpg";
 import { useHistory } from "react-router";
-import { informationCircle } from "ionicons/icons";
-
+import { informationCircle, checkmarkOutline } from "ionicons/icons";
+import Rectangle1 from "../../images/Rectangle1.png"
+import Rectangle2 from "../../images/Rectangle2.png"
+import Rectangle3 from "../../images/Rectangle3.png"
+import Rectangle4 from "../../images/Rectangle4.png"
+import Rectangle5 from "../../images/Rectangle5.png"
+import Rectangle6 from "../../images/Rectangle6.png"
 const interests = [
   {
     id: 0,
@@ -67,155 +63,114 @@ const vals: boolean[] = [false, false, false, false, false, false];
 
 const PickInterests: React.FC = () => {
   const history = useHistory();
-  const [ints, setInts] = React.useState(interests);
   const [pickedInterests, setPickedInterests] = React.useState<boolean[]>(vals);
   const [showToast1, setShowToast1] = React.useState(false);
+  const [checkBoxState, setcheckBoxState] = useState(vals)
 
   const toggleSelection = (id: number) => {
-    let val = pickedInterests;
-    if (val[id]) val[id] = false;
-    else val[id] = true;
-
+    var val = pickedInterests;
+    val[id] ? (val[id] = false) : (val[id] = true)
     setPickedInterests(val);
+    setcheckBoxState(prevState => prevState.map((item, idx) => idx === id ? !item : item));
   };
 
   const handleClick = () => {
-    let val = pickedInterests;
-    let c = 0,
-      i = 0;
+    var val = pickedInterests;
+    var c = 0, i = 0;
     for (i = 0; i < interests.length; i++) {
       if (val[i]) c++;
     }
     if (c >= 3) {
       console.log("go to homepage");
       history.push("/homepage");
-    } else {
+    }
+    else {
       setShowToast1(true);
     }
   };
-
   return (
     <IonPage>
-      <IonContent className="ion-no-padding">
-        {/* <IonHeader>
-          Pick your interests
-        </IonHeader> */}
-        <IonHeader>
-          <IonToolbar className="pi-toolbar">
-            <IonText>
-              <h1>Pick Your Interests</h1>
-              <h3>(Minimum 3)</h3>
-            </IonText>
-          </IonToolbar>
-        </IonHeader>
-        {/* <IonGrid className='grid'>
-          <IonCard className='top-card'>
-            <IonCardHeader>
-              <IonCardTitle className='title'>Pick Your Interests</IonCardTitle>
-              <IonCardSubtitle className='subtitle1'> (Select atleast 3)</IonCardSubtitle>
-            </IonCardHeader>
-          </IonCard>
-        </IonGrid> */}
-        <div className="cards1">
+      <IonHeader>
+        <IonToolbar className="pi-toolbar">
+          <IonText>
+            <h1>Pick Your Interests</h1>
+            <h3>(Minimum 3)</h3>
+          </IonText>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <div style={{ height: "100%", display: "flex", justifyContent: "space-evenly", alignItems: "center", flexDirection: "column", padding: "10px" }}>
           <IonRow>
-            <IonGrid>
-              <IonCol className="col" size="6">
-                <img
-                  alt={ints[0].name}
-                  onClick={() => toggleSelection(ints[0].id)}
-                  className="pi-card"
-                  src={ints[0].src}
-                ></img>
-              </IonCol>
-            </IonGrid>
-            <IonGrid>
-              <IonCol className="col" size="6">
-                <img
-                  alt={ints[1].name}
-                  className="pi-card"
-                  onClick={() => toggleSelection(ints[1].id)}
-                  src={ints[1].src}
-                ></img>
-              </IonCol>
-            </IonGrid>
+            <IonCol style={{ background: `url(${Rectangle1})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[0] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[0].id)}>
+              <div className={checkBoxState[0] ? "tick-box" : ""}>
+                {checkBoxState[0] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
+            </IonCol>
+            <IonCol style={{ background: `url(${Rectangle2})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[1] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[1].id)}>
+              <div className={checkBoxState[1] ? "tick-box" : ""}>
+                {checkBoxState[1] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
+            </IonCol>
           </IonRow>
           <IonRow>
-            <IonGrid>
-              <IonCol className="col" size="6">
-                <img
-                  alt={ints[2].name}
-                  onClick={() => toggleSelection(ints[2].id)}
-                  className="pi-card"
-                  src={ints[2].src}
-                ></img>
-              </IonCol>
-            </IonGrid>
-            <IonGrid>
-              <IonCol className="col" size="6">
-                <img
-                  alt={ints[3].name}
-                  onClick={() => toggleSelection(ints[3].id)}
-                  className="pi-card"
-                  src={ints[3].src}
-                ></img>
-              </IonCol>
-            </IonGrid>
+            <IonCol style={{ background: `url(${Rectangle3})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[2] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[2].id)}>
+              <div className={checkBoxState[2] ? "tick-box" : ""}>
+                {checkBoxState[2] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
+            </IonCol>
+            <IonCol style={{ background: `url(${Rectangle4})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[3] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[3].id)}>
+              <div className={checkBoxState[3] ? "tick-box" : ""}>
+                {checkBoxState[3] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
+            </IonCol>
           </IonRow>
           <IonRow>
-            <IonGrid>
-              <IonCol className="col" size="6">
-                <img
-                  alt={ints[4].name}
-                  onClick={() => toggleSelection(ints[4].id)}
-                  className="pi-card"
-                  src={ints[4].src}
-                ></img>
-              </IonCol>
-            </IonGrid>
-            <IonGrid>
-              <IonCol className="col" size="6">
-                <img
-                  alt={ints[5].name}
-                  onClick={() => toggleSelection(ints[5].id)}
-                  className="pi-card"
-                  src={ints[5].src}
-                ></img>
-              </IonCol>
-            </IonGrid>
+            <IonCol style={{ background: `url(${Rectangle5})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[4] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[4].id)}>
+              <div className={checkBoxState[4] ? "tick-box" : ""}>
+                {checkBoxState[4] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              </div>
+            </IonCol>
+            <IonCol style={{ background: `url(${Rectangle6})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
+              className={checkBoxState[5] ? "pickInterestCard scale" : "pickInterestCard"}
+              onClick={() => toggleSelection(interests[5].id)}>
+              <div className={checkBoxState[5] ? "tick-box" : ""}>
+                {checkBoxState[5] && <IonIcon icon={checkmarkOutline} color="white"></IonIcon>}
+              </div>
+            </IonCol>
           </IonRow>
         </div>
-        <IonToast
-          isOpen={showToast1}
-          onDidDismiss={() => setShowToast1(false)}
-          message="Less than 3 interests selected. Please select at least 3 to continue!"
-          icon={informationCircle}
-          translucent={true}
-          mode="ios"
-          duration={4000}
-          position="top"
-          buttons={[
-            // {
-            //   side: 'start',
-            //   icon: 'star',
-            //   text: 'Favorite',
-            //   handler: () => {
-            //     console.log('Favorite clicked');
-            //   }
-            // },
-            {
-              text: "Hide",
-              role: "cancel",
-              handler: () => setShowToast1(false),
-            },
-          ]}
-        />
       </IonContent>
-      <IonFooter className="ion-no-border">
-        <button onClick={handleClick} className="long-cta">
-          Select
-        </button>
-        <IonRippleEffect></IonRippleEffect>
-      </IonFooter>
+      <IonToast
+        isOpen={showToast1}
+        onDidDismiss={() => setShowToast1(false)}
+        message="Less than 3 interests selected. Please select at least 3 to continue!"
+        icon={informationCircle}
+        translucent={true}
+        mode="ios"
+        duration={4000}
+        position="top"
+        buttons={[
+          {
+            text: "Hide",
+            role: "cancel",
+            handler: () => setShowToast1(false),
+          },
+        ]}
+      />
+      <button onClick={handleClick} className="long-cta">
+        Select
+      </button>
+      <IonRippleEffect></IonRippleEffect>
     </IonPage>
   );
 };

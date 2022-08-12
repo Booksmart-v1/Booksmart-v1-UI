@@ -131,7 +131,7 @@ http://ionicframework.com/docs/theming/ */
   --bs-sText: #002d62;
   --bs-pBg: url("https://image.shutterstock.com/image-photo/wood-plank-texture-background-260nw-1721233891.jpg");
   --bs-sBg: url("https://t4.ftcdn.net/jpg/01/91/22/51/360_F_191225191_Ehl3dpuV1PRgGj4VwfDesUIVUVlXuhpz.jpg");
- 
+
 }
 
 .mainHeader {
@@ -142,4 +142,37 @@ http://ionicframework.com/docs/theming/ */
   overflow: hidden;
   max-height: 7vh;
   text-overflow: ellipsis;
+}
+
+ion-toggle {
+  --background: #df4759;
+  --background-checked: #42ba96;
+}
+
+.loaderDiv-outer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #571c20;
+}
+
+.loaderDiv-inner {
+  animation: example 1.2s ease-in-out infinite;
+  color: white;
+  text-align: center;
+}
+
+@keyframes example {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

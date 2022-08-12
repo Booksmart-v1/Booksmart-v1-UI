@@ -12,6 +12,7 @@
   justify-content: space-between;
   border-radius: 25px 25px 0 0;
 }
+
 .card1 {
   height: 150px !important;
   width: 180px;
@@ -20,30 +21,27 @@
   margin-top: 10px;
   margin-bottom: 100px !important;
 }
-ion-text {
-  font-family: "Montserrat-B";
-  font-size: 25px;
-  color: #2a1820;
-  align-items: center;
-  text-align: center;
-}
+
 .pi-toolbar {
   --background: #d3dbe1;
   height: 110px;
+  text-align: center;
+  font-family: "Montserrat-B";
 }
+
 .long-cta {
   --background: var(--bs-pText) !important;
   color: #ffffff;
   font-family: "Montserrat-SB";
   text-align: center;
-  padding: 20px 20px;
+  padding: 20px;
   border-radius: 10px;
-  display: inline;
   width: 90%;
   margin-left: 20px;
-  font-size: 15px;
+  font-size: 20px;
   margin-bottom: 10px;
 }
+
 .subtitle1 {
   font-family: "Montserrat-SB" !important;
   font-size: 18px;
@@ -57,6 +55,7 @@ ion-text {
 .grid {
   height: 130px !important;
 }
+
 .title {
   font-family: "Montserrat-B" !important;
   font-size: 25px;
@@ -65,6 +64,7 @@ ion-text {
   margin: 32px;
   --background: var(--bs-sBg) !important;
 }
+
 .top-card {
   height: 140px;
   width: 90%;
@@ -72,4 +72,35 @@ ion-text {
   margin-left: 20px;
   margin-top: 20px;
   background: var(--bs-pBg) !important;
+}
+
+.pickInterestCard {
+  box-shadow: 0 0 5px 0;
+  border: 2px solid black;
+  text-align: center;
+  width: 150px;
+  height: 175px;
+  margin: 0 15px;
+  transition: transform 1s;
+  border-radius: 20px;
+}
+
+.scale {
+  /* perspective(650px) rotateX(20deg) */
+  transform: rotateY(360deg) scale(0.8);
+}
+
+.tick-box {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 35px;
+  height: 35px;
+  border-radius: 0 20px 0 0;
+  background-color: white;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scale: 1.2;
 }

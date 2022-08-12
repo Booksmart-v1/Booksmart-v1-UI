@@ -11,7 +11,7 @@ import {
   IonButton,
   IonImg,
 } from "@ionic/react";
-import { CreateAnimation, Animation } from "@ionic/react";
+// import { CreateAnimation, Animation } from "@ionic/react";
 // import { LottieSplashScreen } from '@awesome-cordova-plugins/lottie-splash-screen';
 import ExploreContainer from "../../components/ExploreContainer";
 import "./welcome.css";
@@ -24,17 +24,16 @@ import { useHistory } from "react-router-dom";
 const Welcome: React.FC = () => {
   const history = useHistory();
 
-  const showLottieScreen = async () => {
-    //await LottieSplashScreen.show('../../lottie/72170-books.json',false,100,100);
-  };
-
-  React.useEffect(() => {
-    // showLottieScreen();
-    // const timer = setTimeout(async () => {
-    //   await LottieSplashScreen.hide()
-    // }, 10000);
-    // return () => clearTimeout(timer);
-  }, []);
+  // const showLottieScreen = async () => {
+  //   //await LottieSplashScreen.show('../../lottie/72170-books.json',false,100,100);
+  // };
+  // React.useEffect(() => {
+  //   // showLottieScreen();
+  //   // const timer = setTimeout(async () => {
+  //   //   await LottieSplashScreen.hide()
+  //   // }, 10000);
+  //   // return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <IonPage className="ion-no-padding">
@@ -53,7 +52,7 @@ const Welcome: React.FC = () => {
         ..
       </CreateAnimation> */}
       <IonContent className="ion-padding over" scrollY={false}>
-        <IonRow style={{ width: "100vw" }}>
+        <IonRow style={{ width: "100%" }}>
           <IonCol className="ion-text-center smart">𝐁𝐎𝐎𝐊𝐒𝐌𝐀𝐑𝐓</IonCol>
           <div className="tagline">
             Making every home, <p className="tagline1"> A library.</p>
@@ -82,10 +81,10 @@ const Welcome: React.FC = () => {
         >
           Sign Up
         </IonButton>
-        <br /> <br />
+        {/* <br /> <br />
         <br />
         <br />
-        <br />
+        <br /> */}
         <IonCol className="text-center"></IonCol>
       </IonContent>
       <IonImg className="woman" src={logo} />

@@ -21,7 +21,7 @@ import Welcome from "./pages/login/Welcome";
 
 import Home from "./Home";
 import Login from "./Login";
-
+import Logo from "./images/logo.png"
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -43,12 +43,14 @@ import "./theme/variables.css";
 import Search from "./pages/Search";
 import Sell from "./pages/Sell";
 import OpeningPage from "./pages/OpeningPage";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const [refresh, setRefresh] = React.useState(false);
+  const [showLoading, setShowLoading] = useState(true);
+
   const refreshPage = () => {
     console.log(refresh);
     setRefresh(!refresh);
@@ -57,6 +59,13 @@ const App: React.FC = () => {
   useIonViewWillEnter(() => {
     console.log("heyy");
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowLoading(false)
+    }, 3000);
+  }, [])
+
   return (
     <IonApp>
       <IonReactRouter>
@@ -81,9 +90,15 @@ const App: React.FC = () => {
             <Route exact path="/">
               <Redirect exact to="/homepage" />
             </Route>
-
             <Route exact path="/login">
-              <Welcome />
+              {showLoading ? (
+                <div className="loaderDiv-outer">
+                  <div className="loaderDiv-inner">
+                    <h1 style={{ fontSize: "47px", fontFamily: "Serif", fontWeight: "light" }}>BOOKSMART</h1>
+                    <p style={{ fontSize: "16px", fontFamily: "Montserrat-sb",letterSpacing: "-0.02rem", wordSpacing: "0.04rem"}}>MAKING EVERY HOME, A LIBRARY</p>
+                  </div>
+                </div>
+              ) : (<Welcome />)}
             </Route>
             <Route exact path="/opening">
               <OpeningPage />
