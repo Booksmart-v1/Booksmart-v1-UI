@@ -48,11 +48,13 @@ interface myProps {
 
 const Home: React.FC<myProps> = ({ refreshPage }) => {
   // let {page} = useParams();
+  var selectArray: boolean[] = [true, false, false, false, false];
   const [refresh, setRefresh] = React.useState(false);
-
-  useIonViewWillEnter(() => {
-    console.log("heyy");
-  });
+  const [isSelected, setIsSelected] = React.useState<boolean[]>(selectArray);
+  console.log(isSelected)
+  const handleSelect = (id: number) => {
+    setIsSelected(prevState => prevState.map((item, idx) => idx === id ? true : false));
+  }
 
   return (
     <>
@@ -61,25 +63,13 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
           <IonTabs>
             <IonRouterOutlet ionPage>
               <Route exact={true} path="/homepage" component={HomePage}></Route>
-              <Route
-                exact={true}
-                path="/homepage/search"
-                component={Search}
+              <Route exact={true} path="/homepage/search" component={Search}
               ></Route>
-              <Route
-                exact={true}
-                path="/homepage/Chat"
-                component={Chat}
+              <Route exact={true} path="/homepage/Chat" component={Chat}
               ></Route>
-              <Route
-                exact={true}
-                path="/homepage/sell"
-                component={Sell}
+              <Route exact={true} path="/homepage/sell" component={Sell}
               ></Route>
-              <Route
-                exact={true}
-                path="/homepage/profile"
-                component={Profile}
+              <Route exact={true} path="/homepage/profile" component={Profile}
               ></Route>
               {/* <Route exact={true} path="/homepage/shop"
           component={Sell}
@@ -100,46 +90,28 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 boxShadow: "0px 0px 0px 0px rgba(0,0,0,0.2)",
                 height: "50px",
               }}
-              onClick={refreshPage}
+            // onClick={refreshPage}
             >
-              <IonTabButton tab="homePage" href="/homepage">
-                <IonIcon icon={homeOutline} />
+              <IonTabButton tab="homePage" href="/homepage" selected={isSelected[0]}>
+                <IonIcon icon={homeOutline} onClick={() => handleSelect(0)} />
                 <IonLabel>Home</IonLabel>
               </IonTabButton>
 
-              <IonTabButton
-                tab="search"
-                href="/homepage/Search"
-                onClick={refreshPage}
-              >
-                <IonIcon icon={searchOutline} />
+              <IonTabButton tab="search" href="/homepage/Search" selected={isSelected[1]}>
+                <IonIcon icon={searchOutline} onClick={() => handleSelect(1)} />
                 <IonLabel>Search</IonLabel>
               </IonTabButton>
 
-              <IonTabButton
-                tab="chat"
-                href="/homepage/Chat"
-                onClick={refreshPage}
-              >
-                <IonIcon icon={chatbubbleEllipses} />
+              <IonTabButton tab="chat" href="/homepage/Chat" selected={isSelected[2]}>
+                <IonIcon icon={chatbubbleEllipses} onClick={() => handleSelect(2)} />
                 <IonLabel>Chat</IonLabel>
               </IonTabButton>
-
-              <IonTabButton
-                tab="sell"
-                href="/homepage/Sell"
-                onClick={refreshPage}
-              >
-                <IonIcon icon={heartOutline} />
+              <IonTabButton tab="sell" href="/homepage/Sell" selected={isSelected[3]}>
+                <IonIcon icon={heartOutline} onClick={() => handleSelect(3)} />
                 <IonLabel>Sell</IonLabel>
               </IonTabButton>
-
-              <IonTabButton
-                tab="profile"
-                href="/homepage/Profile"
-                onClick={refreshPage}
-              >
-                <IonIcon icon={personCircleOutline} />
+              <IonTabButton tab="profile" href="/homepage/Profile" selected={isSelected[4]}>
+                <IonIcon icon={personCircleOutline} onClick={() => handleSelect(4)} />
                 <IonLabel>Profile</IonLabel>
               </IonTabButton>
               {/* <IonTabButton
