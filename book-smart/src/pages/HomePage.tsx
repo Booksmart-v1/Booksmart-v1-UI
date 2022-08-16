@@ -63,6 +63,7 @@ const cardDetails = [
     descr:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
+    tags: "Love",
     cost: "200",
     seller: {
       name: "Taarush Bhatia",
@@ -80,6 +81,7 @@ const cardDetails = [
     descr:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
+    tags: "Horror",
     cost: "200",
     seller: {
       name: "Taarush Bhatia",
@@ -97,6 +99,7 @@ const cardDetails = [
     descr:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
+    tags: "Health",
     cost: "200",
     seller: {
       name: "Taarush Bhatia",
@@ -114,6 +117,7 @@ const cardDetails = [
     descr:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
+    tags: "Fiction",
     cost: "200",
     seller: {
       name: "Taarush Bhatia",
@@ -131,6 +135,7 @@ const cardDetails = [
     descr:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
+    tags: "Health",
     cost: "200",
     seller: {
       name: "Taarush Bhatia",
@@ -426,56 +431,35 @@ const Tab1: React.FC = () => {
             return (
               <>
                 <br />
-
                 <IonCard key={index} className="card">
-                  <IonGrid>
+                  <IonGrid
+                    onClick={() => {
+                      setInterest(element.interested);
+                      setSellerDeets(element.seller);
+                      setShowModal(true);
+                    }}>
                     <IonRow className="row">
-                      <IonCol className="img">
+                      <IonCol className="img" size="6">
                         <img alt="Book" className="pic" src={element.pic} />
                       </IonCol>
-                      <IonCol className="ion-no-padding">
-                        <IonItem
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "flex-start",
-                            alignItems: "flex-start",
-                            margin: 0,
-                            padding: 0,
-                          }}
-                        >
+                      <IonCol className="ion-no-padding" size="6">
+                        <IonItem>
                           <IonGrid
-                            onClick={() => {
-                              setInterest(element.interested);
-                              setSellerDeets(element.seller);
-                              setShowModal(true);
-                            }}
                           >
                             {/* <IonAvatar item-start> <img alt="avatar" src={element.avatar} /> </IonAvatar> */}
-                            <IonRow>
-                              <h5>
-                                <strong>{element.title}</strong>
-                              </h5>
-                            </IonRow>
-                            <IonRow>
-                              <p style={{ fontSize: 13 }}>{element.author}</p>
-                            </IonRow>
-                            <IonRow
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "flex-start",
-                                alignItems: "center",
-                              }}
-                            >
-                              <IonCol>
-                                {" "}
-                                <img alt="avatar" className="ava" src={star} />
-                              </IonCol>
-                              <IonCol style={{ marginLeft: "-2vw" }}>
+                            <IonHeader>
+                              <h3 style={{ fontSize: "14px" }}>{element.title}</h3>
+                            </IonHeader>
+                            <p style={{ fontSize: "13px" }}>{element.author}</p>
+                            <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", margin: "5px 0", padding: "5px 0" }}>
+                              <IonChip color="warning" style={{ color: "black", border: "1px solid black" }}>
+                                <IonLabel style={{ fontFamily: "Montserrat-sb" }}>{element.tags}</IonLabel>
+                              </IonChip>
+                              <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
                                 <h6>{element.rating}</h6>
-                              </IonCol>
-                            </IonRow>
+                                <img alt="avatar" className="ava" src={star} />
+                              </div>
+                            </div>
                           </IonGrid>
                         </IonItem>
                         <IonCardContent>
@@ -490,7 +474,7 @@ const Tab1: React.FC = () => {
           })}
         </IonGrid>
       </IonContent>
-    </IonPage>
+    </IonPage >
   );
 };
 
