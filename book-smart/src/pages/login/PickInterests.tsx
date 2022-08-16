@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   IonContent,
   IonText,
@@ -55,27 +55,20 @@ const interests = [
   },
 ];
 
-//   export interface Interest {
-//   name: string;
-//   src: string;
-// }
-const vals: boolean[] = [false, false, false, false, false, false];
+var vals: boolean[] = [false, false, false, false, false, false];
 
 const PickInterests: React.FC = () => {
   const history = useHistory();
   const [pickedInterests, setPickedInterests] = React.useState<boolean[]>(vals);
   const [showToast1, setShowToast1] = React.useState(false);
-  const [checkBoxState, setcheckBoxState] = useState(vals)
+  // const [checkBoxState, setcheckBoxState] = useState(vals)
 
   const toggleSelection = (id: number) => {
-    var val = pickedInterests;
-    val[id] ? (val[id] = false) : (val[id] = true)
-    setPickedInterests(val);
-    setcheckBoxState(prevState => prevState.map((item, idx) => idx === id ? !item : item));
+    setPickedInterests(prevState => prevState.map((item, idx) => idx === id ? !item : item));
   };
 
   const handleClick = () => {
-    var val = pickedInterests;
+    let val = pickedInterests;
     var c = 0, i = 0;
     for (i = 0; i < interests.length; i++) {
       if (val[i]) c++;
@@ -102,49 +95,49 @@ const PickInterests: React.FC = () => {
         <div style={{ height: "100%", display: "flex", justifyContent: "space-evenly", alignItems: "center", flexDirection: "column", padding: "10px" }}>
           <IonRow>
             <IonCol style={{ background: `url(${Rectangle1})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
-              className={checkBoxState[0] ? "pickInterestCard scale" : "pickInterestCard"}
+              className={pickedInterests[0] ? "pickInterestCard scale" : "pickInterestCard"}
               onClick={() => toggleSelection(interests[0].id)}>
-              <div className={checkBoxState[0] ? "tick-box" : ""}>
-                {checkBoxState[0] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              <div className={pickedInterests[0] ? "tick-box" : ""}>
+                {pickedInterests[0] && <IonIcon icon={checkmarkOutline}></IonIcon>}
               </div>
             </IonCol>
             <IonCol style={{ background: `url(${Rectangle2})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
-              className={checkBoxState[1] ? "pickInterestCard scale" : "pickInterestCard"}
+              className={pickedInterests[1] ? "pickInterestCard scale" : "pickInterestCard"}
               onClick={() => toggleSelection(interests[1].id)}>
-              <div className={checkBoxState[1] ? "tick-box" : ""}>
-                {checkBoxState[1] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              <div className={pickedInterests[1] ? "tick-box" : ""}>
+                {pickedInterests[1] && <IonIcon icon={checkmarkOutline}></IonIcon>}
               </div>
             </IonCol>
           </IonRow>
           <IonRow>
             <IonCol style={{ background: `url(${Rectangle3})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
-              className={checkBoxState[2] ? "pickInterestCard scale" : "pickInterestCard"}
+              className={pickedInterests[2] ? "pickInterestCard scale" : "pickInterestCard"}
               onClick={() => toggleSelection(interests[2].id)}>
-              <div className={checkBoxState[2] ? "tick-box" : ""}>
-                {checkBoxState[2] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              <div className={pickedInterests[2] ? "tick-box" : ""}>
+                {pickedInterests[2] && <IonIcon icon={checkmarkOutline}></IonIcon>}
               </div>
             </IonCol>
             <IonCol style={{ background: `url(${Rectangle4})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
-              className={checkBoxState[3] ? "pickInterestCard scale" : "pickInterestCard"}
+              className={pickedInterests[3] ? "pickInterestCard scale" : "pickInterestCard"}
               onClick={() => toggleSelection(interests[3].id)}>
-              <div className={checkBoxState[3] ? "tick-box" : ""}>
-                {checkBoxState[3] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              <div className={pickedInterests[3] ? "tick-box" : ""}>
+                {pickedInterests[3] && <IonIcon icon={checkmarkOutline}></IonIcon>}
               </div>
             </IonCol>
           </IonRow>
           <IonRow>
             <IonCol style={{ background: `url(${Rectangle5})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
-              className={checkBoxState[4] ? "pickInterestCard scale" : "pickInterestCard"}
+              className={pickedInterests[4] ? "pickInterestCard scale" : "pickInterestCard"}
               onClick={() => toggleSelection(interests[4].id)}>
-              <div className={checkBoxState[4] ? "tick-box" : ""}>
-                {checkBoxState[4] && <IonIcon icon={checkmarkOutline}></IonIcon>}
+              <div className={pickedInterests[4] ? "tick-box" : ""}>
+                {pickedInterests[4] && <IonIcon icon={checkmarkOutline}></IonIcon>}
               </div>
             </IonCol>
             <IonCol style={{ background: `url(${Rectangle6})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center" }}
-              className={checkBoxState[5] ? "pickInterestCard scale" : "pickInterestCard"}
+              className={pickedInterests[5] ? "pickInterestCard scale" : "pickInterestCard"}
               onClick={() => toggleSelection(interests[5].id)}>
-              <div className={checkBoxState[5] ? "tick-box" : ""}>
-                {checkBoxState[5] && <IonIcon icon={checkmarkOutline} color="white"></IonIcon>}
+              <div className={pickedInterests[5] ? "tick-box" : ""}>
+                {pickedInterests[5] && <IonIcon icon={checkmarkOutline} color="white"></IonIcon>}
               </div>
             </IonCol>
           </IonRow>
