@@ -52,13 +52,9 @@ const App: React.FC = () => {
   const [showLoading, setShowLoading] = useState(true);
 
   const refreshPage = () => {
-    console.log(refresh);
+    // console.log(refresh);
     setRefresh(!refresh);
   };
-
-  useIonViewWillEnter(() => {
-    console.log("heyy");
-  });
 
   useEffect(() => {
     setTimeout(() => {
@@ -95,7 +91,7 @@ const App: React.FC = () => {
                 <div className="loaderDiv-outer">
                   <div className="loaderDiv-inner">
                     <h1 style={{ fontSize: "47px", fontFamily: "Serif", fontWeight: "light" }}>BOOKSMART</h1>
-                    <p style={{ fontSize: "16px", fontFamily: "Montserrat-sb",letterSpacing: "-0.02rem", wordSpacing: "0.04rem"}}>MAKING EVERY HOME, A LIBRARY</p>
+                    <p style={{ fontSize: "16px", fontFamily: "Montserrat-sb", letterSpacing: "-0.02rem", wordSpacing: "0.04rem" }}>MAKING EVERY HOME, A LIBRARY</p>
                   </div>
                 </div>
               ) : (<Welcome />)}
@@ -113,17 +109,11 @@ const App: React.FC = () => {
           </IonRouterOutlet>
           <IonTabBar slot="top" style={{ display: "none" }}>
             <IonTabButton tab="home" href="/homepage">
-              {/* <IonIcon icon={triangle} /> */}
               <IonLabel>Home</IonLabel>
             </IonTabButton>
             <IonTabButton tab="login" href="/login">
-              {/* <IonIcon icon={ellipse} /> */}
               <IonLabel>Login</IonLabel>
             </IonTabButton>
-            {/* <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon icon={square} />
-            <IonLabel>Tab 3</IonLabel>
-</IonTabButton> */}
           </IonTabBar>
         </IonTabs>
       </IonReactRouter>

@@ -71,6 +71,7 @@ ion-item-divider {
   height: 100vh;
   padding: 10px;
   box-shadow: 1px 1px 5px 1px lightgray;
+  position: fixed;
 }
 
 .category-area div {
@@ -93,8 +94,10 @@ ion-item-divider {
   padding: 25px;
 }
 
-
 .trending-area {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 80%;
   padding: 15px;
   display: grid;

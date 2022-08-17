@@ -194,7 +194,7 @@ const Search: React.FC = () => {
                 <IonIcon style={{ backgroundColor: "light gray", borderRadius: "15px", marginLeft: "10px", fontSize: "20px" }} icon={chevronBackOutline} onClick={() => setShowSearchModal(false)}></IonIcon>
               </IonButtons>
               <IonButtons slot="end">
-                <IonIcon icon={search} onClick={() => { setShowAddBookToast(true) }} style={{ fontSize: "20px" }} />
+                <IonIcon icon={search} style={{ fontSize: "20px" }} />
               </IonButtons>
             </IonToolbar>
           </IonHeader>
