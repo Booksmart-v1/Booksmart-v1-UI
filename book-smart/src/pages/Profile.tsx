@@ -30,6 +30,8 @@ import {
   IonToast,
   IonAccordionGroup,
   IonAccordion,
+  IonBadge,
+  IonAvatar,
 } from "@ionic/react";
 import "./Profile.css";
 import profile from "../images/profile-image.jpg";
@@ -51,6 +53,8 @@ import {
   logOut,
   settingsOutline,
 } from "ionicons/icons";
+
+import Logo from "../images/logo.png"
 import { useState } from "react";
 
 const Profile = () => {
@@ -72,8 +76,56 @@ const Profile = () => {
     var userId = JSON.parse(a).id;
     var username = JSON.parse(a).name;
   }
-  const [showModal, setShowModal] = useState(false)
-  // const [changeName, setChangeName] = useState(username);
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
+
+  // Notifications
+  const [showNotifyModal, setShowNotifyModal] = useState(false)
+  const notifyArray = [
+    {
+      id: 0,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: true,
+      time: "2 mins ago"
+    },
+    {
+      id: 1,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "10 mins ago"
+    },
+    {
+      id: 2,
+      img: Logo,
+      name: "BookSmart",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: true,
+      time: "17 mins ago"
+    },
+    {
+      id: 3,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "25 mins ago"
+    },
+    {
+      id: 4,
+      img: Logo,
+      name: "BookSmart",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "1 hr ago"
+    },
+  ]
+  // const [notifyList, setNotifyList] = useState(notifyArray);
+  // const [unread, setunread] = useState()
+  const [notifyCount, setNotifyCount] = useState(notifyArray.filter((item) => { return (item.read === false) }).length)
+
   const [changeName, setChangeName] = useState("Username");
   const [changeUsername, setChangeUsername] = useState("Name");
   const [editName, setEditName] = useState(false);
@@ -94,7 +146,7 @@ const Profile = () => {
 
   const handleSaveChange = () => {
     // Save data here
-    setShowModal(false)
+    setShowSettingsModal(false)
   }
 
   const handleToggleChange1 = (e: any) => {
@@ -118,11 +170,6 @@ const Profile = () => {
     <IonPage className="md">
       <IonHeader>
         <IonToolbar>
-          {/* <IonButtons slot="start">
-						<IonButton color="dark">
-							<IonIcon icon={ arrowBackOutline } />
-						</IonButton>
-					</IonButtons> */}
           <div
             style={{
               fontFamily: "Montserrat-B",
@@ -184,8 +231,7 @@ const Profile = () => {
                         alt="avatar"
                         style={{
                           borderRadius: "80px",
-                          height: "14vh",
-                          width: "60vw",
+                          height: "10vh",
                         }}
                       />
                       <IonIcon
@@ -302,8 +348,7 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <br />
-          <IonRow className="profileStatusContainer">
+          <IonRow className="profileStatusContainer" style={{ margin: "10px 0" }}>
             <IonCol size="12">
               <IonCard className="profileCard">
                 <IonCardHeader>
@@ -314,7 +359,7 @@ const Profile = () => {
                     </IonRow>
                     {editStatus ? (
                       <IonButton
-                        style={{ height: "25px" }}
+                        style={{ height: "20px" }}
                         onClick={() => setEditStatus(false)}
                       >
                         {"Save"}
@@ -345,8 +390,7 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <br />
-          <IonRow>
+          <IonRow style={{ margin: "10px 0" }}>
             <IonCol size="6">
               <IonCard className="profileCard">
                 <IonCardContent>
@@ -367,14 +411,12 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <br />
-
-
-          <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+          {/* Settings Modal; */}
+          <IonModal isOpen={showSettingsModal} onDidDismiss={() => setShowSettingsModal(false)}>
             <IonHeader>
               <IonToolbar style={{ padding: "10px 0" }}>
                 <IonButtons slot="end">
-                  <IonButton onClick={() => { setShowModal(false) }}>Close</IonButton>
+                  <IonButton onClick={() => { setShowSettingsModal(false) }}>Close</IonButton>
                 </IonButtons>
                 <IonTitle>
                   <h2 style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "24px" }}>Settings</h2>
@@ -410,8 +452,8 @@ const Profile = () => {
                 position="top"
                 duration={250}
               />
-              <IonAccordionGroup multiple={true} value="default">
-                <IonAccordion value="default">
+              <IonAccordionGroup multiple={true} value="notifyAccord">
+                <IonAccordion value="notifyAccord">
                   <IonItem slot="header" color="light">
                     <IonLabel style={{ fontFamily: "Montserrat-B" }}>Notification Settings</IonLabel>
                   </IonItem>
@@ -434,7 +476,7 @@ const Profile = () => {
                     </div>
                   </div>
                 </IonAccordion>
-                <IonAccordion value="default1">
+                <IonAccordion value="userAccord">
                   <IonItem slot="header" color="light">
                     <IonLabel style={{ fontFamily: "Montserrat-B" }}>User Settings</IonLabel>
                   </IonItem>
@@ -481,7 +523,7 @@ const Profile = () => {
                     </div>
                   </div>
                 </IonAccordion>
-                <IonAccordion value="default2">
+                <IonAccordion value="pickAccord">
                   <IonItem slot="header" color="light">
                     <IonLabel style={{ fontFamily: "Montserrat-B" }}>Change Interests</IonLabel>
                   </IonItem>
@@ -490,15 +532,16 @@ const Profile = () => {
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>
-
             </IonContent>
             <IonFooter>
               <button className='long-cta' onClick={handleSaveChange}>Save Changes</button>
             </IonFooter>
           </IonModal>
+
+          {/* Settings Bar */}
           <IonRow className="profileActionContainer">
             <IonCol size="12">
-              <IonCard className="profileActionCard" onClick={() => setShowModal(true)}>
+              <IonCard className="profileActionCard" onClick={() => setShowSettingsModal(true)}>
                 <IonCardContent>
                   <IonRow className="ion-justify-content-between">
                     <IonCardSubtitle>Settings</IonCardSubtitle>
@@ -508,7 +551,82 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
+          {/* Notifications Modal */}
+          <IonModal isOpen={showNotifyModal} onDidDismiss={() => setShowNotifyModal(false)}>
+            <IonHeader>
+              <IonToolbar style={{ padding: "10px 0" }}>
+                <IonButtons slot="end">
+                  <IonButton onClick={() => { setShowNotifyModal(false) }}>Close</IonButton>
+                </IonButtons>
+                <IonTitle>
+                  <h2 style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "24px", margin: "5px 0" }}>Notifications</h2>
+                </IonTitle>
+              </IonToolbar>
+            </IonHeader>
+            <IonContent>
+              <div className="notifyCards-area">
+                <div className="notifyCards-area">
+                  {notifyArray.map((item, idx) => {
+                    return item.read ? (
+                      <IonCard className="notifyCard">
+                        <div className="notifyCard-img">
+                          <IonAvatar>
+                            <img src={item.img} alt="abc" />
+                          </IonAvatar>
+                        </div>
+                        <div className="notifyCard-content">
+                          <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
+                        </div>
+                        <div className="notify-time">
+                          <p style={{ fontFamily: "Montserrat-sb", textAlign: "center" }}>{item.time}</p>
+                        </div>
+                      </IonCard>
+                    ) : (
+                      <IonCard className="notifyCard notify-unread">
+                        <div className="notifyCard-img">
+                          <IonAvatar>
+                            <img src={item.img} alt="abc" />
+                          </IonAvatar>
+                        </div>
+                        <div className="notifyCard-content">
+                          <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
+                        </div>
+                        <div className="notify-time">
+                          <p style={{ fontFamily: "Montserrat-sb", textAlign: "center" }}>{item.time}</p>
+                        </div>
+                      </IonCard>
+                    );
+                  })}
+                </div>
+              </div>
+            </IonContent>
+          </IonModal>
+          {/* 
+           <IonCard className="notifyCard">
+             <div className="notifyCard-img">
+               <IonAvatar>
+                 <img src={item.img} alt="abc" />
+               </IonAvatar>
+             </div>
+             <div className="notifyCard-content">
+               <h2 style={{ fontFamily: "Montserrat-b", fontSize: "18px" }}>{item.name}</h2>
+               <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
+             </div>
+           </IonCard> */}
 
+          {/* Notifications Bar */}
+          <IonRow className="profileActionContainer">
+            <IonCol size="12">
+              <IonCard className="profileActionCard" onClick={() => setShowNotifyModal(true)}>
+                <IonCardContent style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
+                  <IonCardSubtitle>Notifications</IonCardSubtitle>
+                  <IonBadge slot="end" color="danger">{notifyCount}</IonBadge>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
 
           <IonRow className="profileActionContainer">
             <IonCol size="12">
