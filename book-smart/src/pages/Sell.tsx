@@ -41,6 +41,7 @@ import {
   IonImg,
   IonToast,
   IonFabList,
+  IonSpinner,
 } from "@ionic/react";
 import { Storage } from "@capacitor/storage";
 
@@ -107,6 +108,13 @@ const SellCardDettails = [
     cost: "200",
   }
 ];
+const tempbook = {
+        bookId: null,
+        bookName: "Book",
+        bookAuthor: "Roald Dahl",
+        bookDescription: "This is a book",
+        tags: ['Mystery', 'Fiction', 'Romance']
+      };
 const Sell: React.FC = () => {
   const [info, setInfo] = useState(SellCardDettails);
 
@@ -117,13 +125,16 @@ const Sell: React.FC = () => {
     { key: 3, label: "Fiction" },
   ]);
   const [segment, setSegment] = React.useState("activeTrades");
+  const [loading,setLoading] = React.useState(false);
   const [screen, setScreen] = React.useState("details");
   const [name, setName] = React.useState("");
   const [descr, setDescr] = React.useState("");
   const [price, setPrice] = React.useState("");
+  const [isbn,setISBN] = React.useState("");
   const [condition, setCondition] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [pincode, setPincode] = React.useState("");
+  const [book, setBook] = React.useState(tempbook);
   const [showToast1, setShowToast1] = useState(false);
 
   const [popoverState, setShowPopover] = useState({
@@ -152,17 +163,94 @@ const Sell: React.FC = () => {
     setScreen("choose");
   };
 
+  const getBookDetails = () => {
+    setLoading(true);
+    const url= APIURL + "v2/getBook";
+
+    axios.get(url+`?ISBN=${isbn}`,).then((resp)=>{
+      console.log(resp);
+      if(resp.status===200){
+        setName(resp.data.data.bookName)
+        setDescr(resp.data.data.bookDescription)
+        setBook(resp.data.data);
+        setLoading(false);
+      }
+    }).catch((err)=>{
+      console.log(err);
+    });
+    
+  }
+
   const changeScreen = () => {
+    console.log(screen);
     if (screen === "details") setScreen("upload");
     else {
 
       // get Book details from book name
-      const book = {
-        id: "123",
-        name: name,
-        author: "Roald Dahl",
-        tags: ['Mystery', 'Fiction', 'Romance']
-      };
+      // const tempbook = ;
+      let id = book.bookId;
+      console.log(id);
+      if(id===null){
+        const url = APIURL + "v2/addBooks";
+        axios.post(url,{
+          bookName:book.bookName,
+          bookAuthor:book.bookAuthor,
+          bookDescription: book.bookDescription,
+          ISBN: isbn,
+          tags: book.tags,
+        }).then((resp)=>{
+          console.log(resp);
+          if(resp.status===200){
+            id = resp.data.data.bookId;
+            console.log(id);
+            const url = APIURL + "v2/addBookAds";
+            let userId = "1233";
+            let username = "Aagam";
+            const a = localStorage.getItem("user");
+            if(a){
+              userId = JSON.parse(a).id;
+              username = JSON.parse(a).name;
+            }
+            axios.post(url,{
+              bookId: id,
+              sellerId: userId,
+              sellerName: username,
+              bookName: book.bookName,
+              bookPrice: price,
+              bookAuthor: book.bookAuthor,
+              bookCondition: condition,
+              tags: book.tags,
+              sellerAddress: address,
+              sellerPincode: pincode,
+              bookDescription: descr,
+              sold:false,
+
+
+
+            }).then((resp)=>{
+              console.log(resp);
+              if(resp.data.success)
+              {
+                setShowModal(false);
+                setScreen("details");
+                toaster1();
+              }
+            }).catch((e)=>{
+              console.log(e);
+            });
+          }
+        }).catch((e)=>{
+          console.log(e);
+        });
+        setBook(tempbook);
+        setName("");
+        setDescr("");
+        setPrice("");
+        setCondition("");
+        setAddress("");
+        setPincode("");
+        return;
+      }
 
       const url = APIURL + "v2/addBookAds";
       let userId = "1233";
@@ -172,19 +260,21 @@ const Sell: React.FC = () => {
         userId = JSON.parse(a).id;
         username = JSON.parse(a).name;
       }
+      console.log(id);
       
       axios.post(url,{
-        bookId: book.id,
+        bookId: id,
         sellerId: userId,
         sellerName: username,
-        bookName: book.name,
+        bookName: book.bookName,
         bookPrice: price,
-        bookAuthor: book.author,
+        bookAuthor: book.bookAuthor,
         bookCondition: condition,
         tags: book.tags,
         sellerAddress: address,
         sellerPincode: pincode,
         bookDescription: descr,
+        sold:false,
 
 
 
@@ -199,6 +289,14 @@ const Sell: React.FC = () => {
       }).catch((e)=>{
         console.log(e);
       });
+
+      setBook(tempbook);
+      setName("");
+      setDescr("");
+      setPrice("");
+      setCondition("");
+      setAddress("");
+      setPincode("");
       
     }
   };
@@ -370,6 +468,29 @@ const Sell: React.FC = () => {
                   </IonHeader>
                   {screen === "details" ? (
                     <>
+                    <div className="number1">
+                        <p
+                          style={{
+                            fontFamily: "Montserrat-SB !important",
+                            fontWeight: "bold",
+                            fontSize: "18",
+                          }}
+                        ></p>
+                        <IonItem style={{ marginTop: "10px" }}>
+                          {/* <IonLabel position="floating"> Email</IonLabel> */}
+                          <IonInput
+                            placeholder="Enter ISBN"
+                            // disabled={true}
+                            value={isbn}
+                            onIonChange={(e: any) => {
+                              setISBN(e.target.value);
+                            }}
+                          ></IonInput>
+                        </IonItem>
+                        <IonButton disabled={isbn.length !== 10 && isbn.length!== 13 && loading} onClick={()=>{getBookDetails()}}>
+                          {loading?<IonSpinner name="dots" />:"Get"}
+                        </IonButton>
+                      </div>
                       <div className="number">
                         <p
                           style={{
@@ -382,6 +503,7 @@ const Sell: React.FC = () => {
                           {/* <IonLabel position="floating"> Email</IonLabel> */}
                           <IonInput
                             type="text"
+                            disabled={true}
                             value={name}
                             placeholder="Enter Book name"
                             onIonChange={(e: any) => {
@@ -402,6 +524,7 @@ const Sell: React.FC = () => {
                           {/* <IonLabel position="floating"> Email</IonLabel> */}
                           <IonInput
                             placeholder="Enter Description"
+                            disabled={true}
                             value={descr}
                             onIonChange={(e: any) => {
                               setDescr(e.target.value);

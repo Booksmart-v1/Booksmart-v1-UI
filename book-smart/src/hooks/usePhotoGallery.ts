@@ -26,6 +26,7 @@ export function usePhotoGallery() {
       const loadSaved = async () => {
         const { value } = await Storage.get({ key: PHOTO_STORAGE_PATH });
         const photosInStorage = (value ? JSON.parse(value) : []) as UserPhoto[];
+        console.log(photosInStorage);
 
         if(!isPlatform('hybrid')){  
           for (let photo of photosInStorage) {

@@ -36,7 +36,7 @@ import ExploreContainer from "../components/ExploreContainer";
 import "./homePage.css";
 import logo from "../images/Booksmart.png";
 import star from "../images/star.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   headset,
   informationCircle,
@@ -44,6 +44,8 @@ import {
   toggle,
 } from "ionicons/icons";
 import Search from "./Search";
+import { APIURL } from "../constants";
+import axios from "axios";
 
 function doRefresh(event: CustomEvent<RefresherEventDetail>) {
   console.log("Begin async operation");
@@ -164,6 +166,29 @@ const Tab1: React.FC = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [checked, setChecked] = useState(false);
+
+  const getCardDetails=(lim: Number)=>{
+    const url=APIURL+"v2/getBookAds";
+    let userId = "1233";
+    let username = "Aagam";
+    const a = localStorage.getItem("user");
+    if(a){
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios.get(url+`?limit=${lim}&userId=${userId}`).then((resp)=>{
+      console.log(resp);
+    }).catch((e)=>{
+      console.log(e);
+    })
+  };
+
+  useEffect(()=>{
+    getCardDetails(10);
+  },[]);
+
+
+
 
   return (
     <IonPage className="backg">

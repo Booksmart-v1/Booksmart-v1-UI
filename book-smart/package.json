@@ -55,7 +55,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "dev": "concurrently \"ionic serve\"  \"cd ../BookSmartApp-v1/book-smart && ionic serve\"  \"nodemon app.js\" ",
+    "dev": "concurrently \"ionic serve\"  \"cd ../../BookSmartApp-v1-backend && nodemon\"  ",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
