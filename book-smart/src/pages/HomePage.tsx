@@ -47,118 +47,108 @@ import Search from "./Search";
 import { APIURL } from "../constants";
 import axios from "axios";
 
-function doRefresh(event: CustomEvent<RefresherEventDetail>) {
-  console.log("Begin async operation");
-
-  setTimeout(() => {
-    console.log("Async operation has ended");
-    event.detail.complete();
-  }, 2000);
-}
-
+const defaultImage = "https://via.placeholder.com/200/1200";
 const cardDetails = [
   {
-    pic: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    author: "Author One",
-    title: "The Great Gatsby",
-    descr:
+    bookImageUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    // avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    bookAuthor: "Author One",
+    bookName: "The Great Gatsby",
+    bookDescription:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
-    tags: "Love",
-    cost: "200",
-    seller: {
-      name: "Taarush Bhatia",
-      city: "Mumbai",
-      info: "This is me. This is where i rant. I hope you like me.",
-      negotiable: true,
-    },
-    interested: false,
+    tags: ["Love"],
+    bookPrice: "200",
+    sellerName: "Taarush Bhatia",
+    sellerId: "1",
+    sellerAddress: "Pune",
+    sellerPincode: "411037",
+    sold: false,
+    interestedBuyers: ["1", "2", "3"],
   },
   {
-    pic: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    author: "Author One",
-    title: "The Great Gatsby",
-    descr:
+    bookImageUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    // avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    bookAuthor: "Author One",
+    bookName: "The Great Gatsby",
+    bookDescription:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
-    tags: "Horror",
-    cost: "200",
-    seller: {
-      name: "Taarush Bhatia",
-      city: "Mumbai",
-      info: "This is me. This is where i rant. I hope you like me.",
-      negotiable: false,
-    },
-    interested: true,
+    tags: ["Love"],
+    bookPrice: "200",
+    sellerName: "Taarush Bhatia",
+    sellerId: "1",
+    sellerAddress: "Pune",
+    sellerPincode: "411037",
+    sold: false,
+    interestedBuyers: ["1", "2", "3"],
   },
   {
-    pic: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    author: "Author One",
-    title: "The Great Gatsby",
-    descr:
+    bookImageUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    // avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    bookAuthor: "Author One",
+    bookName: "The Great Gatsby",
+    bookDescription:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
-    tags: "Health",
-    cost: "200",
-    seller: {
-      name: "Taarush Bhatia",
-      city: "Mumbai",
-      info: "This is me. This is where i rant. I hope you like me.",
-      negotiable: false,
-    },
-    interested: false,
+    tags: ["Love"],
+    bookPrice: "200",
+    sellerName: "Taarush Bhatia",
+    sellerId: "1",
+    sellerAddress: "Pune",
+    sellerPincode: "411037",
+    sold: false,
+    interestedBuyers: ["1", "2", "3"],
   },
   {
-    pic: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    author: "Author One",
-    title: "The Great Gatsby",
-    descr:
+    bookImageUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    // avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    bookAuthor: "Author One",
+    bookName: "The Great Gatsby",
+    bookDescription:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
-    tags: "Fiction",
-    cost: "200",
-    seller: {
-      name: "Taarush Bhatia",
-      city: "Mumbai",
-      info: "This is me. This is where i rant. I hope you like me.",
-      negotiable: true,
-    },
-    interested: false,
+    tags: ["Love"],
+    bookPrice: "200",
+    sellerName: "Taarush Bhatia",
+    sellerId: "1",
+    sellerAddress: "Pune",
+    sellerPincode: "411037",
+    sold: false,
+    interestedBuyers: ["1", "2", "3"],
   },
   {
-    pic: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
-    author: "Author One",
-    title: "The Great Gatsby",
-    descr:
+    bookImageUrl: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    // avatar: "https://material.angular.io/assets/img/examples/shiba1.jpg",
+    bookAuthor: "Author One",
+    bookName: "The Great Gatsby",
+    bookDescription:
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
-    tags: "Health",
-    cost: "200",
-    seller: {
-      name: "Taarush Bhatia",
-      city: "Mumbai",
-      info: "This is me. This is where i rant. I hope you like me.",
-      negotiable: true,
-    },
-    interested: false,
+    tags: ["Love"],
+    bookPrice: "200",
+    sellerName: "Taarush Bhatia",
+    sellerId: "1",
+
+    sellerAddress: "Pune",
+    sellerPincode: "411037",
+    sold: false,
+    interestedBuyers: ["1", "2", "3"],
   },
 ];
 
+// const tempSellerDetails = {
+//   sellerName: "Taarush Bhatia",
+//   sellerId: "1",
+//   sellerAddress: "Pune",
+//   sellerPincode: "411037",
+//   interestedBuyers: ["1", "2", "3"],
+//   bookPrice: "200",
+// };
+
 const Tab1: React.FC = () => {
   const [info, setInfo] = useState(cardDetails);
-  // const handleDismiss = () => {
-  //   dismiss();
-  // };
-  // const [present, dismiss] = useIonModal(
-  //   onDismiss: handleDismiss,
-  // );
-  // const [showModal, setShowModal] = useState(false);
-  const [sellerDeets, setSellerDeets] = useState(cardDetails[0].seller);
+  const [sellerDeets, setSellerDeets] = useState(cardDetails[0]);
   const [interest, setInterest] = useState(false);
   const [showToast1, setShowToast1] = useState(false);
   const [showToast2, setShowToast2] = useState(false);
@@ -167,28 +157,46 @@ const Tab1: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [checked, setChecked] = useState(false);
 
-  const getCardDetails=(lim: Number)=>{
-    const url=APIURL+"v2/getBookAds";
+  const getCardDetails = (lim: Number) => {
+    const url = APIURL + "v2/getBookAds";
     let userId = "1233";
     let username = "Aagam";
     const a = localStorage.getItem("user");
-    if(a){
+    if (a) {
       userId = JSON.parse(a).id;
       username = JSON.parse(a).name;
     }
-    axios.get(url+`?limit=${lim}&userId=${userId}`).then((resp)=>{
-      console.log(resp);
-    }).catch((e)=>{
-      console.log(e);
-    })
+    axios
+      .get(url + `?limit=${lim}&userId=${userId}`)
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          let data = resp.data.data;
+          for (const element of data) {
+            element.bookImageUrl = element.bookImageUrl
+              ? element.bookImageUrl
+              : defaultImage;
+          }
+          setInfo(data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    getCardDetails(60);
+    console.log("Begin async operation");
 
-  useEffect(()=>{
-    getCardDetails(10);
-  },[]);
+    setTimeout(() => {
+      console.log("Async operation has ended");
+      event.detail.complete();
+    }, 2000);
+  }
 
-
-
+  useEffect(() => {
+    getCardDetails(60);
+  }, []);
 
   return (
     <IonPage className="backg">
@@ -323,7 +331,7 @@ const Tab1: React.FC = () => {
                       marginLeft: "30px",
                     }}
                   >
-                    The Great Gatsby
+                    {sellerDeets.bookName}
                   </h2>
                   <IonButtons slot="end">
                     <IonButton
@@ -359,13 +367,10 @@ const Tab1: React.FC = () => {
                     alignSelf: "center",
                     fontSize: 15,
                     fontWeight: "bolder",
-                    color: `${sellerDeets.negotiable ? "green" : "red"}`,
+                    color: `${true ? "green" : "red"}`,
                     marginBottom: "3px",
                   }}
-                >{`${sellerDeets.negotiable
-                  ? "Negotiable Price!"
-                  : "Not Negotiable!"
-                  }`}</p>
+                >{`${true ? "Negotiable Price!" : "Not Negotiable!"}`}</p>
                 <h2
                   style={{
                     alignSelf: "center",
@@ -389,18 +394,24 @@ const Tab1: React.FC = () => {
                     fontWeight: "bolder",
                     marginBottom: "8px",
                   }}
-                >{`${sellerDeets.name}`}</p>
-                <p
+                >{`${sellerDeets.sellerName}`}</p>
+
+                {/* STATUS OF SELLER FROM SELLER ID */}
+                {/* <p
                   style={{
                     fontSize: 15,
                     fontWeight: "lighter",
                     marginBottom: "15px",
                     marginLeft: "15px",
                   }}
-                >{`${sellerDeets.info}`}</p>
+                >{`${sellerDeets.info}`}</p> */}
                 <p style={{ fontSize: 18, marginBottom: "10px" }}>
                   {`City: `}
-                  <b>{sellerDeets.city}</b>
+                  <b>{sellerDeets.sellerAddress}</b>
+                </p>
+                <p style={{ fontSize: 18, marginBottom: "10px" }}>
+                  {`Price: `}
+                  <b>{sellerDeets.bookPrice}</b>
                 </p>
                 {/* <p
                   style={{
@@ -440,7 +451,7 @@ const Tab1: React.FC = () => {
                           setShowToast2(true);
                         } else {
                           setInterest(!interest);
-                          setMsg(`Request Sent to ${sellerDeets.name}!`);
+                          setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
                           setShowToast2(true);
                         }
                       }}
@@ -459,28 +470,64 @@ const Tab1: React.FC = () => {
                 <IonCard key={index} className="card">
                   <IonGrid
                     onClick={() => {
-                      setInterest(element.interested);
-                      setSellerDeets(element.seller);
+                      setInterest(false);
+                      setSellerDeets(element);
                       setShowModal(true);
-                    }}>
+                    }}
+                  >
                     <IonRow className="row">
                       <IonCol className="img" size="6">
-                        <img alt="Book" className="pic" src={element.pic} />
+                        <img
+                          alt="Book"
+                          className="pic"
+                          src={element.bookImageUrl}
+                        />
                       </IonCol>
                       <IonCol className="ion-no-padding" size="6">
                         <IonItem>
-                          <IonGrid
-                          >
+                          <IonGrid>
                             {/* <IonAvatar item-start> <img alt="avatar" src={element.avatar} /> </IonAvatar> */}
                             <IonHeader>
-                              <h3 style={{ fontSize: "14px" }}>{element.title}</h3>
+                              <h3 style={{ fontSize: "14px" }}>
+                                {element.bookName}
+                              </h3>
                             </IonHeader>
-                            <p style={{ fontSize: "13px" }}>{element.author}</p>
-                            <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", margin: "5px 0", padding: "5px 0" }}>
-                              <IonChip color="warning" style={{ color: "black", border: "1px solid black" }}>
-                                <IonLabel style={{ fontFamily: "Montserrat-sb" }}>{element.tags}</IonLabel>
-                              </IonChip>
-                              <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+                            <p style={{ fontSize: "13px" }}>
+                              {element.bookAuthor}
+                            </p>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-around",
+                                alignItems: "center",
+                                margin: "5px 0",
+                                padding: "5px 0",
+                              }}
+                            >
+                              {element.tags.map((tag, index) => (
+                                <IonChip
+                                  color="warning"
+                                  key={index}
+                                  style={{
+                                    color: "black",
+                                    border: "1px solid black",
+                                  }}
+                                >
+                                  <IonLabel
+                                    style={{ fontFamily: "Montserrat-sb" }}
+                                  >
+                                    {tag}
+                                  </IonLabel>
+                                </IonChip>
+                              ))}
+
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-around",
+                                  alignItems: "center",
+                                }}
+                              >
                                 <h6>{element.rating}</h6>
                                 <img alt="avatar" className="ava" src={star} />
                               </div>
@@ -488,7 +535,7 @@ const Tab1: React.FC = () => {
                           </IonGrid>
                         </IonItem>
                         <IonCardContent>
-                          <p>{element.descr}</p>
+                          <p>{element.bookDescription}</p>
                         </IonCardContent>
                       </IonCol>
                     </IonRow>
@@ -499,7 +546,7 @@ const Tab1: React.FC = () => {
           })}
         </IonGrid>
       </IonContent>
-    </IonPage >
+    </IonPage>
   );
 };
 
