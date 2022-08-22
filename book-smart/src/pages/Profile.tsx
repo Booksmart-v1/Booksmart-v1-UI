@@ -30,6 +30,11 @@ import {
   IonToast,
   IonAccordionGroup,
   IonAccordion,
+  IonBadge,
+  IonAvatar,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
 } from "@ionic/react";
 import "./Profile.css";
 import profile from "../images/profile-image.jpg";
@@ -49,9 +54,13 @@ import {
   heart,
   logOutOutline,
   logOut,
+  checkmarkOutline,
+  closeOutline,
   settingsOutline,
 } from "ionicons/icons";
-import { useState } from "react";
+
+import Logo from "../images/logo.png"
+import { useRef, useState } from "react";
 
 const Profile = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
@@ -72,8 +81,8 @@ const Profile = () => {
     var userId = JSON.parse(a).id;
     var username = JSON.parse(a).name;
   }
-  const [showModal, setShowModal] = useState(false)
-  // const [changeName, setChangeName] = useState(username);
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
+
   const [changeName, setChangeName] = useState("Username");
   const [changeUsername, setChangeUsername] = useState("Name");
   const [editName, setEditName] = useState(false);
@@ -94,8 +103,18 @@ const Profile = () => {
 
   const handleSaveChange = () => {
     // Save data here
-    setShowModal(false)
+    setShowSettingsModal(false)
   }
+
+  // TOGGLE REVISED TECHNIQUE
+  // var toggleCheck = [false, false, false, false];
+  // var showToggleToast = [false, false, false, false];
+  // const [checkToggleList, setCheckToggleList] = useState(toggleCheck)
+  // const [showTTList, setShowTTList] = useState(showToggleToast)
+  // const handletoggleSelection = (id: number) => {
+  //   setCheckToggleList(prevState => prevState.map((item, idx) => idx === id ? !item : item));
+  //   setShowTTList(prevState => prevState.map((item, idx) => idx === id ? !item : item));
+  // }
 
   const handleToggleChange1 = (e: any) => {
     setChecked1(e.detail.checked);
@@ -114,15 +133,73 @@ const Profile = () => {
     setShowToast4(true);
   }
 
+  // Notifications
+  const [showNotifyModal, setShowNotifyModal] = useState(false)
+  const notifyArray = [
+    {
+      id: 0,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: true,
+      time: "2 mins ago",
+      status: "X"
+    },
+    {
+      id: 1,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "10 mins ago",
+      status: "X"
+    },
+    {
+      id: 2,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: true,
+      time: "17 mins ago",
+      status: "X"
+    },
+    {
+      id: 3,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "25 mins ago",
+      status: "X"
+    },
+    {
+      id: 4,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "1 hr ago",
+      status: "X"
+    },
+  ]
+
+  const [notifyCount, setNotifyCount] = useState(notifyArray.filter((item) => { return (item.read === false) }).length)
+  const [updatedNotifyArray, setUpdatedNotifyArray] = useState(notifyArray)
+  const handleNotifyStatus = (id: number, str: String) => {
+    if (str === "Accepted") {
+      notifyArray[id].status = "Accepted"
+    }
+    else if (str === "Rejected") {
+      notifyArray[id].status = "Rejected"
+    }
+    setUpdatedNotifyArray(notifyArray)
+  }
+  console.log(updatedNotifyArray.map((item) => { return item.status }))
+
   return (
     <IonPage className="md">
       <IonHeader>
         <IonToolbar>
-          {/* <IonButtons slot="start">
-						<IonButton color="dark">
-							<IonIcon icon={ arrowBackOutline } />
-						</IonButton>
-					</IonButtons> */}
           <div
             style={{
               fontFamily: "Montserrat-B",
@@ -184,8 +261,7 @@ const Profile = () => {
                         alt="avatar"
                         style={{
                           borderRadius: "80px",
-                          height: "14vh",
-                          width: "60vw",
+                          height: "10vh",
                         }}
                       />
                       <IonIcon
@@ -302,8 +378,7 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <br />
-          <IonRow className="profileStatusContainer">
+          <IonRow className="profileStatusContainer" style={{ margin: "10px 0" }}>
             <IonCol size="12">
               <IonCard className="profileCard">
                 <IonCardHeader>
@@ -314,7 +389,7 @@ const Profile = () => {
                     </IonRow>
                     {editStatus ? (
                       <IonButton
-                        style={{ height: "25px" }}
+                        style={{ height: "20px" }}
                         onClick={() => setEditStatus(false)}
                       >
                         {"Save"}
@@ -345,8 +420,7 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <br />
-          <IonRow>
+          <IonRow style={{ margin: "10px 0" }}>
             <IonCol size="6">
               <IonCard className="profileCard">
                 <IonCardContent>
@@ -367,14 +441,12 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <br />
-
-
-          <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+          {/* Settings Modal; */}
+          <IonModal isOpen={showSettingsModal} onDidDismiss={() => setShowSettingsModal(false)}>
             <IonHeader>
               <IonToolbar style={{ padding: "10px 0" }}>
                 <IonButtons slot="end">
-                  <IonButton onClick={() => { setShowModal(false) }}>Close</IonButton>
+                  <IonButton onClick={() => { setShowSettingsModal(false) }}>Close</IonButton>
                 </IonButtons>
                 <IonTitle>
                   <h2 style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "24px" }}>Settings</h2>
@@ -410,8 +482,8 @@ const Profile = () => {
                 position="top"
                 duration={250}
               />
-              <IonAccordionGroup multiple={true} value="default">
-                <IonAccordion value="default">
+              <IonAccordionGroup multiple={true} value="notifyAccord">
+                <IonAccordion value="notifyAccord">
                   <IonItem slot="header" color="light">
                     <IonLabel style={{ fontFamily: "Montserrat-B" }}>Notification Settings</IonLabel>
                   </IonItem>
@@ -434,7 +506,7 @@ const Profile = () => {
                     </div>
                   </div>
                 </IonAccordion>
-                <IonAccordion value="default1">
+                <IonAccordion value="userAccord">
                   <IonItem slot="header" color="light">
                     <IonLabel style={{ fontFamily: "Montserrat-B" }}>User Settings</IonLabel>
                   </IonItem>
@@ -481,7 +553,7 @@ const Profile = () => {
                     </div>
                   </div>
                 </IonAccordion>
-                <IonAccordion value="default2">
+                <IonAccordion value="pickAccord">
                   <IonItem slot="header" color="light">
                     <IonLabel style={{ fontFamily: "Montserrat-B" }}>Change Interests</IonLabel>
                   </IonItem>
@@ -490,15 +562,16 @@ const Profile = () => {
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>
-
             </IonContent>
             <IonFooter>
               <button className='long-cta' onClick={handleSaveChange}>Save Changes</button>
             </IonFooter>
           </IonModal>
+
+          {/* Settings Bar */}
           <IonRow className="profileActionContainer">
             <IonCol size="12">
-              <IonCard className="profileActionCard" onClick={() => setShowModal(true)}>
+              <IonCard className="profileActionCard" onClick={() => setShowSettingsModal(true)}>
                 <IonCardContent>
                   <IonRow className="ion-justify-content-between">
                     <IonCardSubtitle>Settings</IonCardSubtitle>
@@ -508,7 +581,103 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
+          {/* Notifications Modal */}
+          <IonModal isOpen={showNotifyModal} onDidDismiss={() => setShowNotifyModal(false)}>
+            <IonHeader>
+              <IonToolbar style={{ padding: "10px 0" }}>
+                <IonButtons slot="end">
+                  <IonButton onClick={() => { setShowNotifyModal(false) }}>Close</IonButton>
+                </IonButtons>
+                <IonTitle>
+                  <h2 style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "24px", margin: "5px 0" }}>Notifications</h2>
+                </IonTitle>
+              </IonToolbar>
+            </IonHeader>
+            <IonContent>
+              <div className="notifyCards-area">
+                {notifyArray.map((item, idx) => {
+                  return item.read ? (
+                    <IonItemSliding className='notifyCard' key={idx}>
+                      {/* <IonItem lines='none' color={(updatedNotifyArray[idx].status === "X" ? "" : (updatedNotifyArray[idx].status === "Accepted" ? "success" : "danger"))}> */}
+                      <IonItem lines='none'>
+                        <div className="notifyCard-img">
+                          <IonAvatar>
+                            <img src={item.img} alt="abc" />
+                          </IonAvatar>
+                        </div>
+                        <div className="notifyCard-content">
+                          <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
+                        </div>
+                        <div className="notify-time">
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.time}</p>
+                        </div>
+                      </IonItem>
+                      <IonItemOptions side="start" onClick={() => { handleNotifyStatus(idx, "Accepted") }}>
+                        <IonItemOption color="success" >
+                          <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
+                          <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
+                        </IonItemOption>
+                      </IonItemOptions>
+                      <IonItemOptions side="end" onClick={() => { handleNotifyStatus(idx, "Rejected") }}>
+                        <IonItemOption color="danger">
+                          <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
+                          <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
+                        </IonItemOption>
+                      </IonItemOptions>
+                    </IonItemSliding>
+                  ) : (
+                    <IonItemSliding className='notifyCard' key={idx}>
+                      {/* <IonItem lines='none' color={(updatedNotifyArray[idx].status === "X" ? "light" : (updatedNotifyArray[idx].status === "Accepted" ? "success" : "danger"))}> */}
+                      <IonItem lines='none'>
+                        {/* <div style={{ position: "absolute", top: 0, left: "-10px", backgroundColor: "lightblue", width: "15px", height: "15px", borderRadius: "50%" }}></div> */}
+                        <div className="notifyCard-img">
+                          <IonAvatar>
+                            <img src={item.img} alt="profileImg" />
+                          </IonAvatar>
+                        </div>
+                        <div className="notifyCard-content">
+                          <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
+                        </div>
+                        <div className="notify-time">
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.time}</p>
+                          <div className="notify-unread"></div>
+                        </div>
+                      </IonItem>
+                      <IonItemOptions side="start" onClick={() => { handleNotifyStatus(idx, "Accepted") }}>
+                        <IonItemOption color="success">
+                          <IonPopover trigger="click-trigger" triggerAction="click">
+                            <IonContent class="ion-padding">Hello World!</IonContent>
+                          </IonPopover>
+                          <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
+                          <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
+                        </IonItemOption>
+                      </IonItemOptions>
+                      <IonItemOptions side="end" onClick={() => { handleNotifyStatus(idx, "Rejected") }}>
+                        <IonItemOption color="danger">
+                          <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
+                          <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
+                        </IonItemOption>
+                      </IonItemOptions>
+                    </IonItemSliding>
+                  );
+                })}
+              </div>
+            </IonContent>
+          </IonModal>
 
+          {/* Notifications Bar */}
+          <IonRow className="profileActionContainer">
+            <IonCol size="12">
+              <IonCard className="profileActionCard" onClick={() => setShowNotifyModal(true)}>
+                <IonCardContent style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
+                  <IonCardSubtitle>Notifications</IonCardSubtitle>
+                  <IonBadge slot="end" color="danger">{notifyCount}</IonBadge>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
 
           <IonRow className="profileActionContainer">
             <IonCol size="12">

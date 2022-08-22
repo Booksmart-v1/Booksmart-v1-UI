@@ -3,6 +3,7 @@
   color: var(--bs-secondary);
   font-family: 'Montserrat-SB';
 }
+
 .follow-button {
   --background-activated: transparent;
   --background-focused: transparent;
@@ -51,24 +52,55 @@
   color: var(--bs-pText);
   font-size: 20px;
 }
+
 .profile-orders {
   font-family: 'Montserrat-SB' !important;
   color: var(--bs-pText);
   font-size: 20px;
 }
 
-/* .div .set-status {
+.notifyCards-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.notifyCard {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid gray;
+  width: 100%;
+}
+
+.notify-unread{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: lightblue;
+  margin: 0 5px;
+}
+
+.notifyCard-content {
+  height: 100%;
+  margin-left: 20px;
+}
+
+.notifyCard-content p {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.notify-time {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  background-color: #555;
-  color: white;
-  font-size: 16px;
-  padding: 12px 24px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  text-align: center;
-} */
+  top: 20px;
+  right: 15px;
+  width: 30%;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
