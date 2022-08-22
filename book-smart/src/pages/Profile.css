@@ -61,71 +61,46 @@
 
 .notifyCards-area {
   width: 100%;
-  padding: 10px 15px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  min-height: 100vh;
 }
 
 .notifyCard {
-  margin: 10px 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  min-height: 110px;
-  /* box-shadow: 0 5px 0 0 #eb445a; */
-  /* border-bottom: 3px solid #2dd36f; */
   position: relative;
+  border-bottom: 1px solid gray;
+  width: 100%;
 }
 
-.notifyCard-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.notify-unread{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: lightblue;
+  margin: 0 5px;
 }
 
 .notifyCard-content {
-  max-width: 70%;
   height: 100%;
+  margin-left: 20px;
 }
 
 .notifyCard-content p {
   margin: 10px 0;
+  font-size: 14px;
 }
 
-/* .notify-accept-badge {
+.notify-time {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  min-width: 60px;
-  background-color: #2dd36f;
-  padding: 5px;
-  color: black;
-  font-size: 12px;
-  border-radius: 10px;
-}
-
-.notify-reject-badge {
-  position: absolute;
-  top: 5px;
-  left: 70px;
-  min-width: 60px;
-  background-color: red;
-  padding: 5px;
-  color: black;
-  font-size: 12px;
-  border-radius: 10px;
-} */
-
-.notify-unread{
-  border-bottom: 3px solid red;
-}
-
-.notify-time{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  min-width: 50px;
+  top: 20px;
+  right: 15px;
+  width: 30%;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

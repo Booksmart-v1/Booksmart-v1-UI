@@ -32,6 +32,9 @@ import {
   IonAccordion,
   IonBadge,
   IonAvatar,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
 } from "@ionic/react";
 import "./Profile.css";
 import profile from "../images/profile-image.jpg";
@@ -51,11 +54,13 @@ import {
   heart,
   logOutOutline,
   logOut,
+  checkmarkOutline,
+  closeOutline,
   settingsOutline,
 } from "ionicons/icons";
 
 import Logo from "../images/logo.png"
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const Profile = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
@@ -77,54 +82,6 @@ const Profile = () => {
     var username = JSON.parse(a).name;
   }
   const [showSettingsModal, setShowSettingsModal] = useState(false)
-
-  // Notifications
-  const [showNotifyModal, setShowNotifyModal] = useState(false)
-  const notifyArray = [
-    {
-      id: 0,
-      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
-      name: "Name Surname",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: true,
-      time: "2 mins ago"
-    },
-    {
-      id: 1,
-      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
-      name: "Name Surname",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: false,
-      time: "10 mins ago"
-    },
-    {
-      id: 2,
-      img: Logo,
-      name: "BookSmart",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: true,
-      time: "17 mins ago"
-    },
-    {
-      id: 3,
-      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
-      name: "Name Surname",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: false,
-      time: "25 mins ago"
-    },
-    {
-      id: 4,
-      img: Logo,
-      name: "BookSmart",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: false,
-      time: "1 hr ago"
-    },
-  ]
-  // const [notifyList, setNotifyList] = useState(notifyArray);
-  // const [unread, setunread] = useState()
-  const [notifyCount, setNotifyCount] = useState(notifyArray.filter((item) => { return (item.read === false) }).length)
 
   const [changeName, setChangeName] = useState("Username");
   const [changeUsername, setChangeUsername] = useState("Name");
@@ -149,6 +106,16 @@ const Profile = () => {
     setShowSettingsModal(false)
   }
 
+  // TOGGLE REVISED TECHNIQUE
+  // var toggleCheck = [false, false, false, false];
+  // var showToggleToast = [false, false, false, false];
+  // const [checkToggleList, setCheckToggleList] = useState(toggleCheck)
+  // const [showTTList, setShowTTList] = useState(showToggleToast)
+  // const handletoggleSelection = (id: number) => {
+  //   setCheckToggleList(prevState => prevState.map((item, idx) => idx === id ? !item : item));
+  //   setShowTTList(prevState => prevState.map((item, idx) => idx === id ? !item : item));
+  // }
+
   const handleToggleChange1 = (e: any) => {
     setChecked1(e.detail.checked);
     setShowToast1(true);
@@ -165,6 +132,69 @@ const Profile = () => {
     setChecked4(e.detail.checked);
     setShowToast4(true);
   }
+
+  // Notifications
+  const [showNotifyModal, setShowNotifyModal] = useState(false)
+  const notifyArray = [
+    {
+      id: 0,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: true,
+      time: "2 mins ago",
+      status: "X"
+    },
+    {
+      id: 1,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "10 mins ago",
+      status: "X"
+    },
+    {
+      id: 2,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: true,
+      time: "17 mins ago",
+      status: "X"
+    },
+    {
+      id: 3,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "25 mins ago",
+      status: "X"
+    },
+    {
+      id: 4,
+      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
+      name: "Name Surname",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      read: false,
+      time: "1 hr ago",
+      status: "X"
+    },
+  ]
+
+  const [notifyCount, setNotifyCount] = useState(notifyArray.filter((item) => { return (item.read === false) }).length)
+  const [updatedNotifyArray, setUpdatedNotifyArray] = useState(notifyArray)
+  const handleNotifyStatus = (id: number, str: String) => {
+    if (str === "Accepted") {
+      notifyArray[id].status = "Accepted"
+    }
+    else if (str === "Rejected") {
+      notifyArray[id].status = "Rejected"
+    }
+    setUpdatedNotifyArray(notifyArray)
+  }
+  console.log(updatedNotifyArray.map((item) => { return item.status }))
 
   return (
     <IonPage className="md">
@@ -565,10 +595,11 @@ const Profile = () => {
             </IonHeader>
             <IonContent>
               <div className="notifyCards-area">
-                <div className="notifyCards-area">
-                  {notifyArray.map((item, idx) => {
-                    return item.read ? (
-                      <IonCard className="notifyCard">
+                {notifyArray.map((item, idx) => {
+                  return item.read ? (
+                    <IonItemSliding className='notifyCard' key={idx}>
+                      {/* <IonItem lines='none' color={(updatedNotifyArray[idx].status === "X" ? "" : (updatedNotifyArray[idx].status === "Accepted" ? "success" : "danger"))}> */}
+                      <IonItem lines='none'>
                         <div className="notifyCard-img">
                           <IonAvatar>
                             <img src={item.img} alt="abc" />
@@ -579,14 +610,30 @@ const Profile = () => {
                           <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
                         </div>
                         <div className="notify-time">
-                          <p style={{ fontFamily: "Montserrat-sb", textAlign: "center" }}>{item.time}</p>
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.time}</p>
                         </div>
-                      </IonCard>
-                    ) : (
-                      <IonCard className="notifyCard notify-unread">
+                      </IonItem>
+                      <IonItemOptions side="start" onClick={() => { handleNotifyStatus(idx, "Accepted") }}>
+                        <IonItemOption color="success" >
+                          <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
+                          <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
+                        </IonItemOption>
+                      </IonItemOptions>
+                      <IonItemOptions side="end" onClick={() => { handleNotifyStatus(idx, "Rejected") }}>
+                        <IonItemOption color="danger">
+                          <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
+                          <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
+                        </IonItemOption>
+                      </IonItemOptions>
+                    </IonItemSliding>
+                  ) : (
+                    <IonItemSliding className='notifyCard' key={idx}>
+                      {/* <IonItem lines='none' color={(updatedNotifyArray[idx].status === "X" ? "light" : (updatedNotifyArray[idx].status === "Accepted" ? "success" : "danger"))}> */}
+                      <IonItem lines='none'>
+                        {/* <div style={{ position: "absolute", top: 0, left: "-10px", backgroundColor: "lightblue", width: "15px", height: "15px", borderRadius: "50%" }}></div> */}
                         <div className="notifyCard-img">
                           <IonAvatar>
-                            <img src={item.img} alt="abc" />
+                            <img src={item.img} alt="profileImg" />
                           </IonAvatar>
                         </div>
                         <div className="notifyCard-content">
@@ -594,27 +641,31 @@ const Profile = () => {
                           <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
                         </div>
                         <div className="notify-time">
-                          <p style={{ fontFamily: "Montserrat-sb", textAlign: "center" }}>{item.time}</p>
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.time}</p>
+                          <div className="notify-unread"></div>
                         </div>
-                      </IonCard>
-                    );
-                  })}
-                </div>
+                      </IonItem>
+                      <IonItemOptions side="start" onClick={() => { handleNotifyStatus(idx, "Accepted") }}>
+                        <IonItemOption color="success">
+                          <IonPopover trigger="click-trigger" triggerAction="click">
+                            <IonContent class="ion-padding">Hello World!</IonContent>
+                          </IonPopover>
+                          <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
+                          <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
+                        </IonItemOption>
+                      </IonItemOptions>
+                      <IonItemOptions side="end" onClick={() => { handleNotifyStatus(idx, "Rejected") }}>
+                        <IonItemOption color="danger">
+                          <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
+                          <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
+                        </IonItemOption>
+                      </IonItemOptions>
+                    </IonItemSliding>
+                  );
+                })}
               </div>
             </IonContent>
           </IonModal>
-          {/* 
-           <IonCard className="notifyCard">
-             <div className="notifyCard-img">
-               <IonAvatar>
-                 <img src={item.img} alt="abc" />
-               </IonAvatar>
-             </div>
-             <div className="notifyCard-content">
-               <h2 style={{ fontFamily: "Montserrat-b", fontSize: "18px" }}>{item.name}</h2>
-               <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
-             </div>
-           </IonCard> */}
 
           {/* Notifications Bar */}
           <IonRow className="profileActionContainer">
