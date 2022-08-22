@@ -161,7 +161,7 @@ const PickInterests: React.FC = () => {
         ]}
       />
       <button onClick={handleClick} className="long-cta">
-        Select
+        Continue
       </button>
       <IonRippleEffect></IonRippleEffect>
     </IonPage>
