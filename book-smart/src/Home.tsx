@@ -51,7 +51,6 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   var selectArray: boolean[] = [true, false, false, false, false];
   const [refresh, setRefresh] = React.useState(false);
   const [isSelected, setIsSelected] = React.useState<boolean[]>(selectArray);
-  console.log(isSelected)
   const handleSelect = (id: number) => {
     setIsSelected(prevState => prevState.map((item, idx) => idx === id ? true : false));
   }

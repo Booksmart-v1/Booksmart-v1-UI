@@ -30,6 +30,9 @@ import {
   IonIcon,
   IonToggle,
   IonItemDivider,
+  IonList,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import ExploreContainer from "../components/ExploreContainer";
@@ -42,6 +45,8 @@ import {
   informationCircle,
   starHalfSharp,
   toggle,
+  closeCircle,
+  pin
 } from "ionicons/icons";
 import Search from "./Search";
 import { APIURL } from "../constants";
@@ -148,6 +153,7 @@ const cardDetails = [
 
 const Tab1: React.FC = () => {
   const [info, setInfo] = useState(cardDetails);
+  const [filteredInfo, setFilteredInfo] = useState(cardDetails);
   const [sellerDeets, setSellerDeets] = useState(cardDetails[0]);
   const [interest, setInterest] = useState(false);
   const [showToast1, setShowToast1] = useState(false);
@@ -178,6 +184,7 @@ const Tab1: React.FC = () => {
               : defaultImage;
           }
           setInfo(data);
+          setFilteredInfo(data);
         }
       })
       .catch((e) => {
@@ -197,6 +204,42 @@ const Tab1: React.FC = () => {
   useEffect(() => {
     getCardDetails(60);
   }, []);
+
+  // Searched Chips
+  const [refresh, setRefresh] = useState(false);
+  const [chipData, setChipData] = useState([
+    { key: 0, label: "Health", hide: false },
+    { key: 1, label: "Love", hide: false },
+    { key: 2, label: "Horror", hide: false },
+    { key: 3, label: "Fiction", hide: false },
+  ]);
+  const hideRecent = (i: number) => {
+    let chips = chipData;
+    chips[i].hide = true;
+    setChipData(chips);
+    setRefresh(!refresh);
+  };
+
+  const [selectedChipsArr, setSelectedChipsArr] = useState([]);
+  const handleInputChange = (chipArr: any) => {
+    setSelectedChipsArr(chipArr);
+    if (chipArr.length > 0) {
+      let lowerCasedChips = chipArr.map((chip: string) => { return chip.toLowerCase() });
+      var filterData = []
+      for (let i = 0; i < lowerCasedChips.length; i++) {
+        filterData = info.filter((item) => {
+          if (item.tags.map((tag) => { return tag.toLowerCase() }).includes(lowerCasedChips[i])) {
+            return item;
+          }
+        })
+        setFilteredInfo(filterData)
+      }
+    }
+    else {
+      setFilteredInfo(info);
+    }
+    console.log("ChipArr: ", chipArr);
+  }
 
   return (
     <IonPage className="backg">
@@ -258,13 +301,39 @@ const Tab1: React.FC = () => {
         </IonRefresher>
         <IonHeader className="header">
           <IonToolbar className="toolbar">
-            <br />
-            {/* <IonTitle class="text-align-left">BOOKS</IonTitle> */}
-            <br />
-            <IonSearchbar
+            {/* <IonSearchbar
               showCancelButton="focus"
-              placeholder="Click to Search "
-            ></IonSearchbar>
+              placeholder="Click to Search"
+            ></IonSearchbar> */}
+            <IonList style={{ margin: "10px auto", width: "80%" }}>
+              <IonItem >
+                <IonSelect placeholder="Select interest" multiple={true} selectedText=""
+                  onIonChange={(e) => handleInputChange(e.detail.value)}
+                >
+                  {chipData.map((item) => (<IonSelectOption value={item.label}>{item.label}</IonSelectOption>))}
+                </IonSelect>
+              </IonItem>
+            </IonList>
+            <br />
+            <div className="searching-chips">
+              {selectedChipsArr.map((chip, i) =>
+                <IonChip
+                  className="searching-items"
+                  key={i}
+                  outline
+                  color="primary"
+                >
+                  <IonIcon icon={pin} />
+                  <IonLabel style={{ padding: "6px" }}>{chip}</IonLabel>
+                  {/* <IonIcon
+                    style={{ height: "20px" }}
+                    onClick={() => hideRecent(i)}
+                    icon={closeCircle}
+                  /> */}
+                </IonChip>
+              )}
+            </div>
+
             {/* <IonModal
               isOpen={showModal}
               className="modal"
@@ -289,7 +358,6 @@ const Tab1: React.FC = () => {
               </IonFooter>
             </IonModal> */}
           </IonToolbar>
-
           <IonGrid className="chips">
             <span className="chip">
               <IonChip color="warning">
@@ -463,90 +531,39 @@ const Tab1: React.FC = () => {
               </IonFooter>
             </IonContent>
           </IonModal>
-          {info.map((element, index) => {
+          {/* {info.map((element, index) => { */}
+          {filteredInfo.map((element, index) => {
             return (
               <>
-                <br />
-                <IonCard key={index} className="card">
-                  <IonGrid
-                    onClick={() => {
-                      setInterest(false);
-                      setSellerDeets(element);
-                      setShowModal(true);
-                    }}
-                  >
-                    <IonRow className="row">
-                      <IonCol className="img" size="6">
-                        <img
-                          alt="Book"
-                          className="pic"
-                          src={element.bookImageUrl}
-                        />
-                      </IonCol>
-                      <IonCol className="ion-no-padding" size="6">
-                        <IonItem>
-                          <IonGrid>
-                            {/* <IonAvatar item-start> <img alt="avatar" src={element.avatar} /> </IonAvatar> */}
-                            <IonHeader>
-                              <h3 style={{ fontSize: "14px" }}>
-                                {element.bookName}
-                              </h3>
-                            </IonHeader>
-                            <p style={{ fontSize: "13px" }}>
-                              {element.bookAuthor}
-                            </p>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-around",
-                                alignItems: "center",
-                                margin: "5px 0",
-                                padding: "5px 0",
-                              }}
-                            >
-                              {element.tags.map((tag, index) => (
-                                <IonChip
-                                  color="warning"
-                                  key={index}
-                                  style={{
-                                    color: "black",
-                                    border: "1px solid black",
-                                  }}
-                                >
-                                  <IonLabel
-                                    style={{ fontFamily: "Montserrat-sb" }}
-                                  >
-                                    {tag}
-                                  </IonLabel>
-                                </IonChip>
-                              ))}
-
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "space-around",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <h6>{element.rating}</h6>
-                                <img alt="avatar" className="ava" src={star} />
-                              </div>
-                            </div>
-                          </IonGrid>
-                        </IonItem>
-                        <IonCardContent>
-                          <p>{element.bookDescription}</p>
-                        </IonCardContent>
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
+                <IonCard key={index} className="homepage-card">
+                  <div className="homepage-card-img">
+                    <img alt="Book" className="pic" src={element.bookImageUrl} />
+                  </div>
+                  <div className="homepage-card-content">
+                    <IonCardTitle style={{ fontSize: "18px", fontFamily: "Montserrat-b" }}>
+                      {element.bookName}
+                    </IonCardTitle>
+                    <IonCardSubtitle style={{ fontSize: "12px", fontFamily: "Montserrat-sb" }}>
+                      {element.bookAuthor}
+                    </IonCardSubtitle>
+                    <div className="homepage-card-chips">
+                      {element.tags.map((tag, index) => (
+                        <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", margin: "0 5px", background: "var(--bs-pBg)" }}>
+                          <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "13px", textTransform: "capitalize" }}>{tag}</IonLabel>
+                        </IonChip>
+                      ))}
+                    </div>
+                    <div>
+                      <p style={{ fontSize: "18px", fontFamily: "Montserrat-SB" }}>Price: ₹ {element.bookPrice}</p>
+                    </div>
+                  </div>
                 </IonCard>
               </>
             );
           })}
         </IonGrid>
       </IonContent>
-    </IonPage>
+    </IonPage >
   );
 };
 

@@ -189,7 +189,7 @@ const Profile = () => {
   ]
 
   const [updatedNotifyArray, setUpdatedNotifyArray] = useState(notifyArray)
-  
+
   // PopOver Box
   const handlePopOverClick = (id: number) => {
     setUpdatedNotifyArray(updatedNotifyArray.map(item => item.id == id ? { ...item, isPopOverOpen: !item.isPopOverOpen, read: true } : item));
@@ -580,7 +580,7 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          
+
           {/* Notifications Modal */}
           <IonModal isOpen={showNotifyModal} onDidDismiss={() => setShowNotifyModal(false)}>
             <IonHeader>
@@ -597,15 +597,15 @@ const Profile = () => {
               <div className="notifyCards-area">
                 {updatedNotifyArray.map((item, idx) => {
                   return (
-                    <IonItemSliding className='notifyCard' key={idx} onClick={() => { handlePopOverClick(idx) }} id={String(idx)}>
+                    <IonItemSliding className='notifyCard' key={idx}>
                       {/* <IonItem lines='none' color={(updatedNotifyArray[idx].status === "X" ? "" : (updatedNotifyArray[idx].status === "Accepted" ? "success" : "danger"))}> */}
-                      <IonItem lines='none'>
+                      <IonItem lines='none' onClick={() => { handlePopOverClick(idx) }} id={String(idx)}>
                         <div className="notifyCard-img">
                           <IonAvatar>
                             <img src={item.img} alt="abc" />
                           </IonAvatar>
                         </div>
-                        <div className="notifyCard-content">
+                        <div className="notifyCard-content" >
                           <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
                           <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
                         </div>
