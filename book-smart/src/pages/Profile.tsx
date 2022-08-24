@@ -143,7 +143,8 @@ const Profile = () => {
       description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
       read: true,
       time: "2 mins ago",
-      status: "X"
+      status: "X",
+      isPopOverOpen: false
     },
     {
       id: 1,
@@ -152,7 +153,8 @@ const Profile = () => {
       description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
       read: false,
       time: "10 mins ago",
-      status: "X"
+      status: "X",
+      isPopOverOpen: false
     },
     {
       id: 2,
@@ -161,7 +163,8 @@ const Profile = () => {
       description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
       read: true,
       time: "17 mins ago",
-      status: "X"
+      status: "X",
+      isPopOverOpen: false
     },
     {
       id: 3,
@@ -170,7 +173,8 @@ const Profile = () => {
       description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
       read: false,
       time: "25 mins ago",
-      status: "X"
+      status: "X",
+      isPopOverOpen: false
     },
     {
       id: 4,
@@ -179,22 +183,17 @@ const Profile = () => {
       description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
       read: false,
       time: "1 hr ago",
-      status: "X"
+      status: "X",
+      isPopOverOpen: false
     },
   ]
 
-  const [notifyCount, setNotifyCount] = useState(notifyArray.filter((item) => { return (item.read === false) }).length)
   const [updatedNotifyArray, setUpdatedNotifyArray] = useState(notifyArray)
-  const handleNotifyStatus = (id: number, str: String) => {
-    if (str === "Accepted") {
-      notifyArray[id].status = "Accepted"
-    }
-    else if (str === "Rejected") {
-      notifyArray[id].status = "Rejected"
-    }
-    setUpdatedNotifyArray(notifyArray)
+
+  // PopOver Box
+  const handlePopOverClick = (id: number) => {
+    setUpdatedNotifyArray(updatedNotifyArray.map(item => item.id == id ? { ...item, isPopOverOpen: !item.isPopOverOpen, read: true } : item));
   }
-  console.log(updatedNotifyArray.map((item) => { return item.status }))
 
   return (
     <IonPage className="md">
@@ -581,6 +580,7 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
+
           {/* Notifications Modal */}
           <IonModal isOpen={showNotifyModal} onDidDismiss={() => setShowNotifyModal(false)}>
             <IonHeader>
@@ -595,73 +595,54 @@ const Profile = () => {
             </IonHeader>
             <IonContent>
               <div className="notifyCards-area">
-                {notifyArray.map((item, idx) => {
-                  return item.read ? (
+                {updatedNotifyArray.map((item, idx) => {
+                  return (
                     <IonItemSliding className='notifyCard' key={idx}>
                       {/* <IonItem lines='none' color={(updatedNotifyArray[idx].status === "X" ? "" : (updatedNotifyArray[idx].status === "Accepted" ? "success" : "danger"))}> */}
-                      <IonItem lines='none'>
+                      <IonItem lines='none' onClick={() => { handlePopOverClick(idx) }} id={String(idx)}>
                         <div className="notifyCard-img">
                           <IonAvatar>
                             <img src={item.img} alt="abc" />
                           </IonAvatar>
                         </div>
-                        <div className="notifyCard-content">
+                        <div className="notifyCard-content" >
                           <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
                           <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
                         </div>
                         <div className="notify-time">
                           <p style={{ fontFamily: "Montserrat-sb" }}>{item.time}</p>
+                          <div className={item.read ? "" : "notify-unread"}></div>
                         </div>
                       </IonItem>
-                      <IonItemOptions side="start" onClick={() => { handleNotifyStatus(idx, "Accepted") }}>
+                      <IonPopover isOpen={updatedNotifyArray[idx].isPopOverOpen} side="bottom" alignment="center" trigger={String(idx)} size="cover">
+                        <IonContent class="ion-padding">
+                          <div style={{ padding: "0 10px" }}>
+                            <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
+                            <p style={{ fontFamily: "Montserrat-sb", margin: "20px 0", fontSize: "14px" }}>{item.description}</p>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <button onClick={(e) => {
+                              handlePopOverClick(idx)
+                            }} className="popover-close-btn">Close</button>
+                          </div>
+                        </IonContent>
+                      </IonPopover>
+                      {/* <IonItemOptions side="start" onClick={() => { handleNotifyStatus(idx, "Accepted") }}> */}
+                      <IonItemOptions side="start">
                         <IonItemOption color="success" >
                           <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
                           <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
                         </IonItemOption>
                       </IonItemOptions>
-                      <IonItemOptions side="end" onClick={() => { handleNotifyStatus(idx, "Rejected") }}>
+                      {/* <IonItemOptions side="end" onClick={() => { handleNotifyStatus(idx, "Rejected") }}> */}
+                      <IonItemOptions side="end">
                         <IonItemOption color="danger">
                           <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
                           <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
                         </IonItemOption>
                       </IonItemOptions>
                     </IonItemSliding>
-                  ) : (
-                    <IonItemSliding className='notifyCard' key={idx}>
-                      {/* <IonItem lines='none' color={(updatedNotifyArray[idx].status === "X" ? "light" : (updatedNotifyArray[idx].status === "Accepted" ? "success" : "danger"))}> */}
-                      <IonItem lines='none'>
-                        {/* <div style={{ position: "absolute", top: 0, left: "-10px", backgroundColor: "lightblue", width: "15px", height: "15px", borderRadius: "50%" }}></div> */}
-                        <div className="notifyCard-img">
-                          <IonAvatar>
-                            <img src={item.img} alt="profileImg" />
-                          </IonAvatar>
-                        </div>
-                        <div className="notifyCard-content">
-                          <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
-                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
-                        </div>
-                        <div className="notify-time">
-                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.time}</p>
-                          <div className="notify-unread"></div>
-                        </div>
-                      </IonItem>
-                      <IonItemOptions side="start" onClick={() => { handleNotifyStatus(idx, "Accepted") }}>
-                        <IonItemOption color="success">
-                          <IonPopover trigger="click-trigger" triggerAction="click">
-                            <IonContent class="ion-padding">Hello World!</IonContent>
-                          </IonPopover>
-                          <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
-                          <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
-                        </IonItemOption>
-                      </IonItemOptions>
-                      <IonItemOptions side="end" onClick={() => { handleNotifyStatus(idx, "Rejected") }}>
-                        <IonItemOption color="danger">
-                          <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
-                          <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
-                        </IonItemOption>
-                      </IonItemOptions>
-                    </IonItemSliding>
-                  );
+                  )
                 })}
               </div>
             </IonContent>
@@ -673,7 +654,7 @@ const Profile = () => {
               <IonCard className="profileActionCard" onClick={() => setShowNotifyModal(true)}>
                 <IonCardContent style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
                   <IonCardSubtitle>Notifications</IonCardSubtitle>
-                  <IonBadge slot="end" color="danger">{notifyCount}</IonBadge>
+                  <IonBadge slot="end" color="danger">{updatedNotifyArray.filter((item) => { return (item.read === false) }).length}</IonBadge>
                 </IonCardContent>
               </IonCard>
             </IonCol>

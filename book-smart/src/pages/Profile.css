@@ -73,16 +73,9 @@
   align-items: center;
   position: relative;
   border-bottom: 1px solid gray;
-  width: 100%;
+  width: 98%;
 }
 
-.notify-unread{
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background-color: lightblue;
-  margin: 0 5px;
-}
 
 .notifyCard-content {
   height: 100%;
@@ -101,6 +94,29 @@
   width: 30%;
   font-size: 13px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+}
+
+.notify-unread {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: lightblue;
+  margin: 0 5px;
+}
+
+ion-popover {
+  --backdrop-opacity: 0.5;
+}
+
+.popover-close-btn {
+  background: var(--bs-pText) !important;
+  color: #ffffff;
+  font-family: "Montserrat-b";
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px;
+  width: 50%;
+  font-size: 14px;
 }
