@@ -433,11 +433,11 @@ const Sell: React.FC = () => {
                             {element.bookAuthor}
                           </IonCardSubtitle>
                           <div>
-                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-SB" }}>₹ {element.bookPrice}</p>
+                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>₹ {element.bookPrice}</p>
                           </div>
-                          <div className="trade-card-status">
-                            <p style={{ fontSize: "20px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
-                          </div>
+                          {/* <div className="trade-card-status">
+                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
+                          </div> */}
                         </div>
                         <div className="trade-tick">
                           <img src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg" alt="" />

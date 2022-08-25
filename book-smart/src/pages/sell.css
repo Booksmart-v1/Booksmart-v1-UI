@@ -6,7 +6,7 @@
     margin: 10px auto;
     min-height: 160px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     text-align: center;
     border-bottom: 1px solid gray;
@@ -24,12 +24,13 @@
 .trade-card-content {
     width: 45%;
     max-width: 50%;
-    min-height: 130px;
+    min-height: 120px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: flex-start;
     text-align: left;
+    margin: 0 0 0 12px;
 }
 
 .trade-card-chips {
