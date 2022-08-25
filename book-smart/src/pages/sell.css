@@ -1,0 +1,52 @@
+.trading-area {
+    width: 100%;
+}
+
+.trade-card {
+    margin: 10px auto;
+    min-height: 160px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid gray;
+    border-radius: 0;
+    padding: 10px;
+}
+
+.trade-card-img img {
+    width: 30%;
+    width: 100px;
+    min-height: 130px;
+    border-radius: 0;
+}
+
+.trade-card-content {
+    width: 45%;
+    max-width: 50%;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.trade-card-chips {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.trade-card-status span {
+    font-size: 18px;
+    font-family: "Montserrat-b";
+}
+
+.trade-tick{
+    width: 20%;
+}
