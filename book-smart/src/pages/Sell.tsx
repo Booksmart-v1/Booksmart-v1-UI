@@ -42,6 +42,7 @@ import {
   IonToast,
   IonFabList,
   IonSpinner,
+  RefresherEventDetail,
 } from "@ionic/react";
 import { Storage } from "@capacitor/storage";
 
@@ -51,7 +52,8 @@ import "./wishlist.css";
 import rectangle from "../images/Rectangle.png";
 import book from "../images/book.jpg";
 import logo from "../images/history.jpg";
-import React, { useState } from "react";
+import "./sell.css"
+import React, { useEffect, useState } from "react";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
 import {
   add,
@@ -109,12 +111,12 @@ const SellCardDettails = [
   }
 ];
 const tempbook = {
-        bookId: null,
-        bookName: "Book",
-        bookAuthor: "Roald Dahl",
-        bookDescription: "This is a book",
-        tags: ['Mystery', 'Fiction', 'Romance']
-      };
+  bookId: null,
+  bookName: "Book",
+  bookAuthor: "Roald Dahl",
+  bookDescription: "This is a book",
+  tags: ['Mystery', 'Fiction', 'Romance']
+};
 const Sell: React.FC = () => {
   const [info, setInfo] = useState(SellCardDettails);
 
@@ -125,12 +127,12 @@ const Sell: React.FC = () => {
     { key: 3, label: "Fiction" },
   ]);
   const [segment, setSegment] = React.useState("activeTrades");
-  const [loading,setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [screen, setScreen] = React.useState("details");
   const [name, setName] = React.useState("");
   const [descr, setDescr] = React.useState("");
   const [price, setPrice] = React.useState("");
-  const [isbn,setISBN] = React.useState("");
+  const [isbn, setISBN] = React.useState("");
   const [condition, setCondition] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [pincode, setPincode] = React.useState("");
@@ -146,39 +148,32 @@ const Sell: React.FC = () => {
   const { photos, takePhoto } = usePhotoGallery();
 
   const history = useHistory();
-
-  useIonViewWillEnter(() => {
-    console.log("heyy");
-  });
-
   const toaster1 = () => {
     setShowToast1(true);
   };
-
   const handleClick = () => {
     setScreen("upload");
   };
-
   const handleClick1 = () => {
     setScreen("choose");
   };
 
   const getBookDetails = () => {
     setLoading(true);
-    const url= APIURL + "v2/getBook";
+    const url = APIURL + "v2/getBook";
 
-    axios.get(url+`?ISBN=${isbn}`,).then((resp)=>{
+    axios.get(url + `?ISBN=${isbn}`,).then((resp) => {
       console.log(resp);
-      if(resp.status===200){
+      if (resp.status === 200) {
         setName(resp.data.data.bookName)
         setDescr(resp.data.data.bookDescription)
         setBook(resp.data.data);
         setLoading(false);
       }
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err);
     });
-    
+
   }
 
   const changeScreen = () => {
@@ -190,28 +185,28 @@ const Sell: React.FC = () => {
       // const tempbook = ;
       let id = book.bookId;
       console.log(id);
-      if(id===null){
+      if (id === null) {
         const url = APIURL + "v2/addBooks";
-        axios.post(url,{
-          bookName:book.bookName,
-          bookAuthor:book.bookAuthor,
+        axios.post(url, {
+          bookName: book.bookName,
+          bookAuthor: book.bookAuthor,
           bookDescription: book.bookDescription,
           ISBN: isbn,
           tags: book.tags,
-        }).then((resp)=>{
+        }).then((resp) => {
           console.log(resp);
-          if(resp.status===200){
+          if (resp.status === 200) {
             id = resp.data.data.bookId;
             console.log(id);
             const url = APIURL + "v2/addBookAds";
             let userId = "1233";
             let username = "Aagam";
             const a = localStorage.getItem("user");
-            if(a){
+            if (a) {
               userId = JSON.parse(a).id;
               username = JSON.parse(a).name;
             }
-            axios.post(url,{
+            axios.post(url, {
               bookId: id,
               sellerId: userId,
               sellerName: username,
@@ -223,23 +218,19 @@ const Sell: React.FC = () => {
               sellerAddress: address,
               sellerPincode: pincode,
               bookDescription: descr,
-              sold:false,
-
-
-
-            }).then((resp)=>{
+              sold: false,
+            }).then((resp) => {
               console.log(resp);
-              if(resp.data.success)
-              {
+              if (resp.data.success) {
                 setShowModal(false);
                 setScreen("details");
                 toaster1();
               }
-            }).catch((e)=>{
+            }).catch((e) => {
               console.log(e);
             });
           }
-        }).catch((e)=>{
+        }).catch((e) => {
           console.log(e);
         });
         setBook(tempbook);
@@ -256,13 +247,13 @@ const Sell: React.FC = () => {
       let userId = "1233";
       let username = "Aagam";
       const a = localStorage.getItem("user");
-      if(a){
+      if (a) {
         userId = JSON.parse(a).id;
         username = JSON.parse(a).name;
       }
       console.log(id);
-      
-      axios.post(url,{
+
+      axios.post(url, {
         bookId: id,
         sellerId: userId,
         sellerName: username,
@@ -274,22 +265,17 @@ const Sell: React.FC = () => {
         sellerAddress: address,
         sellerPincode: pincode,
         bookDescription: descr,
-        sold:false,
-
-
-
-      }).then((resp)=>{
+        sold: false,
+      }).then((resp) => {
         console.log(resp);
-        if(resp.data.success)
-        {
+        if (resp.data.success) {
           setShowModal(false);
           setScreen("details");
           toaster1();
         }
-      }).catch((e)=>{
+      }).catch((e) => {
         console.log(e);
       });
-
       setBook(tempbook);
       setName("");
       setDescr("");
@@ -297,13 +283,52 @@ const Sell: React.FC = () => {
       setCondition("");
       setAddress("");
       setPincode("");
-      
     }
   };
 
   const goBack = () => {
     history.goBack();
   };
+
+  // Trades
+  // const [tradeInfo, setTradeInfo] = useState<any[]>([]);
+  const [activeTrades, setActiveTrades] = useState<any[]>([]);
+  const [pastTrades, setPastTrades] = useState<any[]>([]);
+  const defaultImage = "https://via.placeholder.com/200/1200";
+  const getTradeCardDetails = (lim: Number) => {
+    const url = APIURL + "v2/getMyBookAds";
+    let userId = "1233";
+    let username = "Aagam";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios
+      .get(url + `?limit=${lim}&userId=${userId}`)
+      .then((resp) => {
+        if (resp.status === 200) {
+          // console.log(resp.data.data);
+          let data = resp.data.data.selling;
+          for (const element of data) {
+            element.bookImageUrl = element.bookImageUrl
+              ? element.bookImageUrl
+              : defaultImage;
+          }
+          setActiveTrades(data.filter((item: any) => { if (item.sold === false) { return item } }))
+          setPastTrades(data.filter((item: any) => { if (item.sold === true) { return item } }))
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  // console.log(tradeInfo)
+  console.log(activeTrades.concat(pastTrades))
+
+  useEffect(() => {
+    getTradeCardDetails(60);
+  }, []);
 
   return (
     <>
@@ -335,12 +360,12 @@ const Sell: React.FC = () => {
                       setShowPopover({ showPopover: false, event: undefined })
                     }
                   >
-                    <IonItem button onClick={() => {}}>
+                    <IonItem button onClick={() => { }}>
                       <IonLabel className="profile-orders">
                         Books Purchased
                       </IonLabel>
                     </IonItem>
-                    <IonItem button onClick={() => {}}>
+                    <IonItem button onClick={() => { }}>
                       <IonLabel className="profile-purchases">
                         Books Sold
                       </IonLabel>
@@ -391,45 +416,67 @@ const Sell: React.FC = () => {
                 <IonLabel>Past Trades</IonLabel>
               </IonSegmentButton>
             </IonSegment>
-
-            {segment === "activeTrades" ? (
-              <>
-                {info.map((element, index) => {
+            <div className="trades-area">
+              {segment === "activeTrades" ? (
+                activeTrades.map((element, idx) => {
                   return (
-                    <IonCard
-                      key={index}
-                      style={{ marginTop: "15px", margin: "10px" }}
-                    >
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol size="5">
-                            {photos.map((photo, index) => (
-                              <IonCol size="4" key={index}>
-                                {/* <IonImg src={photo.webviewPath} /> */}
-                                <IonImg src={element.pic} />
-                              </IonCol>
-                            ))}
-                          </IonCol>
-
-                          <IonCol size="7">
-                            <IonCardHeader>
-                              <IonCardTitle className="title" style={{fontSize: "18px"}}>
-                                {element.bookName}
-                              </IonCardTitle>
-                            </IonCardHeader>
-                          </IonCol>
-                        </IonRow>
-                      </IonGrid>
-                      <div>
-                        <IonText style={{ color: "black" }}>{descr}</IonText>
-                      </div>
-                    </IonCard>
-                  );
-                })}
-              </>
-            ) : (
-              <></>
-            )}
+                    <>
+                      <IonCard key={idx} className="trade-card">
+                        <div className="trade-card-img">
+                          <img alt="Book" className="pic" src={element.bookImageUrl} />
+                        </div>
+                        <div className="trade-card-content">
+                          <IonCardTitle style={{ fontSize: "12px", fontFamily: "Montserrat-b" }}>
+                            {element.bookName}
+                          </IonCardTitle>
+                          <IonCardSubtitle style={{ fontSize: "10px", fontFamily: "Montserrat-sb" }}>
+                            {element.bookAuthor}
+                          </IonCardSubtitle>
+                          <div>
+                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>₹ {element.bookPrice}</p>
+                          </div>
+                          {/* <div className="trade-card-status">
+                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
+                          </div> */}
+                        </div>
+                        <div className="trade-tick">
+                          <img src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg" alt="" />
+                        </div>
+                      </IonCard>
+                    </>
+                  )
+                })
+              ) : (
+                pastTrades.map((element, idx) => {
+                  return (
+                    <>
+                      <IonCard key={idx} className="trade-card">
+                        <div className="trade-card-img">
+                          <img alt="Book" className="pic" src={element.bookImageUrl} />
+                        </div>
+                        <div className="trade-card-content">
+                          <IonCardTitle style={{ fontSize: "12px", fontFamily: "Montserrat-b" }}>
+                            {element.bookName}
+                          </IonCardTitle>
+                          <IonCardSubtitle style={{ fontSize: "10px", fontFamily: "Montserrat-sb" }}>
+                            {element.bookAuthor}
+                          </IonCardSubtitle>
+                          <div>
+                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-SB" }}>Price: ₹ {element.bookPrice}</p>
+                          </div>
+                          <div className="trade-card-status">
+                            <p style={{ fontSize: "20px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
+                          </div>
+                        </div>
+                        <div className="trade-tick">
+                          <img src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg" alt="" />
+                        </div>
+                      </IonCard>
+                    </>
+                  )
+                })
+              )}
+            </div>
             <IonFabList>
               <IonModal
                 isOpen={showModal}
@@ -468,7 +515,7 @@ const Sell: React.FC = () => {
                   </IonHeader>
                   {screen === "details" ? (
                     <>
-                    <div className="number1">
+                      <div className="number1">
                         <p
                           style={{
                             fontFamily: "Montserrat-SB !important",
@@ -487,8 +534,8 @@ const Sell: React.FC = () => {
                             }}
                           ></IonInput>
                         </IonItem>
-                        <IonButton disabled={isbn.length !== 10 && isbn.length!== 13 && loading} onClick={()=>{getBookDetails()}}>
-                          {loading?<IonSpinner name="dots" />:"Get"}
+                        <IonButton disabled={isbn.length !== 10 && isbn.length !== 13 && loading} onClick={() => { getBookDetails() }}>
+                          {loading ? <IonSpinner name="dots" /> : "Get"}
                         </IonButton>
                       </div>
                       <div className="number">
