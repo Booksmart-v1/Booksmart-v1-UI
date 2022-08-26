@@ -258,31 +258,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                 ) : (
                   <></>
                 )}
-                {/* <div className="number">
-                  <IonItem style={{ marginTop: "10px" }}>
-                    {""}
-                    <IonInput
-                      type="number"
-                      max={10}
-                      value={phone}
-                      placeholder="Enter Number"
-                      onIonChange={(e: any) => {
-                        setPhone(e.target.value);
-                      }}
-                      // style={{
-                      //   fontFamily: "Montserrat-SB !important",
-                      //   fontWeight: "bold",
-                      //   fontSize: "18",
-                      //   borderRadius: "5px",
-                      //   paddingLeft: "5px",
-                      //   marginTop: "10px",
-                      // }}
-                      required
-                    >
-                      +91 &nbsp;&nbsp;
-                    </IonInput>
-                  </IonItem>
-                </div> */}
+             
                 <div className="number">
                   <p
                     style={{

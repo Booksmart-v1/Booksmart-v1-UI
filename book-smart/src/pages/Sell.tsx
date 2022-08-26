@@ -43,6 +43,8 @@ import {
   IonFabList,
   IonSpinner,
   RefresherEventDetail,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/react";
 import { Storage } from "@capacitor/storage";
 
@@ -52,7 +54,7 @@ import "./wishlist.css";
 import rectangle from "../images/Rectangle.png";
 import book from "../images/book.jpg";
 import logo from "../images/history.jpg";
-import "./sell.css"
+import "./sell.css";
 import React, { useEffect, useState } from "react";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
 import {
@@ -108,14 +110,14 @@ const SellCardDettails = [
       "Lorem ipsum dolor sit amet, consectetuis nostrud exercitation ullamco laboris ",
     rating: "3.8",
     cost: "200",
-  }
+  },
 ];
 const tempbook = {
   bookId: null,
   bookName: "Book",
   bookAuthor: "Roald Dahl",
   bookDescription: "This is a book",
-  tags: ['Mystery', 'Fiction', 'Romance']
+  tags: ["Mystery", "Fiction", "Romance"],
 };
 const Sell: React.FC = () => {
   const [info, setInfo] = useState(SellCardDettails);
@@ -162,77 +164,84 @@ const Sell: React.FC = () => {
     setLoading(true);
     const url = APIURL + "v2/getBook";
 
-    axios.get(url + `?ISBN=${isbn}`,).then((resp) => {
-      console.log(resp);
-      if (resp.status === 200) {
-        setName(resp.data.data.bookName)
-        setDescr(resp.data.data.bookDescription)
-        setBook(resp.data.data);
-        setLoading(false);
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
-
-  }
+    axios
+      .get(url + `?ISBN=${isbn}`)
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          setName(resp.data.data.bookName);
+          setDescr(resp.data.data.bookDescription);
+          setBook(resp.data.data);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const changeScreen = () => {
     console.log(screen);
     if (screen === "details") setScreen("upload");
     else {
-
       // get Book details from book name
       // const tempbook = ;
       let id = book.bookId;
       console.log(id);
       if (id === null) {
         const url = APIURL + "v2/addBooks";
-        axios.post(url, {
-          bookName: book.bookName,
-          bookAuthor: book.bookAuthor,
-          bookDescription: book.bookDescription,
-          ISBN: isbn,
-          tags: book.tags,
-        }).then((resp) => {
-          console.log(resp);
-          if (resp.status === 200) {
-            id = resp.data.data.bookId;
-            console.log(id);
-            const url = APIURL + "v2/addBookAds";
-            let userId = "1233";
-            let username = "Aagam";
-            const a = localStorage.getItem("user");
-            if (a) {
-              userId = JSON.parse(a).id;
-              username = JSON.parse(a).name;
-            }
-            axios.post(url, {
-              bookId: id,
-              sellerId: userId,
-              sellerName: username,
-              bookName: book.bookName,
-              bookPrice: price,
-              bookAuthor: book.bookAuthor,
-              bookCondition: condition,
-              tags: book.tags,
-              sellerAddress: address,
-              sellerPincode: pincode,
-              bookDescription: descr,
-              sold: false,
-            }).then((resp) => {
-              console.log(resp);
-              if (resp.data.success) {
-                setShowModal(false);
-                setScreen("details");
-                toaster1();
+        axios
+          .post(url, {
+            bookName: book.bookName,
+            bookAuthor: book.bookAuthor,
+            bookDescription: book.bookDescription,
+            ISBN: isbn,
+            tags: book.tags,
+          })
+          .then((resp) => {
+            console.log(resp);
+            if (resp.status === 200) {
+              id = resp.data.data.bookId;
+              console.log(id);
+              const url = APIURL + "v2/addBookAds";
+              let userId = "1233";
+              let username = "Aagam";
+              const a = localStorage.getItem("user");
+              if (a) {
+                userId = JSON.parse(a).id;
+                username = JSON.parse(a).name;
               }
-            }).catch((e) => {
-              console.log(e);
-            });
-          }
-        }).catch((e) => {
-          console.log(e);
-        });
+              axios
+                .post(url, {
+                  bookId: id,
+                  sellerId: userId,
+                  sellerName: username,
+                  bookName: book.bookName,
+                  bookPrice: price,
+                  bookAuthor: book.bookAuthor,
+                  bookCondition: condition,
+                  tags: book.tags,
+                  sellerAddress: address,
+                  sellerPincode: pincode,
+                  bookDescription: descr,
+                  sold: false,
+                })
+                .then((resp) => {
+                  console.log(resp);
+                  if (resp.data.success) {
+                    setShowModal(false);
+                    setScreen("details");
+                    toaster1();
+                  }
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
         setBook(tempbook);
         setName("");
         setDescr("");
@@ -253,29 +262,32 @@ const Sell: React.FC = () => {
       }
       console.log(id);
 
-      axios.post(url, {
-        bookId: id,
-        sellerId: userId,
-        sellerName: username,
-        bookName: book.bookName,
-        bookPrice: price,
-        bookAuthor: book.bookAuthor,
-        bookCondition: condition,
-        tags: book.tags,
-        sellerAddress: address,
-        sellerPincode: pincode,
-        bookDescription: descr,
-        sold: false,
-      }).then((resp) => {
-        console.log(resp);
-        if (resp.data.success) {
-          setShowModal(false);
-          setScreen("details");
-          toaster1();
-        }
-      }).catch((e) => {
-        console.log(e);
-      });
+      axios
+        .post(url, {
+          bookId: id,
+          sellerId: userId,
+          sellerName: username,
+          bookName: book.bookName,
+          bookPrice: price,
+          bookAuthor: book.bookAuthor,
+          bookCondition: condition,
+          tags: book.tags,
+          sellerAddress: address,
+          sellerPincode: pincode,
+          bookDescription: descr,
+          sold: false,
+        })
+        .then((resp) => {
+          console.log(resp);
+          if (resp.data.success) {
+            setShowModal(false);
+            setScreen("details");
+            toaster1();
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
       setBook(tempbook);
       setName("");
       setDescr("");
@@ -289,6 +301,15 @@ const Sell: React.FC = () => {
   const goBack = () => {
     history.goBack();
   };
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    getTradeCardDetails(60);
+    console.log("Begin async operation");
+
+    setTimeout(() => {
+      console.log("Async operation has ended");
+      event.detail.complete();
+    }, 2000);
+  }
 
   // Trades
   // const [tradeInfo, setTradeInfo] = useState<any[]>([]);
@@ -315,8 +336,20 @@ const Sell: React.FC = () => {
               ? element.bookImageUrl
               : defaultImage;
           }
-          setActiveTrades(data.filter((item: any) => { if (item.sold === false) { return item } }))
-          setPastTrades(data.filter((item: any) => { if (item.sold === true) { return item } }))
+          setActiveTrades(
+            data.filter((item: any) => {
+              if (item.sold === false) {
+                return item;
+              }
+            })
+          );
+          setPastTrades(
+            data.filter((item: any) => {
+              if (item.sold === true) {
+                return item;
+              }
+            })
+          );
         }
       })
       .catch((e) => {
@@ -324,7 +357,7 @@ const Sell: React.FC = () => {
       });
   };
   // console.log(tradeInfo)
-  console.log(activeTrades.concat(pastTrades))
+  console.log(activeTrades.concat(pastTrades));
 
   useEffect(() => {
     getTradeCardDetails(60);
@@ -334,6 +367,24 @@ const Sell: React.FC = () => {
     <>
       <IonPage>
         <IonContent className="ion-no-padding">
+          <IonRefresher
+            slot="fixed"
+            placeholder="P"
+            onIonRefresh={doRefresh}
+            pullFactor={0.5}
+            pullMin={100}
+            pullMax={200}
+            style={{
+              color: "black",
+              fontFamily: "Montserrat-SB",
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            <p> Fetching your recent Trades!✌️</p>
+            <IonRefresherContent></IonRefresherContent>
+          </IonRefresher>
           {/* {screen === "choose" ? (
             <> */}
           <IonHeader className="sell-header">
@@ -360,12 +411,12 @@ const Sell: React.FC = () => {
                       setShowPopover({ showPopover: false, event: undefined })
                     }
                   >
-                    <IonItem button onClick={() => { }}>
+                    <IonItem button onClick={() => {}}>
                       <IonLabel className="profile-orders">
                         Books Purchased
                       </IonLabel>
                     </IonItem>
-                    <IonItem button onClick={() => { }}>
+                    <IonItem button onClick={() => {}}>
                       <IonLabel className="profile-purchases">
                         Books Sold
                       </IonLabel>
@@ -417,65 +468,133 @@ const Sell: React.FC = () => {
               </IonSegmentButton>
             </IonSegment>
             <div className="trades-area">
-              {segment === "activeTrades" ? (
-                activeTrades.map((element, idx) => {
-                  return (
-                    <>
-                      <IonCard key={idx} className="trade-card">
-                        <div className="trade-card-img">
-                          <img alt="Book" className="pic" src={element.bookImageUrl} />
-                        </div>
-                        <div className="trade-card-content">
-                          <IonCardTitle style={{ fontSize: "12px", fontFamily: "Montserrat-b" }}>
-                            {element.bookName}
-                          </IonCardTitle>
-                          <IonCardSubtitle style={{ fontSize: "10px", fontFamily: "Montserrat-sb" }}>
-                            {element.bookAuthor}
-                          </IonCardSubtitle>
-                          <div>
-                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>₹ {element.bookPrice}</p>
+              {segment === "activeTrades"
+                ? activeTrades.map((element, idx) => {
+                    return (
+                      <>
+                        <IonCard key={idx} className="trade-card">
+                          <div className="trade-card-img">
+                            <img
+                              alt="Book"
+                              className="pic"
+                              src={element.bookImageUrl}
+                            />
                           </div>
-                          {/* <div className="trade-card-status">
+                          <div className="trade-card-content">
+                            <IonCardTitle
+                              style={{
+                                fontSize: "12px",
+                                fontFamily: "Montserrat-b",
+                              }}
+                            >
+                              {element.bookName}
+                            </IonCardTitle>
+                            <IonCardSubtitle
+                              style={{
+                                fontSize: "10px",
+                                fontFamily: "Montserrat-sb",
+                              }}
+                            >
+                              {element.bookAuthor}
+                            </IonCardSubtitle>
+                            <div>
+                              <p
+                                style={{
+                                  fontSize: "18px",
+                                  fontFamily: "Montserrat-sb",
+                                }}
+                              >
+                                ₹ {element.bookPrice}
+                              </p>
+                            </div>
+                            {/* <div className="trade-card-status">
                             <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
                           </div> */}
-                        </div>
-                        <div className="trade-tick">
-                          <img src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg" alt="" />
-                        </div>
-                      </IonCard>
-                    </>
-                  )
-                })
-              ) : (
-                pastTrades.map((element, idx) => {
-                  return (
-                    <>
-                      <IonCard key={idx} className="trade-card">
-                        <div className="trade-card-img">
-                          <img alt="Book" className="pic" src={element.bookImageUrl} />
-                        </div>
-                        <div className="trade-card-content">
-                          <IonCardTitle style={{ fontSize: "12px", fontFamily: "Montserrat-b" }}>
-                            {element.bookName}
-                          </IonCardTitle>
-                          <IonCardSubtitle style={{ fontSize: "10px", fontFamily: "Montserrat-sb" }}>
-                            {element.bookAuthor}
-                          </IonCardSubtitle>
-                          <div>
-                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-SB" }}>Price: ₹ {element.bookPrice}</p>
                           </div>
-                          <div className="trade-card-status">
-                            <p style={{ fontSize: "20px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
+                          <div className="trade-tick">
+                            <img
+                              src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
+                              alt=""
+                            />
                           </div>
-                        </div>
-                        <div className="trade-tick">
-                          <img src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg" alt="" />
-                        </div>
-                      </IonCard>
-                    </>
-                  )
-                })
-              )}
+                        </IonCard>
+                      </>
+                    );
+                  })
+                : pastTrades.map((element, idx) => {
+                    return (
+                      <>
+                        <IonCard key={idx} className="trade-card">
+                          <div className="trade-card-img">
+                            <img
+                              alt="Book"
+                              className="pic"
+                              src={element.bookImageUrl}
+                            />
+                          </div>
+                          <div className="trade-card-content">
+                            <IonCardTitle
+                              style={{
+                                fontSize: "12px",
+                                fontFamily: "Montserrat-b",
+                              }}
+                            >
+                              {element.bookName}
+                            </IonCardTitle>
+                            <IonCardSubtitle
+                              style={{
+                                fontSize: "10px",
+                                fontFamily: "Montserrat-sb",
+                              }}
+                            >
+                              {element.bookAuthor}
+                            </IonCardSubtitle>
+                            <div>
+                              <p
+                                style={{
+                                  fontSize: "18px",
+                                  fontFamily: "Montserrat-SB",
+                                }}
+                              >
+                                Price: ₹ {element.bookPrice}
+                              </p>
+                            </div>
+                            <div className="trade-card-status">
+                              <p
+                                style={{
+                                  fontSize: "20px",
+                                  fontFamily: "Montserrat-sb",
+                                }}
+                              >
+                                Status:{" "}
+                                {element.sold ? (
+                                  <span
+                                    style={{
+                                      color: "var(--ion-color-success)",
+                                    }}
+                                  >
+                                    SOLD
+                                  </span>
+                                ) : (
+                                  <span
+                                    style={{ color: "var(--ion-color-danger)" }}
+                                  >
+                                    UNSOLD
+                                  </span>
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="trade-tick">
+                            <img
+                              src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
+                              alt=""
+                            />
+                          </div>
+                        </IonCard>
+                      </>
+                    );
+                  })}
             </div>
             <IonFabList>
               <IonModal
@@ -534,7 +653,14 @@ const Sell: React.FC = () => {
                             }}
                           ></IonInput>
                         </IonItem>
-                        <IonButton disabled={isbn.length !== 10 && isbn.length !== 13 && loading} onClick={() => { getBookDetails() }}>
+                        <IonButton
+                          disabled={
+                            isbn.length !== 10 && isbn.length !== 13 && loading
+                          }
+                          onClick={() => {
+                            getBookDetails();
+                          }}
+                        >
                           {loading ? <IonSpinner name="dots" /> : "Get"}
                         </IonButton>
                       </div>

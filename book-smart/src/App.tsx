@@ -21,7 +21,7 @@ import Welcome from "./pages/login/Welcome";
 
 import Home from "./Home";
 import Login from "./Login";
-import Logo from "./images/logo.png"
+import Logo from "./images/logo.png";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -38,11 +38,10 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
-/* Theme variables */
+/* Theme variables */ 
 import "./theme/variables.css";
 import Search from "./pages/Search";
 import Sell from "./pages/Sell";
-import OpeningPage from "./pages/OpeningPage";
 import React, { useEffect, useState } from "react";
 
 setupIonicReact();
@@ -58,9 +57,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      setShowLoading(false)
-    }, 3000);
-  }, [])
+      setShowLoading(false);
+    }, 1000);
+  }, []);
 
   return (
     <IonApp>
@@ -90,21 +89,38 @@ const App: React.FC = () => {
               {showLoading ? (
                 <div className="loaderDiv-outer">
                   <div className="loaderDiv-inner">
-                    <h1 style={{ fontSize: "47px", fontFamily: "Serif", fontWeight: "light" }}>BOOKSMART</h1>
-                    <p style={{ fontSize: "16px", fontFamily: "Montserrat-sb", letterSpacing: "-0.02rem", wordSpacing: "0.04rem" }}>MAKING EVERY HOME, A LIBRARY</p>
+                    <h1
+                      style={{
+                        fontSize: "47px",
+                        fontFamily: "Serif",
+                        fontWeight: "light",
+                      }}
+                    >
+                      BOOKSMART
+                    </h1>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                        fontFamily: "Montserrat-sb",
+                        letterSpacing: "-0.02rem",
+                        wordSpacing: "0.04rem",
+                      }}
+                    >
+                      MAKING EVERY HOME, A LIBRARY
+                    </p>
                   </div>
                 </div>
-              ) : (<Welcome />)}
+              ) : (
+                <Welcome />
+              )}
             </Route>
-            <Route exact path="/opening">
-              <OpeningPage />
-            </Route>
+
             <Route exact path="/onboard/:page" component={Onboard} />
             <Route exact path="/pickinterests">
               <PickInterests />
             </Route>
             <Route exact path="/">
-              <Redirect exact to="/opening" />
+              <Redirect exact to="/login" />
             </Route>
           </IonRouterOutlet>
           <IonTabBar slot="top" style={{ display: "none" }}>
