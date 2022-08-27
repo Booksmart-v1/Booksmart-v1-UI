@@ -32,6 +32,7 @@ body {
   border: none;
   border-radius: 25px 25px 0 0;
   background: var(--ion-color-medium-contrast) !important;
+  min-height: 83%;
   max-height: 88%;
   overflow-y: scroll;
   display: flex;
@@ -44,6 +45,20 @@ ion-select {
   font-family: "Montserrat-sb";
   width: 100%;
   justify-content: center;
+}
+
+ion-popover {
+  --background: rgba(40, 173, 218, 0.6);
+  --backdrop-opacity: 0.6;
+  --box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.6);
+  --color: white;
+  --width: 300px;
+  text-transform: capitalize;
+}
+
+ion-list-header.sc-ion-select-popover-ios,
+ion-label.sc-ion-select-popover-ios {
+  margin-left: 10px
 }
 
 .chips {
@@ -80,6 +95,7 @@ ion-select {
   justify-content: space-around;
   align-items: center;
   padding: 10px 0;
+  max-height: 88%;
   /* margin: 0 0 40px 0; */
 }
 
@@ -90,7 +106,7 @@ ion-select {
 .homepage-card {
   width: 90%;
   min-height: 140px;
-  margin: 10px;
+  margin: 10px 0;
   border-radius: 15px;
   border: 1px solid #e5af48;
   display: flex;
@@ -131,12 +147,13 @@ ion-select {
 }
 
 .searching-chips {
+  width: 90%;
   display: grid;
   justify-items: center;
   align-content: center;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
-  margin: 15px 0;
+  margin: 15px auto;
 }
 
 .searching-items {
@@ -147,7 +164,9 @@ ion-select {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 120px;
+  min-width: 120px;
+  text-align: center;
+  padding: 10px 0;
 }
 
 .pic {
@@ -169,4 +188,84 @@ ion-select {
 .long-cta {
   color: white;
   font-family: "Montserrat-SB" !important;
+}
+
+.HPModal {
+  height: 100vh;
+}
+
+.HPModal-img {
+  width: 100%;
+  height: 30vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-blend-mode: darken;
+}
+
+.HPModal-content {
+  width: 90%;
+  height: 40vh;
+  /* max-height: 45vh; */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.HPModal-desc {
+  width: 100%;
+  text-align: "center";
+  font-family: "Montserrat-SB";
+  margin: 10px 0;
+  line-height: 1.4rem;
+}
+
+.HPModal-sellerInfo {
+  width: 100%;
+}
+
+.HPModal-sellerInfo div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.HPModal-sellerInfo h2 {
+  text-align: center;
+  font-family: "Montserrat-B";
+  color: var(--bs-pText);
+}
+
+.HPModal-sellerInfo p {
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.HPModal-chips {
+  width: 100%;
+  height: 10vh;
+  text-align: center;
+  margin: 15px auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  grid-gap: 0 10px;
+}
+
+.HPModal-toggle {
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 10px;
 }

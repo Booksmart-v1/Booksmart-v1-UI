@@ -53,6 +53,7 @@ import {
 import Search from "./Search";
 import { APIURL } from "../constants";
 import axios from "axios";
+import { url } from "inspector";
 
 const defaultImage = "https://via.placeholder.com/200/1200";
 const cardDetails = [
@@ -216,9 +217,16 @@ const Tab1: React.FC = () => {
     { key: 3, label: "Fiction", hide: false },
   ]);
   const [selectedChipsArr, setSelectedChipsArr] = useState([]);
+
   const handleInputChange = (chipArr: any) => {
-    setSelectedChipsArr(chipArr);
-    if (chipArr.length > 0) {
+    if (chipArr.length >= 0 && chipArr.length < 5) {
+      let xyz = chipArr.map((idx: number, tag: string) => ({ key: idx, label: tag, hide: false }))
+      setSelectedChipsArr(xyz);
+    }
+    else if (chipArr.length >= 5) {
+      console.log("More than 5! Not Allowed.")
+    }
+    if (chipArr.length > 0 && chipArr.length < 5) {
       let lowerCasedChips = chipArr.map((chip: string) => { return chip.toLowerCase() });
       var filterData = []
       for (let i = 0; i < lowerCasedChips.length; i++) {
@@ -233,14 +241,17 @@ const Tab1: React.FC = () => {
     else {
       setFilteredInfo(info);
     }
-    console.log("ChipArr: ", chipArr);
+    console.log("ChipArr: ", selectedChipsArr);
   }
 
+  let allTags = info.map((item) => item.tags.map((tag) => tag))
+  var uniqueTags: string[] = []
+  allTags.map((item) => item.map((tag) => uniqueTags.push(tag.toLowerCase())))
+  let finalTags = Array.from(new Set(uniqueTags))
+  // console.log(finalTags)
+  // console.log(filteredInfo)
+
   const [sortByNewest, setSortByNewest] = useState(false);
-  const handleNewestClick = () => {
-    setSortByNewest(true);
-    console.log(sortByNewest)
-  }
 
   return (
     <IonPage className="backg">
@@ -304,22 +315,22 @@ const Tab1: React.FC = () => {
           <IonList style={{ margin: "10px auto 0 auto", width: "90%" }}>
             <IonItem >
               <IonSelect placeholder="Select interest" multiple={true} selectedText=""
-                onIonChange={(e) => handleInputChange(e.detail.value)}
+                onIonChange={(e) => handleInputChange(e.detail.value)} interface="popover"
               >
-                {chipData.map((item) => (<IonSelectOption value={item.label}>{item.label}</IonSelectOption>))}
+                {finalTags.map((item) => (<IonSelectOption value={item} style={{ textTransform: "capitalize" }}>{item}</IonSelectOption>))}
               </IonSelect>
             </IonItem>
           </IonList>
           <div className="searching-chips">
-            {selectedChipsArr.map((chip, i) =>
+            {selectedChipsArr.map((item: any) =>
               <IonChip
                 className="searching-items"
-                key={i}
+                key={item.label}
                 outline
                 color="primary"
               >
                 <IonIcon icon={pin} />
-                <IonLabel style={{ padding: "6px" }}>{chip}</IonLabel>
+                <IonLabel style={{ textTransform: "capitalize" }}>{item.key}</IonLabel>
                 {/* <IonIcon
                     style={{ height: "20px" }}
                     onClick={() => hideRecent(i)}
@@ -353,165 +364,103 @@ const Tab1: React.FC = () => {
                 </IonButton>
               </IonFooter>
             </IonModal> */}
-        <IonGrid className="oola">
-          <IonModal
-            isOpen={showModal}
-            swipeToClose={true}
-            mode="ios"
-            initialBreakpoint={1}
-            // breakpoints={[0.8, 1]}
-            title="Seller Details"
-            keyboardClose={true}
-            onDidDismiss={() => setShowModal(false)}
-          >
-            <IonContent>
-              <IonHeader>
-                <IonToolbar>
-                  <h2
-                    style={{
-                      textAlign: "center",
-                      fontFamily: "Montserrat-B",
-                      color: "var(--bs-pText)",
-                      marginLeft: "30px",
-                    }}
-                  >
-                    {sellerDeets.bookName}
-                  </h2>
-                  <IonButtons slot="end">
-                    <IonButton
-                      onClick={() => {
-                        setShowModal(false);
-                      }}
-                      slot="end"
-                      mode="ios"
-                    >
-                      Close
-                    </IonButton>
-                  </IonButtons>
-                </IonToolbar>
-              </IonHeader>
-              <img
-                src={
-                  "https://material.angular.io/assets/img/examples/shiba1.jpg"
-                }
-                style={{ width: "100%", height: "400px", marginBottom: "10px" }}
-                alt="book"
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "flex-start",
-                  padding: "16px",
-                }}
-              >
-                <p
+        <IonModal
+          isOpen={showModal}
+          swipeToClose={true}
+          mode="ios"
+          // initialBreakpoint={1}
+          // breakpoints={[0.8, 1]}
+          title="Seller Details"
+          // keyboardClose={true}
+          onDidDismiss={() => setShowModal(false)}
+          className="HPModal"
+        >
+          <IonHeader>
+            <IonToolbar style={{ minHeight: "7vh" }}>
+              <h2 style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "18px" }} >
+                {sellerDeets.bookName.length < 30 ? sellerDeets.bookName : sellerDeets.bookName.substring(0, 30) + "..."}
+              </h2>
+              <IonButtons slot="end">
+                <IonButton onClick={() => { setShowModal(false); }} slot="end" mode="ios">Close</IonButton>
+              </IonButtons>
+            </IonToolbar>
+            <div className="HPModal-img"
+              style={{
+                // backgroundImage: `url(${sellerDeets.bookImageUrl})` 
+                backgroundImage: `url(${"https://material.angular.io/assets/img/examples/shiba1.jpg"})`
+              }}
+            >
+              <img src={"https://material.angular.io/assets/img/examples/shiba1.jpg"} style={{ width: "35%", height: "20vh" }} alt="book" />
+            </div>
+          </IonHeader>
+          <IonContent>
+            <div style={{ width: "90%", maxHeight: "10vh", textAlign: "center", margin: "10px auto" }}>
+              <p style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "goldenrod", fontSize: "22px", marginBottom: "5px" }} >
+                {sellerDeets.bookName.length < 45 ? sellerDeets.bookName : sellerDeets.bookName.substring(0, 45) + "..."}
+              </p>
+              <p style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "18px" }} >
+                {sellerDeets.bookAuthor}
+              </p>
+            </div>
+            <div className="HPModal-content">
+              <p className="HPModal-desc">
+                {sellerDeets.bookDescription.length < 180 ? sellerDeets.bookDescription : sellerDeets.bookDescription.substring(0, 180) + "..."}
+              </p>
+              <div className="HPModal-sellerInfo">
+                <div>
+                  <h2 style={{ fontFamily: "Montserrat-b", fontSize: "25px" }}>Seller Details</h2>
+                  <IonItemDivider></IonItemDivider>
+                </div>
+                <br />
+                <p>Name: <b>{sellerDeets.sellerName}</b></p>
+                <p style={{ margin: "10px 0" }}>City: <b>{sellerDeets.sellerAddress}</b></p>
+                <p>Price: <b>₹ {sellerDeets.bookPrice}</b></p>
+              </div>
+              <div className="HPModal-chips">
+                {sellerDeets.tags.map((tag, index) => (
+                  <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", background: "var(--bs-pBg)" }}>
+                    <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "18px", textTransform: "capitalize" }}>{tag}</IonLabel>
+                  </IonChip>
+                ))}
+              </div>
+            </div>
+            {/* <IonItemDivider> </IonItemDivider> */}
+            <IonFooter className="HPModal-toggle">
+              <IonItem style={{ width: "90%", padding: "0 10px" }}>
+                <IonLabel
                   style={{
-                    alignSelf: "center",
-                    fontSize: 15,
-                    fontWeight: "bolder",
-                    color: `${true ? "green" : "red"}`,
-                    marginBottom: "3px",
-                  }}
-                >{`${true ? "Negotiable Price!" : "Not Negotiable!"}`}</p>
-                <h2
-                  style={{
-                    alignSelf: "center",
-                    fontFamily: "Montserrat-B",
-                    color: "var(--bs-pText)",
-                    marginLeft: "0px",
+                    fontFamily: "Montserrat-b",
+                    fontSize: "24px",
                   }}
                 >
-                  Seller Details
-                </h2>
-                <IonItemDivider
-                  style={{
-                    alignSelf: "center",
-                    marginRight: "25px",
+                  Interested?
+                </IonLabel>
+                <IonToggle
+                  slot="end"
+                  style={{ color: `${interest ? "red" : "green"}` }}
+                  onClick={() => {
+                    if (interest) {
+                      setInterest(!interest);
+                      setMsg("Request Retracted!");
+                      setShowToast2(true);
+                    } else {
+                      setInterest(!interest);
+                      setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
+                      setShowToast2(true);
+                    }
                   }}
-                ></IonItemDivider>
-                <br />
-                <p
-                  style={{
-                    fontSize: 19,
-                    fontWeight: "bolder",
-                    marginBottom: "8px",
-                  }}
-                >{`${sellerDeets.sellerName}`}</p>
+                >
+                </IonToggle>
+              </IonItem>
+            </IonFooter>
+          </IonContent>
+        </IonModal>
 
-                {/* STATUS OF SELLER FROM SELLER ID */}
-                {/* <p
-                  style={{
-                    fontSize: 15,
-                    fontWeight: "lighter",
-                    marginBottom: "15px",
-                    marginLeft: "15px",
-                  }}
-                >{`${sellerDeets.info}`}</p> */}
-                <p style={{ fontSize: 18, marginBottom: "10px" }}>
-                  {`City: `}
-                  <b>{sellerDeets.sellerAddress}</b>
-                </p>
-                <p style={{ fontSize: 18, marginBottom: "10px" }}>
-                  {`Price: `}
-                  <b>{sellerDeets.bookPrice}</b>
-                </p>
-                {/* <p
-                  style={{
-                    fontSize: 15,
-                    fontWeight: "lighter",
-                    marginBottom: "15px",
-                    marginLeft: "15px",
-                  }}
-                >{`${info}`}</p>
-                <p style={{ fontSize: 18, marginBottom: "10px" }}>
-                  {`Cost: `}
-                  <b>{}</b>
-                </p> */}
-              </div>
-              <IonItemDivider style={{ marginLeft: "130px" }}></IonItemDivider>
-              <div style={{ width: "100%", height: "30px" }}></div>
-              <IonFooter>
-                <IonItem>
-                  <IonTitle
-                    style={{
-                      marginLeft: "-30px",
-                      fontSize: "22px",
-                      padding: "5px",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Interested?
-                    <IonToggle
-                      style={{
-                        marginLeft: "80px",
-                        color: `${interest ? "red" : "green"}`,
-                      }}
-                      onClick={() => {
-                        if (interest) {
-                          setInterest(!interest);
-                          setMsg("Request Retracted!");
-                          setShowToast2(true);
-                        } else {
-                          setInterest(!interest);
-                          setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
-                          setShowToast2(true);
-                        }
-                      }}
-                    >
-                      {/* {interest ? "Retract Interest " : "I am Interested ! "} */}
-                    </IonToggle>
-                  </IonTitle>
-                </IonItem>
-              </IonFooter>
-            </IonContent>
-          </IonModal>
-          {/* {info.map((element, index) => { */}
+        <IonGrid className="oola">
           <div style={{ position: "fixed", width: "100%", zIndex: "10" }}>
             <div className="chips">
               <span className="chip">
-                <IonChip color="warning" onClick={handleNewestClick}>
+                <IonChip color="warning" onClick={() => { setSortByNewest(true) }}>
                   <IonLabel>Newest</IonLabel>
                 </IonChip>
               </span>
@@ -527,13 +476,16 @@ const Tab1: React.FC = () => {
               </span>
             </div>
           </div>
-          {/* style={{ flexDirection: `${sortByNewest}` ? "column-reverse" : "column" }} */}
+
           <div className={sortByNewest ? "homepage-cards-area sortNewest" : "homepage-cards-area"}>
             {
               filteredInfo.map((element, index) => {
                 return (
                   <>
-                    <IonCard key={index} className="homepage-card" onClick={() => { setShowModal(true) }}>
+                    <IonCard key={index} className="homepage-card" onClick={() => {
+                      setSellerDeets(element);
+                      setShowModal(true)
+                    }}>
                       <div className="homepage-card-img">
                         <img alt="Book" className="pic" src={element.bookImageUrl} />
                       </div>
@@ -564,7 +516,7 @@ const Tab1: React.FC = () => {
             }
           </div>
         </IonGrid>
-      </IonContent>
+      </IonContent >
     </IonPage >
   );
 };
