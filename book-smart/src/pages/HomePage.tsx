@@ -407,14 +407,12 @@ const Tab1: React.FC = () => {
                 {sellerDeets.bookDescription.length < 180 ? sellerDeets.bookDescription : sellerDeets.bookDescription.substring(0, 180) + "..."}
               </p>
               <div className="HPModal-sellerInfo">
-                <div>
-                  <h2 style={{ fontFamily: "Montserrat-b", fontSize: "25px" }}>Seller Details</h2>
-                  <IonItemDivider></IonItemDivider>
-                </div>
+                <p style={{ fontFamily: "Montserrat-b", fontSize: "25px" }}>Seller Details</p>
+                <IonItemDivider style={{ marginLeft: "0" }}></IonItemDivider>
                 <br />
-                <p>Name: <b>{sellerDeets.sellerName}</b></p>
-                <p style={{ margin: "10px 0" }}>City: <b>{sellerDeets.sellerAddress}</b></p>
-                <p>Price: <b>₹ {sellerDeets.bookPrice}</b></p>
+                <p>Name: <b style={{ color: "goldenrod" }}>{sellerDeets.sellerName}</b></p>
+                <p style={{ margin: "10px 0" }}>City: <b style={{ color: "goldenrod" }}>{sellerDeets.sellerAddress}</b></p>
+                <p>Price: <b style={{ color: "goldenrod" }}>₹ {sellerDeets.bookPrice}</b></p>
               </div>
               <div className="HPModal-chips">
                 {sellerDeets.tags.map((tag, index) => (
@@ -425,35 +423,35 @@ const Tab1: React.FC = () => {
               </div>
             </div>
             {/* <IonItemDivider> </IonItemDivider> */}
-            <IonFooter className="HPModal-toggle">
-              <IonItem style={{ width: "90%", padding: "0 10px" }}>
-                <IonLabel
-                  style={{
-                    fontFamily: "Montserrat-b",
-                    fontSize: "24px",
-                  }}
-                >
-                  Interested?
-                </IonLabel>
-                <IonToggle
-                  slot="end"
-                  style={{ color: `${interest ? "red" : "green"}` }}
-                  onClick={() => {
-                    if (interest) {
-                      setInterest(!interest);
-                      setMsg("Request Retracted!");
-                      setShowToast2(true);
-                    } else {
-                      setInterest(!interest);
-                      setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
-                      setShowToast2(true);
-                    }
-                  }}
-                >
-                </IonToggle>
-              </IonItem>
-            </IonFooter>
           </IonContent>
+          <IonFooter className="HPModal-toggle">
+            <IonItem style={{ width: "90%", padding: "0 10px" }}>
+              <IonLabel
+                style={{
+                  fontFamily: "Montserrat-b",
+                  fontSize: "24px",
+                }}
+              >
+                Interested?
+              </IonLabel>
+              <IonToggle
+                slot="end"
+                style={{ color: `${interest ? "red" : "green"}` }}
+                onClick={() => {
+                  if (interest) {
+                    setInterest(!interest);
+                    setMsg("Request Retracted!");
+                    setShowToast2(true);
+                  } else {
+                    setInterest(!interest);
+                    setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
+                    setShowToast2(true);
+                  }
+                }}
+              >
+              </IonToggle>
+            </IonItem>
+          </IonFooter>
         </IonModal>
 
         <IonGrid className="oola">

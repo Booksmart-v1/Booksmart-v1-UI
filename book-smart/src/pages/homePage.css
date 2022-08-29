@@ -236,7 +236,7 @@ ion-label.sc-ion-select-popover-ios {
   align-items: flex-start;
 }
 
-.HPModal-sellerInfo h2 {
+.HPModal-sellerInfo div p {
   text-align: center;
   font-family: "Montserrat-B";
   color: var(--bs-pText);
