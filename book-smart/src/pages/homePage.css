@@ -1,3 +1,12 @@
+body {
+  overflow-y: hidden;
+}
+
+.backg {
+  width: 100%;
+  overflow-y: hidden;
+}
+
 .header {
   font-family: "Montserrat-SB" !important;
   padding: 0;
@@ -7,21 +16,9 @@
 .toolbar {
   --background: var(--bs-sBg) !important;
   font-family: "Montserrat-SB" !important;
-  padding: 0;
-  margin: 0px;
   padding: 5px;
-  height: 25vh;
   border-radius: 0 0 25px 25px;
-
-}
-
-ion-searchbar {
-  text-align: center;
-  height: 50px;
-  position: fixed;
-  color: black !important;
-  font-family: "Montserrat-SB" !important;
-  --background: white !important;
+  min-height: 5vh;
 }
 
 .boola {
@@ -32,16 +29,15 @@ ion-searchbar {
 }
 
 .oola {
+  border: none;
   border-radius: 25px 25px 0 0;
   background: var(--ion-color-medium-contrast) !important;
-  border: none;
-  max-height: 75%;
+  min-height: 83%;
+  max-height: 88%;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* max-width: 95%;
-  margin: 0 auto; */
 }
 
 ion-select {
@@ -51,9 +47,24 @@ ion-select {
   justify-content: center;
 }
 
+ion-popover {
+  --background: rgba(40, 173, 218, 0.6);
+  --backdrop-opacity: 0.6;
+  --box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.6);
+  --color: white;
+  --width: 300px;
+  text-transform: capitalize;
+}
+
+ion-list-header.sc-ion-select-popover-ios,
+ion-label.sc-ion-select-popover-ios {
+  margin-left: 10px
+}
+
 .chips {
-  position: fixed;
-  top: 21.5vh;
+  position: absolute;
+  top: -25px;
+  left: 0;
   z-index: 20;
   width: 100%;
   display: flex;
@@ -65,58 +76,70 @@ ion-select {
 
 .chip {
   z-index: 20;
-  position: sticky;
+  /* position: sticky; */
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26vw;
-  height: 4.5vh;
+  /* width: 25vw;
+  height: 4.5vh; */
   text-align: center;
-  font-family: "Asap" !important;
+  /* font-family: "Asap" !important; */
   background-color: #ecdbc1;
   border-radius: 15px;
 }
 
+.homepage-cards-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  max-height: 88%;
+  /* margin: 0 0 40px 0; */
+}
+
+.sortNewest {
+  flex-direction: column-reverse;
+}
+
 .homepage-card {
-  width: 95%;
-  margin: 15px;
-  padding: 10px;
+  width: 90%;
+  min-height: 140px;
+  margin: 10px 0;
   border-radius: 15px;
   border: 1px solid #e5af48;
-  min-height: 200px;
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
   text-align: center;
 }
 
-.homepage-card-img {
-  width: 40%;
-}
-
 .homepage-card-img img {
-  width: 120px;
-  min-height: 170px;
-  border-radius: 0;
+  width: 110px;
+  min-height: 140px;
+  border-radius: 15px 0 0 15px;
 }
 
 .homepage-card-content {
-  width: 55%;
-  min-height: 160px;
+  margin-left: 15px;
+  min-height: 140px;
+  max-width: 60%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: flex-start;
+  text-align: left;
 }
 
 .homepage-card-chips {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: center;
+  text-align: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   display: grid;
   grid-template-columns: auto auto;
-
+  margin: 5px 0;
 }
 
 .searchbar-input {
@@ -124,12 +147,13 @@ ion-select {
 }
 
 .searching-chips {
+  width: 90%;
   display: grid;
   justify-items: center;
   align-content: center;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
-  padding: 10px;
+  margin: 15px auto;
 }
 
 .searching-items {
@@ -140,7 +164,9 @@ ion-select {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 120px;
+  min-width: 120px;
+  text-align: center;
+  padding: 10px 0;
 }
 
 .pic {
@@ -162,4 +188,84 @@ ion-select {
 .long-cta {
   color: white;
   font-family: "Montserrat-SB" !important;
+}
+
+.HPModal {
+  height: 100vh;
+}
+
+.HPModal-img {
+  width: 100%;
+  height: 30vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-blend-mode: darken;
+}
+
+.HPModal-content {
+  width: 90%;
+  height: 40vh;
+  /* max-height: 45vh; */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.HPModal-desc {
+  width: 100%;
+  text-align: "center";
+  font-family: "Montserrat-SB";
+  margin: 10px 0;
+  line-height: 1.4rem;
+}
+
+.HPModal-sellerInfo {
+  width: 100%;
+}
+
+.HPModal-sellerInfo div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.HPModal-sellerInfo div p {
+  text-align: center;
+  font-family: "Montserrat-B";
+  color: var(--bs-pText);
+}
+
+.HPModal-sellerInfo p {
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.HPModal-chips {
+  width: 100%;
+  height: 10vh;
+  text-align: center;
+  margin: 15px auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  grid-gap: 0 10px;
+}
+
+.HPModal-toggle {
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 10px;
 }
