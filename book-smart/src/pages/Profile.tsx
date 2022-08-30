@@ -60,7 +60,9 @@ import {
 } from "ionicons/icons";
 
 import Logo from "../images/logo.png"
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { APIURL } from "../constants";
+import axios from "axios";
 
 const Profile = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
@@ -134,67 +136,47 @@ const Profile = () => {
   }
 
   // Notifications
+  const defaultProfileImg = "https://ionicframework.com/docs/demos/api/avatar/avatar.svg"
   const [showNotifyModal, setShowNotifyModal] = useState(false)
-  const notifyArray = [
-    {
-      id: 0,
-      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
-      name: "Name Surname",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: true,
-      time: "2 mins ago",
-      status: "X",
-      isPopOverOpen: false
-    },
-    {
-      id: 1,
-      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
-      name: "Name Surname",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: false,
-      time: "10 mins ago",
-      status: "X",
-      isPopOverOpen: false
-    },
-    {
-      id: 2,
-      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
-      name: "Name Surname",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: true,
-      time: "17 mins ago",
-      status: "X",
-      isPopOverOpen: false
-    },
-    {
-      id: 3,
-      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
-      name: "Name Surname",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: false,
-      time: "25 mins ago",
-      status: "X",
-      isPopOverOpen: false
-    },
-    {
-      id: 4,
-      img: "https://ionicframework.com/docs/demos/api/avatar/avatar.svg",
-      name: "Name Surname",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      read: false,
-      time: "1 hr ago",
-      status: "X",
-      isPopOverOpen: false
-    },
-  ]
-
-  const [updatedNotifyArray, setUpdatedNotifyArray] = useState(notifyArray)
 
   // PopOver Box
-  const handlePopOverClick = (id: number) => {
-    setUpdatedNotifyArray(updatedNotifyArray.map(item => item.id == id ? { ...item, isPopOverOpen: !item.isPopOverOpen, read: true } : item));
-  }
+  const [notifyArray, setNotifyArray] = useState<any>([])
+  const getNotify = () => {
+    const url = APIURL + "v2/getUserNotifs";
+    let userId = "";
+    let username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios
+      .get(url + `?userId=${userId}`)
+      .then((resp) => {
+        // console.log(resp);
+        if (resp.status === 200) {
+          let data = resp.data.data;
+          let updateData = data.map((item: any) => ({ ...item, isPopOverOpen: false, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
+          console.log(updateData);
+          setNotifyArray(updateData);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
+
+  useEffect(() => {
+    getNotify();
+  }, [])
+
+  // var updatedNotifyArr = notifyArray.map((item: any) => ({ ...item, isPopOverOpen: false, read: false }))
+  // setNotifyArray(updatedNotifyArr);
+
+  const handlePopOverClick = (id: number, action: boolean) => {
+    setNotifyArray(notifyArray.map((item: any, idx: number) => ((idx === id) ? { ...item, isPopOverOpen: action } : item)));
+  }
   return (
     <IonPage className="md">
       <IonHeader>
@@ -595,34 +577,41 @@ const Profile = () => {
             </IonHeader>
             <IonContent>
               <div className="notifyCards-area">
-                {updatedNotifyArray.map((item, idx) => {
+                {notifyArray.map((item: any, idx: number) => {
                   return (
                     <IonItemSliding className='notifyCard' key={idx}>
-                      {/* <IonItem lines='none' color={(updatedNotifyArray[idx].status === "X" ? "" : (updatedNotifyArray[idx].status === "Accepted" ? "success" : "danger"))}> */}
-                      <IonItem lines='none' onClick={() => { handlePopOverClick(idx) }} id={String(idx)}>
+                      <IonItem lines='none'
+                        onClick={() => { handlePopOverClick(idx, true) }}
+                        id={String(idx)}>
                         <div className="notifyCard-img">
                           <IonAvatar>
-                            <img src={item.img} alt="abc" />
+                            <img src={defaultProfileImg} alt="abc" />
                           </IonAvatar>
                         </div>
-                        <div className="notifyCard-content" >
-                          <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
-                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.description}</p>
+                        <div className="notify-date">
+                          {item.date.getDate() + '-' + (item.date.getMonth() + 1) + '-' + item.date.getFullYear()} <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
+                          {/* <div className="notify-unread"></div> */}
                         </div>
-                        <div className="notify-time">
-                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.time}</p>
-                          <div className={item.read ? "" : "notify-unread"}></div>
+                        <div className="notifyCard-content">
+                          <h2 style={{ fontFamily: "Montserrat-b", fontSize: "20px" }}>{item.senderName}</h2>
+                          <p style={{ fontFamily: "Montserrat-sb" }}>{item.message.substring(0, 43)}<span style={{ color: "var(--bs-sText)" }}>{item.message.substring(43)}</span></p>
                         </div>
                       </IonItem>
-                      <IonPopover isOpen={updatedNotifyArray[idx].isPopOverOpen} side="bottom" alignment="center" trigger={String(idx)} size="cover">
+                      <IonPopover
+                        isOpen={notifyArray[idx].isPopOverOpen}
+                        side="bottom" alignment="center" trigger={String(idx)} size="cover">
                         <IonContent class="ion-padding">
-                          <div style={{ padding: "0 10px" }}>
-                            <h2 style={{ fontFamily: "Montserrat-b", fontSize: "17px" }}>{item.name}</h2>
-                            <p style={{ fontFamily: "Montserrat-sb", margin: "20px 0", fontSize: "14px" }}>{item.description}</p>
+                          <div className="notify-time">
+                            <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
+                            {/* <div className="notify-unread"></div> */}
                           </div>
-                          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <button onClick={(e) => {
-                              handlePopOverClick(idx)
+                          <div style={{ padding: "0 12px" }}>
+                            <h2 style={{ fontFamily: "Montserrat-b", fontSize: "20px" }}>{item.senderName}</h2>
+                            <p style={{ fontFamily: "Montserrat-sb" }}>{item.message.substring(0, 43)}<span style={{ color: "var(--bs-sText)" }}>{item.message.substring(43)}</span></p>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "15px 0" }}>
+                            <button onClick={() => {
+                              handlePopOverClick(idx, false);
                             }} className="popover-close-btn">Close</button>
                           </div>
                         </IonContent>
@@ -654,7 +643,7 @@ const Profile = () => {
               <IonCard className="profileActionCard" onClick={() => setShowNotifyModal(true)}>
                 <IonCardContent style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
                   <IonCardSubtitle>Notifications</IonCardSubtitle>
-                  <IonBadge slot="end" color="danger">{updatedNotifyArray.filter((item) => { return (item.read === false) }).length}</IonBadge>
+                  {/* <IonBadge slot="end" color="danger">{notifyArray.filter((item) => { return (item.read === false) }).length}</IonBadge> */}
                 </IonCardContent>
               </IonCard>
             </IonCol>
