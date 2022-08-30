@@ -253,6 +253,40 @@ const Tab1: React.FC = () => {
 
   const [sortByNewest, setSortByNewest] = useState(false);
 
+  // Sending Notify to seller
+  const handleSendNotif = (sellerDetails: any) => {
+    let receiverId = sellerDetails.sellerId;
+    let bookId = sellerDetails._id;
+    sendNotifyToSeller(receiverId, bookId)
+  }
+  const sendNotifyToSeller = (receiverId: string, bookId: string) => {
+    const url = APIURL + "v2/sendNotif";
+    let userId = "";
+    let username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios
+      .post(url, {
+        userId: userId,
+        userName: username,
+        receiverId: receiverId,
+        type: "interest",
+        bookAdId: bookId
+      })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          let data = resp.data.data;
+          console.log(data)
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   return (
     <IonPage className="backg">
       {/* <IonHeader className='header'></IonHeader> */}
@@ -446,6 +480,7 @@ const Tab1: React.FC = () => {
                     setInterest(!interest);
                     setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
                     setShowToast2(true);
+                    handleSendNotif(sellerDeets)
                   }
                 }}
               >
