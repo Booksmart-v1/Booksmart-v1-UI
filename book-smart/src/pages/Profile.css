@@ -68,12 +68,9 @@
 }
 
 .notifyCard {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
   position: relative;
   border-bottom: 1px solid gray;
-  width: 98%;
+  width: 100%;
 }
 
 .notifyCard-content {

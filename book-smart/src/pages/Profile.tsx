@@ -157,7 +157,6 @@ const Profile = () => {
         if (resp.status === 200) {
           let data = resp.data.data;
           let updateData = data.map((item: any) => ({ ...item, isPopOverOpen: false, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
-          console.log(updateData);
           setNotifyArray(updateData);
         }
       })
@@ -177,6 +176,82 @@ const Profile = () => {
   const handlePopOverClick = (id: number, action: boolean) => {
     setNotifyArray(notifyArray.map((item: any, idx: number) => ((idx === id) ? { ...item, isPopOverOpen: action } : item)));
   }
+
+  // Sending Accept Notify to seller
+  const [showAcceptToast, setShowAcceptToast] = useState(false);
+  const handleAcceptClick = (sellerDetails: any) => {
+    let receiverId = sellerDetails.senderId;
+    let bookId = sellerDetails.bookAdId;
+    sendAcceptNotifyToSeller(receiverId, bookId);
+    setShowAcceptToast(true);
+  }
+  const sendAcceptNotifyToSeller = (receiverId: string, bookId: string) => {
+    const url = APIURL + "v2/sendNotif";
+    let userId = "";
+    let username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios
+      .post(url, {
+        userId: userId,
+        userName: username,
+        receiverId: receiverId,
+        type: "accept",
+        bookAdId: bookId
+      })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          let data = resp.data.data;
+          console.log(data)
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  // Sending Accept Notify to seller
+  const [showRejectToast, setShowRejectToast] = useState(false);
+  const handleRejectClick = (sellerDetails: any) => {
+    let receiverId = sellerDetails.senderId;
+    let bookId = sellerDetails.bookAdId;
+    console.log(sellerDetails);
+    sendRejectNotifyToSeller(receiverId, bookId);
+    setShowRejectToast(true);
+  }
+  const sendRejectNotifyToSeller = (receiverId: string, bookId: string) => {
+    const url = APIURL + "v2/sendNotif";
+    let userId = "";
+    let username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios
+      .post(url, {
+        userId: userId,
+        userName: username,
+        receiverId: receiverId,
+        type: "reject",
+        bookAdId: bookId
+      })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          let data = resp.data.data;
+          console.log(data)
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <IonPage className="md">
       <IonHeader>
@@ -616,20 +691,42 @@ const Profile = () => {
                           </div>
                         </IonContent>
                       </IonPopover>
-                      {/* <IonItemOptions side="start" onClick={() => { handleNotifyStatus(idx, "Accepted") }}> */}
-                      <IonItemOptions side="start">
-                        <IonItemOption color="success" >
-                          <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
-                          <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
-                        </IonItemOption>
-                      </IonItemOptions>
-                      {/* <IonItemOptions side="end" onClick={() => { handleNotifyStatus(idx, "Rejected") }}> */}
-                      <IonItemOptions side="end">
-                        <IonItemOption color="danger">
-                          <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
-                          <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
-                        </IonItemOption>
-                      </IonItemOptions>
+                      {item.type === "interest" ? (
+                        <>
+                          <IonToast
+                            isOpen={showAcceptToast}
+                            onDidDismiss={() => setShowAcceptToast(false)}
+                            message="Accept Notification has been sent!"
+                            duration={200}
+                            position="top"
+                          />
+                          <IonItemOptions side="start">
+                            <IonItemOption color="success"
+                              onClick={() => { handleAcceptClick(notifyArray[idx]) }}
+                            >
+                              <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
+                              <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
+                            </IonItemOption>
+                            <IonToast
+                              isOpen={showRejectToast}
+                              onDidDismiss={() => setShowRejectToast(false)}
+                              message="Reject Notification has been sent!"
+                              duration={200}
+                              position="top"
+                            />
+                          </IonItemOptions>
+                          <IonItemOptions side="end">
+                            <IonItemOption color="danger"
+                              onClick={() => { handleRejectClick(notifyArray[idx]) }}
+                            >
+                              <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
+                              <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
+                            </IonItemOption>
+                          </IonItemOptions>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </IonItemSliding>
                   )
                 })}
