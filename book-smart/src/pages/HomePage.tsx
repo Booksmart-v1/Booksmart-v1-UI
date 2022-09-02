@@ -167,34 +167,38 @@ const Tab1: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [checked, setChecked] = useState(false);
 
+  // const User = localStorage.getItem("user");
   const getCardDetails = (lim: Number) => {
     const url = APIURL + "v2/getBookAds";
-    let userId = "1233";
-    let username = "Aagam";
+    var userId = "1233";
+    var username = "Aagam";
     const a = localStorage.getItem("user");
     if (a) {
       userId = JSON.parse(a).id;
       username = JSON.parse(a).name;
+      setCurrUser({ ...currUser, userId: userId, username: username })
     }
     axios
       .get(url + `?limit=${lim}&userId=${userId}`)
       .then((resp) => {
         console.log(resp);
         if (resp.status === 200) {
-          let data = resp.data.data;
+          var data = resp.data.data;
           for (const element of data) {
             element.bookImageUrl = element.bookImageUrl
               ? element.bookImageUrl
               : defaultImage;
           }
-          setInfo(data);
-          setFilteredInfo(data);
+          let updateData = data.map((item: any) => ({ ...item, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
+          setInfo(updateData);
+          setFilteredInfo(updateData);
         }
       })
       .catch((e) => {
         console.log(e);
       });
   };
+  const [currUser, setCurrUser] = useState<any>({})
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getCardDetails(60);
     console.log("Begin async operation");
@@ -209,14 +213,14 @@ const Tab1: React.FC = () => {
 
   const handleInputChange = (chipArr: any) => {
     if (chipArr.length >= 0 && chipArr.length < 5) {
-      let xyz = chipArr.map((idx: number, tag: string) => ({ key: idx, label: tag, hide: false }))
+      var xyz = chipArr.map((idx: number, tag: string) => ({ key: idx, label: tag, hide: false }))
       setSelectedChipsArr(xyz);
     }
     else if (chipArr.length >= 5) {
       console.log("More than 5! Not Allowed.")
     }
     if (chipArr.length > 0 && chipArr.length < 5) {
-      let lowerCasedChips = chipArr.map((chip: string) => { return chip.toLowerCase() });
+      var lowerCasedChips = chipArr.map((chip: string) => { return chip.toLowerCase() });
       var filterData = []
       for (let i = 0; i < lowerCasedChips.length; i++) {
         filterData = info.filter((item) => {
@@ -233,10 +237,10 @@ const Tab1: React.FC = () => {
     console.log("ChipArr: ", selectedChipsArr);
   }
 
-  let allTags = info.map((item) => item.tags.map((tag) => tag))
+  var allTags = info.map((item) => item.tags.map((tag) => tag))
   var uniqueTags: string[] = []
   allTags.map((item) => item.map((tag) => uniqueTags.push(tag.toLowerCase())))
-  let finalTags = Array.from(new Set(uniqueTags))
+  var finalTags = Array.from(new Set(uniqueTags))
 
   // Sending Notify to seller
   const handleSendNotif = (sellerDetails: any) => {
@@ -247,8 +251,8 @@ const Tab1: React.FC = () => {
   }
   const sendNotifyToSeller = (receiverId: string, bookId: string) => {
     const url = APIURL + "v2/sendNotif";
-    let userId = "";
-    let username = "";
+    var userId = "";
+    var username = "";
     const a = localStorage.getItem("user");
     if (a) {
       userId = JSON.parse(a).id;
@@ -297,6 +301,7 @@ const Tab1: React.FC = () => {
       setcardSkeletonLoaded(false);
     };
   }, []);
+
   return (
     <IonPage className="backg">
       {/* <IonHeader className='header'></IonHeader> */}
@@ -416,11 +421,11 @@ const Tab1: React.FC = () => {
             </div>
           </IonHeader>
           <IonContent>
-            <div style={{ width: "90%", maxHeight: "10vh", textAlign: "center", margin: "10px auto" }}>
+            <div style={{ maxWidth: "90%", maxHeight: "10vh", textAlign: "center", margin: "10px auto" }}>
               <p style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "goldenrod", fontSize: "22px", marginBottom: "5px" }} >
                 {sellerDeets.bookName.length < 45 ? sellerDeets.bookName : sellerDeets.bookName.substring(0, 45) + "..."}
               </p>
-              <p style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "18px" }} >
+              <p style={{ textAlign: "center", fontFamily: "Montserrat-SB", color: "var(--bs-pText)", fontSize: "18px" }} >
                 {sellerDeets.bookAuthor}
               </p>
             </div>
@@ -446,33 +451,41 @@ const Tab1: React.FC = () => {
             </div>
             {/* <IonItemDivider> </IonItemDivider> */}
           </IonContent>
-          <IonFooter className="HPModal-toggle">
-            <IonItem style={{ width: "90%", padding: "0 10px" }}>
-              <IonLabel
-                style={{
-                  fontFamily: "Montserrat-b",
-                  fontSize: "24px",
-                }}
-              >
-                Interested?
-              </IonLabel>
-              <IonToggle
-                slot="end"
-                style={{ color: `${interest ? "red" : "green"}` }}
-                onClick={() => {
-                  if (interest) {
-                    setMsg("Request Retracted!");
-                    setShowToast2(true);
-                  } else {
-                    setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
-                    setShowToast2(true);
-                    handleSendNotif(sellerDeets)
-                  }
-                }}
-              >
-              </IonToggle>
-            </IonItem>
-          </IonFooter>
+          {
+            sellerDeets.sellerId === currUser.userId ? (
+              <IonFooter collapse="fade" style={{ color: "gray", textAlign: "center", fontFamily: "Montserrat-b", margin: "10px 0" }}>
+                <h3>Book On Sale</h3>
+              </IonFooter>
+            ) : (
+              <IonFooter className="HPModal-toggle">
+                <IonItem style={{ width: "90%", padding: "0 10px" }}>
+                  <IonLabel
+                    style={{
+                      fontFamily: "Montserrat-b",
+                      fontSize: "24px",
+                    }}
+                  >
+                    Interested?
+                  </IonLabel>
+                  <IonToggle
+                    slot="end"
+                    style={{ color: `${interest ? "red" : "green"}` }}
+                    onClick={() => {
+                      if (interest) {
+                        setMsg("Request Retracted!");
+                        setShowToast2(true);
+                      } else {
+                        setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
+                        setShowToast2(true);
+                        handleSendNotif(sellerDeets)
+                      }
+                    }}
+                  >
+                  </IonToggle>
+                </IonItem>
+              </IonFooter>
+            )
+          }
         </IonModal>
 
         <IonGrid className="oola">
@@ -498,7 +511,7 @@ const Tab1: React.FC = () => {
           <div className={sortByNewest ? "homepage-cards-area sortNewest" : "homepage-cards-area"}>
             {
               cardSkeletonLoaded &&
-              filteredInfo.map((element, index) => {
+              filteredInfo.map((element: any, index) => {
                 return (
                   <>
                     <IonCard key={index} className="homepage-card" onClick={() => {
@@ -509,6 +522,10 @@ const Tab1: React.FC = () => {
                         <img alt="Book" className="pic" src={element.bookImageUrl} />
                       </div>
                       <div className="homepage-card-content">
+                        <div className="homepage-card-time">
+                          {/* {element.date.getDate() + '-' + (element.date.getMonth() + 1) + '-' + element.date.getFullYear()} */}
+                          <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{element.time}</span>
+                        </div>
                         <IonCardTitle style={{
                           fontSize: "1rem", fontFamily: "Montserrat-b"
                         }}>
@@ -518,7 +535,7 @@ const Tab1: React.FC = () => {
                           {element.bookAuthor}
                         </IonCardSubtitle>
                         <div className="homepage-card-chips">
-                          {element.tags.map((tag, index) => (
+                          {element.tags.map((tag: string, index: number) => (
                             <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", margin: "0 5px", background: "var(--bs-pBg)" }}>
                               <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "13px", textTransform: "capitalize" }}>{tag}</IonLabel>
                             </IonChip>
@@ -554,18 +571,12 @@ const Tab1: React.FC = () => {
                       </IonThumbnail>
                     </div>
                     <div className="homepage-card-content" style={{ marginLeft: "75px" }}>
-                      {/* <IonCardTitle style={{ fontSize: "1rem", fontFamily: "Montserrat-b" }}>
-                        {element.bookName.length < 30 ? element.bookName : element.bookName.substring(0, 30) + "..."}
-                      </IonCardTitle> */}
                       <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
                       <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
                       <div className="homepage-card-chips">
-                        {element.tags.map((tag, index) => (
-                          // <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", margin: "0 5px", background: "var(--bs-pBg)" }}>
-                          //   <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "13px", textTransform: "capitalize" }}>{tag}</IonLabel>
-                          // </IonChip>
+                        {element.tags.map(() => (
                           <IonThumbnail slot="start">
-                            <IonSkeletonText animated={true}></IonSkeletonText>
+                            <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
                           </IonThumbnail>
                         ))}
                       </div>
