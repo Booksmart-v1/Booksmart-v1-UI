@@ -258,7 +258,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                 ) : (
                   <></>
                 )}
-             
+
                 <div className="number">
                   <p
                     style={{
@@ -291,7 +291,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                 expand="block"
                 onClick={handleClick}
                 style={{
-                  marginRight: "-15px",
+                  marginTop: "10px",
                   "--background": "white",
                   fontFamily: "Montserrat-SB !important",
                   fontWeight: "bold",

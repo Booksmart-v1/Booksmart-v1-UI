@@ -157,7 +157,6 @@ const Profile = () => {
         if (resp.status === 200) {
           let data = resp.data.data;
           let updateData = data.map((item: any) => ({ ...item, isPopOverOpen: false, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
-          console.log(updateData[0].time)
           setNotifyArray(updateData);
         }
       })
@@ -301,8 +300,7 @@ const Profile = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
-        <div className="topHeader"></div>
+      <IonContent scrollY={false}>
         <IonGrid>
           <IonRow className="ion-justify-content-center">
             <IonCol
@@ -312,13 +310,13 @@ const Profile = () => {
               <IonCard className="profileHeader">
                 <IonCardContent>
                   <IonRow>
-                    <IonCol size="5">
+                    <IonCol size="6">
                       <img
                         src={profile}
                         alt="avatar"
                         style={{
-                          borderRadius: "80px",
-                          height: "10vh",
+                          borderRadius: "50%",
+                          height: "15vh",
                         }}
                       />
                       <IonIcon
@@ -376,7 +374,7 @@ const Profile = () => {
                         ]}
                       ></IonActionSheet>
                     </IonCol>
-                    <IonCol size="7">
+                    <IonCol size="6">
                       <IonRow className="profileInfo">
                         <IonCol size="12">
                           <IonText color="dark" className="profileName">
@@ -435,9 +433,9 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <IonRow className="profileStatusContainer" style={{ margin: "10px 0" }}>
+          <IonRow className="profileStatusContainer" style={{ margin: "20px 0" }}>
             <IonCol size="12">
-              <IonCard className="profileCard">
+              <IonCard className="profileCard" style={{ height: "15vh" }}>
                 <IonCardHeader>
                   <IonRow className="profileStatus">
                     <IonRow>
@@ -477,7 +475,7 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <IonRow style={{ margin: "10px 0" }}>
+          {/* <IonRow style={{ margin: "10px 0" }}>
             <IonCol size="6">
               <IonCard className="profileCard">
                 <IonCardContent>
@@ -497,7 +495,7 @@ const Profile = () => {
                 </IonCardContent>
               </IonCard>
             </IonCol>
-          </IonRow>
+          </IonRow> */}
           {/* Settings Modal; */}
           <IonModal isOpen={showSettingsModal} onDidDismiss={() => setShowSettingsModal(false)}>
             <IonHeader>

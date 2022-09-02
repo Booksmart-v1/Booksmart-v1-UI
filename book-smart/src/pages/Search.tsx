@@ -50,7 +50,7 @@ const Search: React.FC = () => {
   };
 
   // Trending Books Modal
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [showAddBookToast, setShowAddBookToast] = useState(false);
 
   function handleCategoryChange(e: any) {
@@ -76,9 +76,8 @@ const Search: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <br />
+      <IonHeader style={{ width: "100%", height: "11vh"}}>
+        <IonToolbar style={{ width: "100%"}}>
           <IonTitle
             style={{
               color: "var(--bs-pText)",
@@ -89,16 +88,15 @@ const Search: React.FC = () => {
           >
             SEARCH
           </IonTitle>
-          <br />
+        </IonToolbar>
           <IonSearchbar
-            style={{ color: "var(--bs-sBg)" }}
+            style={{ color: "var(--bs-sBg)"}}
             showCancelButton="focus"
             placeholder="Title, author or ISBN"
             onClick={() => setScreen("search")}
           ></IonSearchbar>
-        </IonToolbar>
       </IonHeader>
-      <IonContent>
+      <IonContent style={{ minHeight: "80vh" }}>
         <IonRow>
           <IonCol size="8">
             <p className="text-align-left recent">Recent</p>
@@ -372,7 +370,7 @@ const Search: React.FC = () => {
           </IonSlides>
         </div>
       </IonContent>
-    </IonPage>
+    </IonPage >
   );
 };
 
