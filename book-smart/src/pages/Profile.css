@@ -114,8 +114,10 @@
   margin: 0 5px;
 }
 
-ion-popover {
+.notifyCards-area ion-popover {
   --backdrop-opacity: 0.5;
+  --width: 97%;
+  --offset-y: -100px
 }
 
 .popover-close-btn {

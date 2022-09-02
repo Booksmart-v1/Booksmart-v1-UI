@@ -35,6 +35,8 @@ import {
   IonSelectOption,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
+  IonSkeletonText,
+  IonThumbnail,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import ExploreContainer from "../components/ExploreContainer";
@@ -53,7 +55,6 @@ import {
 import Search from "./Search";
 import { APIURL } from "../constants";
 import axios from "axios";
-import { url } from "inspector";
 
 const defaultImage = "https://via.placeholder.com/200/1200";
 const cardDetails = [
@@ -197,25 +198,13 @@ const Tab1: React.FC = () => {
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getCardDetails(60);
     console.log("Begin async operation");
-
     setTimeout(() => {
       console.log("Async operation has ended");
       event.detail.complete();
     }, 2000);
   }
 
-  useEffect(() => {
-    getCardDetails(60);
-  }, []);
-
   // Searched Chips
-  const [refresh, setRefresh] = useState(false);
-  const [chipData, setChipData] = useState([
-    { key: 0, label: "Health", hide: false },
-    { key: 1, label: "Love", hide: false },
-    { key: 2, label: "Horror", hide: false },
-    { key: 3, label: "Fiction", hide: false },
-  ]);
   const [selectedChipsArr, setSelectedChipsArr] = useState([]);
 
   const handleInputChange = (chipArr: any) => {
@@ -248,16 +237,13 @@ const Tab1: React.FC = () => {
   var uniqueTags: string[] = []
   allTags.map((item) => item.map((tag) => uniqueTags.push(tag.toLowerCase())))
   let finalTags = Array.from(new Set(uniqueTags))
-  // console.log(finalTags)
-  // console.log(filteredInfo)
-
-  const [sortByNewest, setSortByNewest] = useState(false);
 
   // Sending Notify to seller
   const handleSendNotif = (sellerDetails: any) => {
     let receiverId = sellerDetails.sellerId;
     let bookId = sellerDetails._id;
     sendNotifyToSeller(receiverId, bookId)
+    console.log(sellerDetails)
   }
   const sendNotifyToSeller = (receiverId: string, bookId: string) => {
     const url = APIURL + "v2/sendNotif";
@@ -287,6 +273,30 @@ const Tab1: React.FC = () => {
         console.log(e);
       });
   };
+
+  const [cardSkeletonLoaded, setcardSkeletonLoaded] = useState(false);
+  const [sortByNewest, setSortByNewest] = useState(false);
+  const handleSortNewest = () => {
+    setcardSkeletonLoaded(false);
+    const timer = setTimeout(() => {
+      setcardSkeletonLoaded(true);
+      setSortByNewest(true);
+    }, 2000);
+    return () => {
+      clearTimeout(timer);
+      setcardSkeletonLoaded(false);
+    }
+  }
+  useEffect(() => {
+    getCardDetails(60);
+    const timer = setTimeout(() => {
+      setcardSkeletonLoaded(true);
+    }, 2000);
+    return () => {
+      clearTimeout(timer);
+      setcardSkeletonLoaded(false);
+    };
+  }, []);
   return (
     <IonPage className="backg">
       {/* <IonHeader className='header'></IonHeader> */}
@@ -294,6 +304,7 @@ const Tab1: React.FC = () => {
         onLoad={() => setShowToast1(true)}
         fullscreen
         className="boola"
+        scrollY={false}
       >
         <IonToast
           isOpen={showToast1}
@@ -348,7 +359,7 @@ const Tab1: React.FC = () => {
         <div className="selectInput">
           <IonList style={{ margin: "10px auto 0 auto", width: "90%" }}>
             <IonItem >
-              <IonSelect placeholder="Select interest" multiple={true} selectedText=""
+              <IonSelect placeholder="Select interest" multiple={true}
                 onIonChange={(e) => handleInputChange(e.detail.value)} interface="popover"
               >
                 {finalTags.map((item) => (<IonSelectOption value={item} style={{ textTransform: "capitalize" }}>{item}</IonSelectOption>))}
@@ -375,29 +386,6 @@ const Tab1: React.FC = () => {
           </div>
           <br />
         </div>
-        {/* <IonModal
-              isOpen={showModal}
-              className="modal"
-              swipeToClose={true}
-              breakpoints={[0, 0.3, 1]}
-              initialBreakpoint={0.5}
-              onDidDismiss={() => setShowModal(false)}
-            >
-              <Search />
-              <IonFooter>
-                <IonButton
-                  onClick={() => setShowModal(false)}
-                  style={{
-                    marginTop: "360px",
-                    width: "90%",
-                    marginLeft: "20px",
-                    marginRight: "20px",
-                  }}
-                >
-                  Close Modal
-                </IonButton>
-              </IonFooter>
-            </IonModal> */}
         <IonModal
           isOpen={showModal}
           swipeToClose={true}
@@ -473,11 +461,9 @@ const Tab1: React.FC = () => {
                 style={{ color: `${interest ? "red" : "green"}` }}
                 onClick={() => {
                   if (interest) {
-                    setInterest(!interest);
                     setMsg("Request Retracted!");
                     setShowToast2(true);
                   } else {
-                    setInterest(!interest);
                     setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
                     setShowToast2(true);
                     handleSendNotif(sellerDeets)
@@ -493,7 +479,7 @@ const Tab1: React.FC = () => {
           <div style={{ position: "fixed", width: "100%", zIndex: "10" }}>
             <div className="chips">
               <span className="chip">
-                <IonChip color="warning" onClick={() => { setSortByNewest(true) }}>
+                <IonChip color="warning" onClick={handleSortNewest}>
                   <IonLabel>Newest</IonLabel>
                 </IonChip>
               </span>
@@ -509,9 +495,9 @@ const Tab1: React.FC = () => {
               </span>
             </div>
           </div>
-
           <div className={sortByNewest ? "homepage-cards-area sortNewest" : "homepage-cards-area"}>
             {
+              cardSkeletonLoaded &&
               filteredInfo.map((element, index) => {
                 return (
                   <>
@@ -545,6 +531,48 @@ const Tab1: React.FC = () => {
                     </IonCard>
                   </>
                 );
+              })
+            }
+            {
+              !cardSkeletonLoaded &&
+              filteredInfo.map((element, index) => {
+                return (
+                  <IonCard key={index} className="homepage-card" onClick={() => {
+                    setSellerDeets(element);
+                    setShowModal(true)
+                  }}>
+                    <div className="homepage-card-img">
+                      <IonThumbnail>
+                        <IonSkeletonText animated={true}
+                          style={{
+                            width: "110px",
+                            minHeight: "140px",
+                            borderRadius: "15px 0 0 15px",
+                            position: "absolute", top: 0, left: 0
+                          }}
+                        ></IonSkeletonText>
+                      </IonThumbnail>
+                    </div>
+                    <div className="homepage-card-content" style={{ marginLeft: "75px" }}>
+                      {/* <IonCardTitle style={{ fontSize: "1rem", fontFamily: "Montserrat-b" }}>
+                        {element.bookName.length < 30 ? element.bookName : element.bookName.substring(0, 30) + "..."}
+                      </IonCardTitle> */}
+                      <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
+                      <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
+                      <div className="homepage-card-chips">
+                        {element.tags.map((tag, index) => (
+                          // <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", margin: "0 5px", background: "var(--bs-pBg)" }}>
+                          //   <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "13px", textTransform: "capitalize" }}>{tag}</IonLabel>
+                          // </IonChip>
+                          <IonThumbnail slot="start">
+                            <IonSkeletonText animated={true}></IonSkeletonText>
+                          </IonThumbnail>
+                        ))}
+                      </div>
+                      <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
+                    </div>
+                  </IonCard>
+                )
               })
             }
           </div>

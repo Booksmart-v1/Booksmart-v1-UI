@@ -219,9 +219,11 @@ ion-label.sc-ion-select-popover-ios {
 
 .HPModal-desc {
   width: 100%;
-  text-align: "center";
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: "Montserrat-SB";
-  margin: 10px 0;
+  margin: 15px 0;
   line-height: 1.4rem;
 }
 
