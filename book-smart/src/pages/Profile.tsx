@@ -157,6 +157,7 @@ const Profile = () => {
         if (resp.status === 200) {
           let data = resp.data.data;
           let updateData = data.map((item: any) => ({ ...item, isPopOverOpen: false, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
+          console.log(updateData[0].time)
           setNotifyArray(updateData);
         }
       })
@@ -664,7 +665,8 @@ const Profile = () => {
                           </IonAvatar>
                         </div>
                         <div className="notify-date">
-                          {item.date.getDate() + '-' + (item.date.getMonth() + 1) + '-' + item.date.getFullYear()} <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
+                          {item.date.getDate() + '-' + (item.date.getMonth() + 1) + '-' + item.date.getFullYear()}
+                          <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
                           {/* <div className="notify-unread"></div> */}
                         </div>
                         <div className="notifyCard-content">
@@ -672,9 +674,12 @@ const Profile = () => {
                           <p style={{ fontFamily: "Montserrat-sb" }}>{item.message.substring(0, 43)}<span style={{ color: "var(--bs-sText)" }}>{item.message.substring(43)}</span></p>
                         </div>
                       </IonItem>
-                      <IonPopover
+                      <IonPopover reference="event"
                         isOpen={notifyArray[idx].isPopOverOpen}
-                        side="bottom" alignment="center" trigger={String(idx)} size="cover">
+                      // alignment="center" 
+                      // trigger={String(idx)}
+                      //  size="auto"
+                      >
                         <IonContent class="ion-padding">
                           <div className="notify-time">
                             <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
@@ -687,7 +692,7 @@ const Profile = () => {
                           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "15px 0" }}>
                             <button onClick={() => {
                               handlePopOverClick(idx, false);
-                            }} className="popover-close-btn">Close</button>
+                            }} className="popover-close-btn">Dismiss</button>
                           </div>
                         </IonContent>
                       </IonPopover>
