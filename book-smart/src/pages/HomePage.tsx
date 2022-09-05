@@ -2,26 +2,16 @@ import {
   IonContent,
   IonHeader,
   IonPage,
-  IonTitle,
   IonToolbar,
-  IonSearchbar,
-  IonCardHeader,
   IonCard,
   IonCardSubtitle,
   IonCardTitle,
-  IonCardContent,
   IonGrid,
-  IonRow,
-  IonCol,
   IonItem,
-  IonAvatar,
   IonChip,
   IonLabel,
-  IonListHeader,
   IonModal,
-  useIonModal,
   IonButton,
-  useIonToast,
   IonFooter,
   IonRefresher,
   IonRefresherContent,
@@ -33,26 +23,13 @@ import {
   IonList,
   IonSelect,
   IonSelectOption,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
   IonSkeletonText,
   IonThumbnail,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
-import ExploreContainer from "../components/ExploreContainer";
 import "./homePage.css";
-import logo from "../images/Booksmart.png";
-import star from "../images/star.png";
 import { useState, useEffect } from "react";
-import {
-  headset,
-  informationCircle,
-  starHalfSharp,
-  toggle,
-  closeCircle,
-  pin
-} from "ionicons/icons";
-import Search from "./Search";
+import {pin} from "ionicons/icons";
 import { APIURL } from "../constants";
 import axios from "axios";
 
@@ -165,7 +142,6 @@ const Tab1: React.FC = () => {
   const [msg, setMsg] = useState("");
 
   const [showModal, setShowModal] = useState(false);
-  const [checked, setChecked] = useState(false);
 
   // const User = localStorage.getItem("user");
   const getCardDetails = (lim: Number) => {
@@ -440,6 +416,7 @@ const Tab1: React.FC = () => {
                 <p>Name: <b style={{ color: "goldenrod" }}>{sellerDeets.sellerName}</b></p>
                 <p style={{ margin: "10px 0" }}>City: <b style={{ color: "goldenrod" }}>{sellerDeets.sellerAddress}</b></p>
                 <p>Price: <b style={{ color: "goldenrod" }}>₹ {sellerDeets.bookPrice}</b></p>
+                <p></p>
               </div>
               <div className="HPModal-chips">
                 {sellerDeets.tags.map((tag, index) => (
@@ -516,18 +493,17 @@ const Tab1: React.FC = () => {
                   <>
                     <IonCard key={index} className="homepage-card" onClick={() => {
                       setSellerDeets(element);
-                      setShowModal(true)
+                      setShowModal(true);
                     }}>
                       <div className="homepage-card-img">
                         <img alt="Book" className="pic" src={element.bookImageUrl} />
                       </div>
                       <div className="homepage-card-content">
                         <div className="homepage-card-time">
-                          {/* {element.date.getDate() + '-' + (element.date.getMonth() + 1) + '-' + element.date.getFullYear()} */}
-                          <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{element.time}</span>
+                          <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{element.date.getDate() + '-' + (element.date.getMonth() + 1) + '-' + element.date.getFullYear()}</span>
                         </div>
                         <IonCardTitle style={{
-                          fontSize: "1rem", fontFamily: "Montserrat-b"
+                          fontSize: "0.87rem", fontFamily: "Montserrat-b"
                         }}>
                           {element.bookName.length < 30 ? element.bookName : element.bookName.substring(0, 30) + "..."}
                         </IonCardTitle>

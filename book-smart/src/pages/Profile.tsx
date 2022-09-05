@@ -24,8 +24,6 @@ import {
   IonTitle,
   IonInput,
   IonFooter,
-  IonList,
-  IonItemDivider,
   IonToggle,
   IonToast,
   IonAccordionGroup,
@@ -39,12 +37,8 @@ import {
 import "./Profile.css";
 import profile from "../images/profile-image.jpg";
 import {
-  arrowBackOutline,
-  arrowForward,
-  bookmarkOutline,
   chatboxEllipsesOutline,
   ellipsisHorizontal,
-  imageOutline,
   personAddOutline,
   chatboxOutline,
   createOutline,
@@ -53,14 +47,11 @@ import {
   trash,
   heart,
   logOutOutline,
-  logOut,
   checkmarkOutline,
   closeOutline,
   settingsOutline,
 } from "ionicons/icons";
-
-import Logo from "../images/logo.png"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { APIURL } from "../constants";
 import axios from "axios";
 
