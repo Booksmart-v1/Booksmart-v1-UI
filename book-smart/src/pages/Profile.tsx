@@ -15,6 +15,8 @@ import {
   IonIcon,
   IonPage,
   IonRow,
+  IonRefresher,
+  IonRefresherContent,
   IonText,
   IonToolbar,
   IonItem,
@@ -33,8 +35,10 @@ import {
   IonItemSliding,
   IonItemOptions,
   IonItemOption,
+  useIonAlert,
 } from "@ionic/react";
 import "./Profile.css";
+import { RefresherEventDetail } from "@ionic/core";
 import profile from "../images/profile-image.jpg";
 import {
   chatboxEllipsesOutline,
@@ -50,6 +54,7 @@ import {
   checkmarkOutline,
   closeOutline,
   settingsOutline,
+  notificationsOutline
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { APIURL } from "../constants";
@@ -161,22 +166,36 @@ const Profile = () => {
     getNotify();
   }, [])
 
-  // var updatedNotifyArr = notifyArray.map((item: any) => ({ ...item, isPopOverOpen: false, read: false }))
-  // setNotifyArray(updatedNotifyArr);
-
   const handlePopOverClick = (id: number, action: boolean) => {
+    if (action === false) {
+      const url = APIURL + "v2/readNotif";
+      axios
+        .post(url, {
+          id: notifyArray[id]._id
+        })
+        .then((resp) => {
+          if (resp.status === 200) {
+            let data = resp.data.data;
+            console.log(data)
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
     setNotifyArray(notifyArray.map((item: any, idx: number) => ((idx === id) ? { ...item, isPopOverOpen: action } : item)));
   }
-
+  const [presentNotifyHandleAlert] = useIonAlert();
   // Sending Accept Notify to seller
   const [showAcceptToast, setShowAcceptToast] = useState(false);
   const handleAcceptClick = (sellerDetails: any) => {
     let receiverId = sellerDetails.senderId;
     let bookId = sellerDetails.bookAdId;
-    sendAcceptNotifyToSeller(receiverId, bookId);
+    let notifId = sellerDetails._id;
+    sendAcceptNotifyToSeller(receiverId, bookId, notifId);
     setShowAcceptToast(true);
   }
-  const sendAcceptNotifyToSeller = (receiverId: string, bookId: string) => {
+  const sendAcceptNotifyToSeller = (receiverId: string, bookId: string, notifId: string) => {
     const url = APIURL + "v2/sendNotif";
     let userId = "";
     let username = "";
@@ -191,7 +210,8 @@ const Profile = () => {
         userName: username,
         receiverId: receiverId,
         type: "accept",
-        bookAdId: bookId
+        bookAdId: bookId,
+        notifId: notifId
       })
       .then((resp) => {
         console.log(resp);
@@ -210,11 +230,11 @@ const Profile = () => {
   const handleRejectClick = (sellerDetails: any) => {
     let receiverId = sellerDetails.senderId;
     let bookId = sellerDetails.bookAdId;
-    console.log(sellerDetails);
-    sendRejectNotifyToSeller(receiverId, bookId);
+    let notifId = sellerDetails._id;
+    sendRejectNotifyToSeller(receiverId, bookId, notifId);
     setShowRejectToast(true);
   }
-  const sendRejectNotifyToSeller = (receiverId: string, bookId: string) => {
+  const sendRejectNotifyToSeller = (receiverId: string, bookId: string, notifId: string) => {
     const url = APIURL + "v2/sendNotif";
     let userId = "";
     let username = "";
@@ -229,7 +249,8 @@ const Profile = () => {
         userName: username,
         receiverId: receiverId,
         type: "reject",
-        bookAdId: bookId
+        bookAdId: bookId,
+        notifId: notifId
       })
       .then((resp) => {
         console.log(resp);
@@ -242,7 +263,14 @@ const Profile = () => {
         console.log(e);
       });
   };
-
+  const [showRefreshToast1, setRefreshShowToast1] = useState(false);
+  const [showRefreshToast2, setRefreshShowToast2] = useState(false);
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    getNotify();
+    setTimeout(() => {
+      event.detail.complete();
+    }, 2000);
+  }
   return (
     <IonPage className="md">
       <IonHeader>
@@ -641,6 +669,56 @@ const Profile = () => {
               </IonToolbar>
             </IonHeader>
             <IonContent>
+              <IonToast
+                isOpen={showToast1}
+                onDidDismiss={() => setRefreshShowToast1(false)}
+                message="Pull to Refresh"
+                duration={200}
+                translucent={true}
+                mode="ios"
+                buttons={[
+                  {
+                    text: "Hide",
+                    role: "cancel",
+                    handler: () => setRefreshShowToast1(false),
+                  },
+                ]}
+              />
+
+              <IonToast
+                isOpen={showToast2}
+                onDidDismiss={() => setRefreshShowToast2(false)}
+                message={"Hello"}
+                duration={400}
+                translucent={true}
+                mode="ios"
+                position="top"
+                buttons={[
+                  {
+                    text: "Hide",
+                    role: "cancel",
+                    handler: () => setRefreshShowToast2(false),
+                  },
+                ]}
+              />
+              <IonRefresher
+                slot="fixed"
+                placeholder="P"
+                onIonRefresh={doRefresh}
+                pullFactor={0.5}
+                pullMin={100}
+                pullMax={200}
+                style={{
+                  color: "black",
+                  fontFamily: "Montserrat-SB",
+                  fontSize: "1.1rem",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                <p style={{ textAlign: "center" }}> Refreshing Your Notifications!✌️ <br /> Please Wait...</p>
+                <IonRefresherContent></IonRefresherContent>
+              </IonRefresher>
               <div className="notifyCards-area">
                 {notifyArray.map((item: any, idx: number) => {
                   return (
@@ -656,7 +734,9 @@ const Profile = () => {
                         <div className="notify-date">
                           {item.date.getDate() + '-' + (item.date.getMonth() + 1) + '-' + item.date.getFullYear()}
                           <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
-                          {/* <div className="notify-unread"></div> */}
+                          {!item.isRead && (
+                            <div className="notify-unread"></div>
+                          )}
                         </div>
                         <div className="notifyCard-content">
                           <h2 style={{ fontFamily: "Montserrat-b", fontSize: "20px" }}>{item.senderName}</h2>
@@ -665,9 +745,6 @@ const Profile = () => {
                       </IonItem>
                       <IonPopover reference="event"
                         isOpen={notifyArray[idx].isPopOverOpen}
-                      // alignment="center" 
-                      // trigger={String(idx)}
-                      //  size="auto"
                       >
                         <IonContent class="ion-padding">
                           <div className="notify-time">
@@ -696,7 +773,24 @@ const Profile = () => {
                           />
                           <IonItemOptions side="start">
                             <IonItemOption color="success"
-                              onClick={() => { handleAcceptClick(notifyArray[idx]) }}
+                              onClick={() =>
+                                presentNotifyHandleAlert({
+                                  header: 'Are you sure you want to Accept?',
+                                  buttons: [
+                                    {
+                                      text: 'Cancel',
+                                      role: 'cancel',
+                                    },
+                                    {
+                                      text: 'Accept',
+                                      role: 'confirm',
+                                      handler: () => {
+                                        handleAcceptClick(notifyArray[idx])
+                                      },
+                                    },
+                                  ]
+                                })}
+                            // onClick={() => { handleAcceptClick(notifyArray[idx]) }}
                             >
                               <IonIcon icon={checkmarkOutline} style={{ fontSize: "20px" }} />
                               <p style={{ fontFamily: "Montserrat-sb" }}>Accept</p>
@@ -711,7 +805,23 @@ const Profile = () => {
                           </IonItemOptions>
                           <IonItemOptions side="end">
                             <IonItemOption color="danger"
-                              onClick={() => { handleRejectClick(notifyArray[idx]) }}
+                              onClick={() =>
+                                presentNotifyHandleAlert({
+                                  header: 'Are you sure you want to Reject?',
+                                  buttons: [
+                                    {
+                                      text: 'Cancel',
+                                      role: 'cancel',
+                                    },
+                                    {
+                                      text: 'Reject',
+                                      role: 'confirm',
+                                      handler: () => {
+                                        handleRejectClick(notifyArray[idx])
+                                      },
+                                    },
+                                  ]
+                                })}
                             >
                               <IonIcon icon={closeOutline} style={{ fontSize: "20px" }} />
                               <p style={{ fontFamily: "Montserrat-sb" }}>Reject</p>
@@ -734,7 +844,10 @@ const Profile = () => {
               <IonCard className="profileActionCard" onClick={() => setShowNotifyModal(true)}>
                 <IonCardContent style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
                   <IonCardSubtitle>Notifications</IonCardSubtitle>
-                  {/* <IonBadge slot="end" color="danger">{notifyArray.filter((item) => { return (item.read === false) }).length}</IonBadge> */}
+                  <div>
+                    <IonBadge slot="end" color="danger">{notifyArray.filter((item: any) => { return (item.isRead === false) }).length}</IonBadge>
+                    <IonIcon icon={notificationsOutline} style={{marginLeft: "5px"}}></IonIcon>
+                  </div>
                 </IonCardContent>
               </IonCard>
             </IonCol>
