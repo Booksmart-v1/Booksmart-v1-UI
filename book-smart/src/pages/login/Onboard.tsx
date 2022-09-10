@@ -156,7 +156,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
       <IonPage>
         <IonContent className="md bg ion-no-padding" scrollY={false}>
           <div className="bod">
-            <IonButton
+            <IonButton fill="clear" color="dark"
               slot="start"
               onClick={() => {
                 otpSent ? setOtpSent(!otpSent) : history.goBack();
@@ -165,15 +165,11 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
               style={{
                 marginRight: "280px",
                 marginTop: "-80px",
-                backgroundColor: "transparent",
-                background: "transparent",
                 border: "none",
-                // opacity: "0.7",
-                color: "white",
                 fontWeight: "bold",
               }}
             >
-              <IonIcon slot="icon-only" color="white" icon={arrowBackOutline} />
+              <IonIcon slot="icon-only" color="light" icon={arrowBackOutline} />
             </IonButton>
             {otpSent ? (
               <OtpInput
@@ -218,7 +214,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                       >
                         {"Name"}
                       </p>
-                      <IonItem style={{ marginTop: "10px" }}>
+                      <IonItem style={{ marginTop: "10px", width: "100%" }}>
                         {/* <IonLabel position="floating"> Email</IonLabel> */}
                         <IonInput
                           type="text"
@@ -241,7 +237,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                       >
                         {"Email"}
                       </p>
-                      <IonItem style={{ marginTop: "10px" }}>
+                      <IonItem style={{ marginTop: "10px", width: "100%" }}>
                         {/* <IonLabel position="floating"> Email</IonLabel> */}
                         <IonInput
                           type="text"

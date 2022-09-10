@@ -487,7 +487,7 @@ const Profile = () => {
                     ></IonTextarea>
                   ) : (
                     <IonText>
-                      <p>{text}</p>
+                      <p style={{ fontFamily: "Montserrat-sb" }}>{text}</p>
                     </IonText>
                   )}
                 </IonCardContent>
@@ -723,10 +723,13 @@ const Profile = () => {
                 {notifyArray.map((item: any, idx: number) => {
                   return (
                     <IonItemSliding className='notifyCard' key={idx}>
-                      <IonItem lines='none'
+                      <IonItem lines='none' class="ion-no-padding"
                         onClick={() => { handlePopOverClick(idx, true) }}
                         id={String(idx)}>
                         <div className="notifyCard-img">
+                          {!item.isRead && (
+                            <div className="notify-unread"></div>
+                          )}
                           <IonAvatar>
                             <img src={defaultProfileImg} alt="abc" />
                           </IonAvatar>
@@ -734,9 +737,9 @@ const Profile = () => {
                         <div className="notify-date">
                           {item.date.getDate() + '-' + (item.date.getMonth() + 1) + '-' + item.date.getFullYear()}
                           <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
-                          {!item.isRead && (
+                          {/* {!item.isRead && (
                             <div className="notify-unread"></div>
-                          )}
+                          )} */}
                         </div>
                         <div className="notifyCard-content">
                           <h2 style={{ fontFamily: "Montserrat-b", fontSize: "20px" }}>{item.senderName}</h2>
@@ -846,7 +849,7 @@ const Profile = () => {
                   <IonCardSubtitle>Notifications</IonCardSubtitle>
                   <div>
                     <IonBadge slot="end" color="danger">{notifyArray.filter((item: any) => { return (item.isRead === false) }).length}</IonBadge>
-                    <IonIcon icon={notificationsOutline} style={{marginLeft: "5px"}}></IonIcon>
+                    <IonIcon icon={notificationsOutline} style={{ marginLeft: "5px" }}></IonIcon>
                   </div>
                 </IonCardContent>
               </IonCard>

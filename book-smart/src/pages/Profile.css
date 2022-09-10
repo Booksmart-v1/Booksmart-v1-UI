@@ -79,6 +79,7 @@
   position: relative;
   border-bottom: 1px solid gray;
   width: 100%;
+  padding: 0 10px;
 }
 
 .notifyCard-content {
@@ -90,6 +91,12 @@
 .notifyCard-content p {
   margin: 10px 0;
   font-size: 14px;
+}
+
+.notifyCard-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .notify-date {
@@ -115,8 +122,8 @@
 }
 
 .notify-unread {
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background-color: lightblue;
   margin: 0 5px;

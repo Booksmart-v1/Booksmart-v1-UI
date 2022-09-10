@@ -77,7 +77,10 @@ ion-item-divider {
   width: 70px;
 }
 
-.category-area button:focus {
+/* .category-area button:focus {
+  box-shadow: 0 0 0 7px rgba(0, 0, 0, 0.2);
+} */
+.category-area .cat-focus {
   box-shadow: 0 0 0 7px rgba(0, 0, 0, 0.2);
 }
 
