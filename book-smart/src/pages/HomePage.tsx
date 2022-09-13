@@ -513,7 +513,7 @@ const Tab1: React.FC = () => {
                         <div className="homepage-card-chips">
                           {element.tags.map((tag: string, index: number) => (
                             <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", margin: "0 5px", background: "var(--bs-pBg)" }}>
-                              <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "13px", textTransform: "capitalize" }}>{tag}</IonLabel>
+                              <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "12px", textTransform: "capitalize" }}>{tag}</IonLabel>
                             </IonChip>
                           ))}
                         </div>

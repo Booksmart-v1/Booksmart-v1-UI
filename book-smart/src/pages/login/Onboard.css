@@ -1,6 +1,7 @@
 ion-content {
   overflow-y: hidden;
 }
+
 .bg {
   --background: url("../../images/login_bg1.jpg") !important;
   -webkit-background-size: cover;
@@ -15,20 +16,23 @@ ion-content {
   justify-content: space-between;
   align-items: flex-start;
 }
-.login-text{
+
+.login-text {
   font-size: 20px;
   color: white;
   font-family: "Montserrat-B";
   margin-top: 20px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 0 27px;
 }
+
 ion-input {
   font-family: "Montserrat-B";
 }
+
 ion-item {
   font-family: "Montserrat-B";
 }
+
 .mainc {
   background: var(--bs-red2);
   height: 80%;
@@ -82,7 +86,7 @@ ion-item {
 
 
 .number {
-    
+
   display: flex;
   flex-direction: column;
   margin: 5px;

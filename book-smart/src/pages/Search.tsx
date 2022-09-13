@@ -76,8 +76,8 @@ const Search: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader style={{ width: "100%", height: "11vh"}}>
-        <IonToolbar style={{ width: "100%"}}>
+      <IonHeader style={{ width: "100%", height: "11vh" }}>
+        <IonToolbar style={{ width: "100%" }}>
           <IonTitle
             style={{
               color: "var(--bs-pText)",
@@ -89,12 +89,12 @@ const Search: React.FC = () => {
             SEARCH
           </IonTitle>
         </IonToolbar>
-          <IonSearchbar
-            style={{ color: "var(--bs-sBg)"}}
-            showCancelButton="focus"
-            placeholder="Title, author or ISBN"
-            onClick={() => setScreen("search")}
-          ></IonSearchbar>
+        <IonSearchbar
+          style={{ color: "var(--bs-sBg)" }}
+          showCancelButton="focus"
+          placeholder="Title, author or ISBN"
+          onClick={() => setScreen("search")}
+        ></IonSearchbar>
       </IonHeader>
       <IonContent style={{ minHeight: "80vh" }}>
         <IonRow>
@@ -201,7 +201,7 @@ const Search: React.FC = () => {
               <div className='category-area'>
                 {categoryValues.map((item) =>
                   <div style={{ textAlign: "center" }}>
-                    <button className='category-btn' onClick={(e) => handleCategoryChange(e)} value={item.value} style={{ backgroundImage: `url(${catLogo})` }}></button>
+                    <button className={selectedCategory === item.value ? 'category-btn cat-focus' : 'category-btn'} onClick={(e) => handleCategoryChange(e)} value={item.value} style={{ backgroundImage: `url(${catLogo})` }}></button>
                     <p>{item.value}</p>
                   </div>)}
               </div>
