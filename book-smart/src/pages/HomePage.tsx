@@ -25,11 +25,13 @@ import {
   IonSelectOption,
   IonSkeletonText,
   IonThumbnail,
+  IonSearchbar,
+  IonCheckbox,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import "./homePage.css";
-import { useState, useEffect } from "react";
-import {pin} from "ionicons/icons";
+import { useState, useEffect, useRef } from "react";
+import { pin } from "ionicons/icons";
 import { APIURL } from "../constants";
 import axios from "axios";
 
@@ -184,35 +186,6 @@ const Tab1: React.FC = () => {
     }, 2000);
   }
 
-  // Searched Chips
-  const [selectedChipsArr, setSelectedChipsArr] = useState([]);
-
-  const handleInputChange = (chipArr: any) => {
-    if (chipArr.length >= 0 && chipArr.length < 5) {
-      var xyz = chipArr.map((idx: number, tag: string) => ({ key: idx, label: tag, hide: false }))
-      setSelectedChipsArr(xyz);
-    }
-    else if (chipArr.length >= 5) {
-      console.log("More than 5! Not Allowed.")
-    }
-    if (chipArr.length > 0 && chipArr.length < 5) {
-      var lowerCasedChips = chipArr.map((chip: string) => { return chip.toLowerCase() });
-      var filterData = []
-      for (let i = 0; i < lowerCasedChips.length; i++) {
-        filterData = info.filter((item) => {
-          if (item.tags.map((tag) => { return tag.toLowerCase() }).includes(lowerCasedChips[i])) {
-            return item;
-          }
-        })
-        setFilteredInfo(filterData)
-      }
-    }
-    else {
-      setFilteredInfo(info);
-    }
-    console.log("ChipArr: ", selectedChipsArr);
-  }
-
   var allTags = info.map((item) => item.tags.map((tag) => tag))
   var uniqueTags: string[] = []
   allTags.map((item) => item.map((tag) => uniqueTags.push(tag.toLowerCase())))
@@ -267,6 +240,32 @@ const Tab1: React.FC = () => {
       setcardSkeletonLoaded(false);
     }
   }
+
+  var selectedInterest: string[] = []
+  const handleInterest = (e: any, idx: number) => {
+    if (e.detail.checked === true) {
+      selectedInterest = [...selectedInterest, finalTags[idx]]
+    }
+    else {
+      selectedInterest = selectedInterest.filter((item) => { return item !== e.detail.value })
+    }
+    if (selectedInterest.length > 0 && selectedInterest.length < 5) {
+      var filterData = []
+      console.log(selectedInterest)
+      for (let i = 0; i < selectedInterest.length; i++) {
+        filterData = info.filter((item) => {
+          if (item.tags.map((tag) => { return tag.toLowerCase() }).includes(selectedInterest[i])) {
+            return item;
+          }
+        })
+        setFilteredInfo(filterData)
+      }
+    }
+    else {
+      setFilteredInfo(info);
+    }
+  }
+
   useEffect(() => {
     getCardDetails(60);
     const timer = setTimeout(() => {
@@ -277,7 +276,23 @@ const Tab1: React.FC = () => {
       setcardSkeletonLoaded(false);
     };
   }, []);
-
+  const [searchBook, setSearchBook] = useState('')
+  const handleSearchBook = (e: any) => {
+    // setSearchBook(e.detail.value);
+    const searchText = e.detail.value;
+    setSearchBook(searchText);
+    if (searchText !== '') {
+      const xyz = info.filter((item) => {
+        if (item.bookName.toLowerCase().includes(searchText.toLowerCase())) {
+          return item;
+        }
+      });
+      setFilteredInfo(xyz);
+    }
+    else {
+      setFilteredInfo(info);
+    }
+  }
   return (
     <IonPage className="backg">
       {/* <IonHeader className='header'></IonHeader> */}
@@ -337,36 +352,28 @@ const Tab1: React.FC = () => {
           Hang on .. <p> Refreshing Your Favourite Content!✌️</p>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-        <div className="selectInput">
-          <IonList style={{ margin: "10px auto 0 auto", width: "90%" }}>
-            <IonItem >
-              <IonSelect placeholder="Select interest" multiple={true}
-                onIonChange={(e) => handleInputChange(e.detail.value)} interface="popover"
-              >
-                {finalTags.map((item) => (<IonSelectOption value={item} style={{ textTransform: "capitalize" }}>{item}</IonSelectOption>))}
-              </IonSelect>
-            </IonItem>
-          </IonList>
-          <div className="searching-chips">
-            {selectedChipsArr.map((item: any) =>
-              <IonChip
-                className="searching-items"
-                key={item.label}
-                outline
-                color="primary"
-              >
-                <IonIcon icon={pin} />
-                <IonLabel style={{ textTransform: "capitalize" }}>{item.key}</IonLabel>
-                {/* <IonIcon
-                    style={{ height: "20px" }}
-                    onClick={() => hideRecent(i)}
-                    icon={closeCircle}
-                  /> */}
-              </IonChip>
-            )}
+        <IonHeader style={{ margin: "10px auto 25px auto", width: "95%" }}>
+          <div className="homesearch">
+            <IonSearchbar placeholder="Search for a book" style={{ "--background": "white", "--placeholder-color": "black" }}
+              value={searchBook} onIonChange={e => {
+                handleSearchBook(e);
+              }}
+              showCancelButton="focus">
+            </IonSearchbar>
           </div>
-          <br />
-        </div>
+        </IonHeader>
+
+        <IonModal trigger="open-modal" initialBreakpoint={0.5} style={{ padding: "0 30px" }}>
+          <IonList style={{ padding: "10px" }}>
+            {finalTags.map((item, idx: number) => (
+              <IonItem style={{}}>
+                <IonLabel style={{ marginLeft: "5px", textTransform: "capitalize" }}>{item}</IonLabel>
+                <IonCheckbox value={item} slot="end" onIonChange={(e) => handleInterest(e, idx)}></IonCheckbox>
+              </IonItem>
+            ))}
+          </IonList>
+        </IonModal>
+
         <IonModal
           isOpen={showModal}
           swipeToClose={true}
@@ -474,8 +481,8 @@ const Tab1: React.FC = () => {
                 </IonChip>
               </span>
               <span className="chip">
-                <IonChip color="warning">
-                  <IonLabel>Popular</IonLabel>
+                <IonChip color="warning" id="open-modal">
+                  <IonLabel>Interest</IonLabel>
                 </IonChip>
               </span>
               <span className="chip">

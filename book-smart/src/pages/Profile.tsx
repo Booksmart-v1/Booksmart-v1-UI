@@ -40,6 +40,7 @@ import {
 import "./Profile.css";
 import { RefresherEventDetail } from "@ionic/core";
 import profile from "../images/profile-image.jpg";
+// import { useHistory } from "react-router-dom";
 import {
   chatboxEllipsesOutline,
   ellipsisHorizontal,
@@ -58,6 +59,7 @@ import {
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { APIURL } from "../constants";
+import createHistory from 'history/createBrowserHistory';
 import axios from "axios";
 
 const Profile = () => {
@@ -271,6 +273,9 @@ const Profile = () => {
       event.detail.complete();
     }, 2000);
   }
+
+  const history = createHistory();
+
   return (
     <IonPage className="md">
       <IonHeader>
@@ -494,27 +499,6 @@ const Profile = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          {/* <IonRow style={{ margin: "10px 0" }}>
-            <IonCol size="6">
-              <IonCard className="profileCard">
-                <IonCardContent>
-                  <IonIcon icon={imageOutline} />
-                  <IonCardTitle>147</IonCardTitle>
-                  <IonCardSubtitle>Photos</IonCardSubtitle>
-                </IonCardContent>
-              </IonCard>
-            </IonCol>
-
-            <IonCol size="6">
-              <IonCard className="profileCard">
-                <IonCardContent>
-                  <IonIcon icon={bookmarkOutline} />
-                  <IonCardTitle>63</IonCardTitle>
-                  <IonCardSubtitle>Bookmarks</IonCardSubtitle>
-                </IonCardContent>
-              </IonCard>
-            </IonCol>
-          </IonRow> */}
           {/* Settings Modal; */}
           <IonModal isOpen={showSettingsModal} onDidDismiss={() => setShowSettingsModal(false)}>
             <IonHeader>
@@ -856,14 +840,15 @@ const Profile = () => {
             </IonCol>
           </IonRow>
 
-          <IonRow className="profileActionContainer">
+          <IonRow className="profileActionContainer" onClick={() => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("chatToken");
+            history.push("/login")
+            document.location.reload()
+          }}>
             <IonCol size="12">
               <IonCard className="profileActionCard">
-                <IonCardContent
-                  onClick={() => {
-                    // localStorage.removeItem("user");
-                  }}
-                >
+                <IonCardContent>
                   <IonRow className="ion-justify-content-between">
                     <IonCardSubtitle>Logout</IonCardSubtitle>
                     <IonIcon icon={logOutOutline} />
