@@ -376,43 +376,43 @@ const Sell: React.FC = () => {
               <h1>Sell</h1>
             </IonTitle>
             <IonButtons>
+
               <IonButton style={{ fontFamily: "Montserrat-sb" }}
+                onClick={(e) => {
+                  presentAlert({
+                    header: 'Sort By',
+                    buttons: ['OK'],
+                    inputs: [
+                      {
+                        label: 'Newest',
+                        type: 'radio',
+                        value: 'Newest',
+                        checked: !sortByPrice,
+                        handler: () => { setSortByPrice(false); }
+                      },
+                      {
+                        label: 'Price',
+                        type: 'radio',
+                        value: 'Price',
+                        checked: sortByPrice,
+                        handler: () => { setSortByPrice(true); }
+                      }
+                    ],
+                  })
+                }
+                }
               >
+                <IonIcon
+                  slot="end"
+                  style={{
+                    display: "flex",
+                    marginTop: "10px",
+                    fontSize: "28px",
+                  }}
+                  icon={funnelOutline}
+                ></IonIcon>
               </IonButton>
             </IonButtons>
-            <IonIcon
-              slot="end"
-              color="primary"
-              style={{
-                display: "flex",
-                margin: "10px",
-                fontSize: "28px",
-              }}
-              icon={funnelOutline}
-              onClick={() => {
-                presentAlert({
-                  header: 'Sort By',
-                  buttons: ['OK'],
-                  inputs: [
-                    {
-                      label: 'Newest',
-                      type: 'radio',
-                      value: 'Newest',
-                      checked: !sortByPrice,
-                      handler: () => { setSortByPrice(false); }
-                    },
-                    {
-                      label: 'Price',
-                      type: 'radio',
-                      value: 'Price',
-                      checked: sortByPrice,
-                      handler: () => { setSortByPrice(true); }
-                    }
-                  ],
-                })
-              }
-              }
-            ></IonIcon>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-no-padding">
@@ -434,6 +434,7 @@ const Sell: React.FC = () => {
             <p> Fetching your recent Trades!✌️</p>
             <IonRefresherContent></IonRefresherContent>
           </IonRefresher>
+
           <div>
             <IonSegment
               onIonChange={(e) => {
@@ -596,7 +597,6 @@ const Sell: React.FC = () => {
                   ))
               }
             </div>
-
             <IonFabList>
               <IonModal
                 isOpen={showModal}
