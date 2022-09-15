@@ -59,9 +59,9 @@ import {
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { APIURL } from "../constants";
-import createHistory from 'history/createBrowserHistory';
 import axios from "axios";
-
+import { useHistory } from "react-router";
+import moment from 'moment';
 const Profile = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [popoverState, setShowPopover] = useState({
@@ -154,7 +154,12 @@ const Profile = () => {
         // console.log(resp);
         if (resp.status === 200) {
           let data = resp.data.data;
-          let updateData = data.map((item: any) => ({ ...item, isPopOverOpen: false, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
+          let updateData = data.map((item: any) => ({
+            ...item, isPopOverOpen: false, date: new Date(item.updatedAt.slice(0, -1)),
+            timeSince: moment(item.updatedAt.substring(0, 10).replaceAll("-", ""), "YYYYMMDD").fromNow(), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17)
+          }))
+          // let updateData = data.map((item: any) => ({ ...item, isPopOverOpen: false, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
+          console.log(updateData);
           setNotifyArray(updateData);
         }
       })
@@ -274,7 +279,7 @@ const Profile = () => {
     }, 2000);
   }
 
-  const history = createHistory();
+  const history = useHistory();
 
   return (
     <IonPage className="md">
@@ -719,8 +724,8 @@ const Profile = () => {
                           </IonAvatar>
                         </div>
                         <div className="notify-date">
-                          {item.date.getDate() + '-' + (item.date.getMonth() + 1) + '-' + item.date.getFullYear()}
-                          <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
+                          {item.timeSince}
+                          {/* <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span> */}
                           {/* {!item.isRead && (
                             <div className="notify-unread"></div>
                           )} */}
@@ -735,6 +740,7 @@ const Profile = () => {
                       >
                         <IonContent class="ion-padding">
                           <div className="notify-time">
+                            {item.date.getDate() + '-' + (item.date.getMonth() + 1) + '-' + item.date.getFullYear()}
                             <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span>
                             {/* <div className="notify-unread"></div> */}
                           </div>
@@ -843,8 +849,8 @@ const Profile = () => {
           <IonRow className="profileActionContainer" onClick={() => {
             localStorage.removeItem("user");
             localStorage.removeItem("chatToken");
-            history.push("/login")
             document.location.reload()
+            history.push("/login")
           }}>
             <IonCol size="12">
               <IonCard className="profileActionCard">

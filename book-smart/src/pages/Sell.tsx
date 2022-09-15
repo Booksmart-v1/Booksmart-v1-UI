@@ -299,9 +299,6 @@ const Sell: React.FC = () => {
     }
   };
 
-  const goBack = () => {
-    history.goBack();
-  };
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getTradeCardDetails(60);
     console.log("Begin async operation");
@@ -380,41 +377,42 @@ const Sell: React.FC = () => {
             </IonTitle>
             <IonButtons>
               <IonButton style={{ fontFamily: "Montserrat-sb" }}
-                onClick={(e) => {
-                  presentAlert({
-                    header: 'Sort By',
-                    buttons: ['OK'],
-                    inputs: [
-                      {
-                        label: 'Newest',
-                        type: 'radio',
-                        value: 'Newest',
-                        checked: !sortByPrice,
-                        handler: () => { setSortByPrice(false); }
-                      },
-                      {
-                        label: 'Price',
-                        type: 'radio',
-                        value: 'Price',
-                        checked: sortByPrice,
-                        handler: () => { setSortByPrice(true); }
-                      }
-                    ],
-                  })
-                }
-                }
               >
-                <IonIcon
-                  slot="end"
-                  style={{
-                    display: "flex",
-                    marginTop: "10px",
-                    fontSize: "28px",
-                  }}
-                  icon={funnelOutline}
-                ></IonIcon>
               </IonButton>
             </IonButtons>
+            <IonIcon
+              slot="end"
+              color="primary"
+              style={{
+                display: "flex",
+                margin: "10px",
+                fontSize: "28px",
+              }}
+              icon={funnelOutline}
+              onClick={() => {
+                presentAlert({
+                  header: 'Sort By',
+                  buttons: ['OK'],
+                  inputs: [
+                    {
+                      label: 'Newest',
+                      type: 'radio',
+                      value: 'Newest',
+                      checked: !sortByPrice,
+                      handler: () => { setSortByPrice(false); }
+                    },
+                    {
+                      label: 'Price',
+                      type: 'radio',
+                      value: 'Price',
+                      checked: sortByPrice,
+                      handler: () => { setSortByPrice(true); }
+                    }
+                  ],
+                })
+              }
+              }
+            ></IonIcon>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-no-padding">
@@ -459,133 +457,146 @@ const Sell: React.FC = () => {
             </IonSegment>
             <div className={sortByPrice ? "trading-area" : "trading-area newest"}>
               {segment === "activeTrades"
-                ? activeTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) => {
-                  return (
-              <>
-                <IonCard key={idx} className="trade-card">
-                  <div className="trade-card-img">
-                    <img
-                      alt="Book"
-                      className="pic"
-                      src={element.bookImageUrl}
-                    />
-                  </div>
-                  <div className="trade-card-content">
-                    <IonCardTitle
-                      style={{
-                        fontSize: "12px",
-                        fontFamily: "Montserrat-b",
-                      }}
-                    >
-                      {element.bookName}
-                    </IonCardTitle>
-                    <IonCardSubtitle
-                      style={{
-                        fontSize: "10px",
-                        fontFamily: "Montserrat-sb",
-                      }}
-                    >
-                      {element.bookAuthor}
-                    </IonCardSubtitle>
-                    <div>
-                      <p
-                        style={{
-                          fontSize: "18px",
-                          fontFamily: "Montserrat-sb",
-                        }}
-                      >
-                        ₹ {element.bookPrice}
-                      </p>
-                    </div>
-                    {/* <div className="trade-card-status">
+                ? (activeTrades.length > 0 ?
+                  activeTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) => {
+                    return (
+                      <>
+                        <IonCard key={idx} className="trade-card">
+                          <div className="trade-card-img">
+                            <img
+                              alt="Book"
+                              className="pic"
+                              src={element.bookImageUrl}
+                            />
+                          </div>
+                          <div className="trade-card-content">
+                            <IonCardTitle
+                              style={{
+                                fontSize: "12px",
+                                fontFamily: "Montserrat-b",
+                              }}
+                            >
+                              {element.bookName}
+                            </IonCardTitle>
+                            <IonCardSubtitle
+                              style={{
+                                fontSize: "10px",
+                                fontFamily: "Montserrat-sb",
+                              }}
+                            >
+                              {element.bookAuthor}
+                            </IonCardSubtitle>
+                            <div>
+                              <p
+                                style={{
+                                  fontSize: "18px",
+                                  fontFamily: "Montserrat-sb",
+                                }}
+                              >
+                                ₹ {element.bookPrice}
+                              </p>
+                            </div>
+                            {/* <div className="trade-card-status">
                             <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
                           </div> */}
-                  </div>
-                  <div className="trade-tick">
-                    <img
-                      src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
-                      alt=""
-                    />
-                  </div>
-                </IonCard>
-              </>
-              );
-                })
-                : pastTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) => {
-                  return (
-              <>
-                <IonCard key={idx} className="trade-card">
-                  <div className="trade-card-img">
-                    <img
-                      alt="Book"
-                      className="pic"
-                      src={element.bookImageUrl}
-                    />
-                  </div>
-                  <div className="trade-card-content">
-                    <IonCardTitle
-                      style={{
-                        fontSize: "12px",
-                        fontFamily: "Montserrat-b",
-                      }}
-                    >
-                      {element.bookName}
-                    </IonCardTitle>
-                    <IonCardSubtitle
-                      style={{
-                        fontSize: "10px",
-                        fontFamily: "Montserrat-sb",
-                      }}
-                    >
-                      {element.bookAuthor}
-                    </IonCardSubtitle>
-                    <div>
-                      <p
-                        style={{
-                          fontSize: "18px",
-                          fontFamily: "Montserrat-SB",
-                        }}
-                      >
-                        Price: ₹ {element.bookPrice}
-                      </p>
+                          </div>
+                          <div className="trade-tick">
+                            <img
+                              src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
+                              alt=""
+                            />
+                          </div>
+                        </IonCard>
+                      </>
+                    );
+                  }) : (
+                    <div className="noBooks">
+                      <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
+                      <p>Currently there are no books available with this name.</p>
+                    </div>))
+                : (pastTrades.length > 0 ?
+                  (pastTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) => {
+                    return (
+                      <>
+                        <IonCard key={idx} className="trade-card">
+                          <div className="trade-card-img">
+                            <img
+                              alt="Book"
+                              className="pic"
+                              src={element.bookImageUrl}
+                            />
+                          </div>
+                          <div className="trade-card-content">
+                            <IonCardTitle
+                              style={{
+                                fontSize: "12px",
+                                fontFamily: "Montserrat-b",
+                              }}
+                            >
+                              {element.bookName}
+                            </IonCardTitle>
+                            <IonCardSubtitle
+                              style={{
+                                fontSize: "10px",
+                                fontFamily: "Montserrat-sb",
+                              }}
+                            >
+                              {element.bookAuthor}
+                            </IonCardSubtitle>
+                            <div>
+                              <p
+                                style={{
+                                  fontSize: "18px",
+                                  fontFamily: "Montserrat-SB",
+                                }}
+                              >
+                                Price: ₹ {element.bookPrice}
+                              </p>
+                            </div>
+                            <div className="trade-card-status">
+                              <p
+                                style={{
+                                  fontSize: "20px",
+                                  fontFamily: "Montserrat-sb",
+                                }}
+                              >
+                                Status:{" "}
+                                {element.sold ? (
+                                  <span
+                                    style={{
+                                      color: "var(--ion-color-success)",
+                                    }}
+                                  >
+                                    SOLD
+                                  </span>
+                                ) : (
+                                  <span
+                                    style={{ color: "var(--ion-color-danger)" }}
+                                  >
+                                    UNSOLD
+                                  </span>
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="trade-tick">
+                            <img
+                              src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
+                              alt=""
+                            />
+                          </div>
+                        </IonCard>
+                      </>
+                    )
+                  })) : (
+                    <div className="noBooks">
+                      <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
+                      <p>Currently there are no books available with this name.</p>
                     </div>
-                    <div className="trade-card-status">
-                      <p
-                        style={{
-                          fontSize: "20px",
-                          fontFamily: "Montserrat-sb",
-                        }}
-                      >
-                        Status:{" "}
-                        {element.sold ? (
-                          <span
-                            style={{
-                              color: "var(--ion-color-success)",
-                            }}
-                          >
-                            SOLD
-                          </span>
-                        ) : (
-                          <span
-                            style={{ color: "var(--ion-color-danger)" }}
-                          >
-                            UNSOLD
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="trade-tick">
-                    <img
-                      src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
-                      alt=""
-                    />
-                  </div>
-                </IonCard>
-              </>
-              );
-                })}
+                  ))
+              }
             </div>
+
             <IonFabList>
               <IonModal
                 isOpen={showModal}

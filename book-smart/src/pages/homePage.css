@@ -96,6 +96,7 @@ ion-label.sc-ion-select-popover-ios {
   align-items: center;
   padding: 10px 0 25px 0;
   max-height: 88%;
+  position: relative;
   /* margin: 0 0 40px 0; */
 }
 
@@ -280,4 +281,15 @@ ion-label.sc-ion-select-popover-ios {
   align-items: center;
   margin: 0 auto;
   padding: 10px;
+}
+
+.noBooks {
+  position: absolute;
+  top: 600%;
+  width: 80%;
+  height: 15vh;
+  text-align: center;
+  color: #888888;
+  font-size: 20px;
+  font-family: "Montserrat-b";
 }
