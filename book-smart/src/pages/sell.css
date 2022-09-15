@@ -5,9 +5,11 @@
     align-items: center;
     flex-direction: column;
 }
-.newest{
+
+.newest {
     flex-direction: column-reverse;
 }
+
 .trade-card {
     margin: 10px auto;
     min-height: 160px;
@@ -54,6 +56,17 @@
     font-family: "Montserrat-b";
 }
 
-.trade-tick{
+.trade-tick {
     width: 20%;
 }
+
+.noBooks {
+    position: absolute;
+    top: 40%;
+    width: 80%;
+    height: 15vh;
+    text-align: center;
+    color: #888888;
+    font-size: 20px;
+    font-family: "Montserrat-b";
+  }
