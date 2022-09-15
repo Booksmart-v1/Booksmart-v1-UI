@@ -32,8 +32,8 @@ body {
   border: none;
   border-radius: 25px 25px 0 0;
   background: var(--ion-color-medium-contrast) !important;
-  min-height: 83%;
-  max-height: 88%;
+  min-height: 88%;
+  max-height: 90%;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;

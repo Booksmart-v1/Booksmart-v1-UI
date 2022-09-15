@@ -1,7 +1,13 @@
 .trading-area {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
-
+.newest{
+    flex-direction: column-reverse;
+}
 .trade-card {
     margin: 10px auto;
     min-height: 160px;
