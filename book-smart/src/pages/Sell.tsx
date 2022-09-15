@@ -379,6 +379,7 @@ const Sell: React.FC = () => {
               <h1>Sell</h1>
             </IonTitle>
             <IonButtons>
+
               <IonButton style={{ fontFamily: "Montserrat-sb" }}
                 onClick={(e) => {
                   presentAlert({
@@ -404,6 +405,9 @@ const Sell: React.FC = () => {
                 }
                 }
               >
+
+             
+
                 <IonIcon
                   slot="end"
                   style={{
@@ -436,6 +440,7 @@ const Sell: React.FC = () => {
             <p> Fetching your recent Trades!✌️</p>
             <IonRefresherContent></IonRefresherContent>
           </IonRefresher>
+
           <div>
             <IonSegment
               onIonChange={(e) => {
@@ -459,6 +464,7 @@ const Sell: React.FC = () => {
             </IonSegment>
             <div className={sortByPrice ? "trading-area" : "trading-area newest"}>
               {segment === "activeTrades"
+
                 ? activeTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) => {
                   return (
               <>
@@ -584,6 +590,7 @@ const Sell: React.FC = () => {
                 </IonCard>
               </>
               );
+
                 })}
             </div>
             <IonFabList>
