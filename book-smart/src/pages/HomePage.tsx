@@ -139,7 +139,7 @@ const Tab1: React.FC = () => {
   const [info, setInfo] = useState(cardDetails);
   const [filteredInfo, setFilteredInfo] = useState(cardDetails);
   const [sellerDeets, setSellerDeets] = useState(cardDetails[0]);
-  const [interest, setInterest] = useState(true);
+  const [interest, setInterest] = useState(false);
   const [showToast1, setShowToast1] = useState(false);
   const [showToast2, setShowToast2] = useState(false);
   const [msg, setMsg] = useState("");
