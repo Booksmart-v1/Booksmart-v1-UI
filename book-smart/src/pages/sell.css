@@ -63,10 +63,10 @@
 .noBooks {
     position: absolute;
     top: 40%;
-    width: 80%;
+    width: 75%;
     height: 15vh;
     text-align: center;
     color: #888888;
     font-size: 20px;
     font-family: "Montserrat-b";
-  }
+}

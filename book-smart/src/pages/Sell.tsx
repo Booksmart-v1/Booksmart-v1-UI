@@ -339,15 +339,17 @@ const Sell: React.FC = () => {
               if (item.sold === false) {
                 return item;
               }
-            })
+            }).sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt))
           );
           setPastTrades(
             data.filter((item: any) => {
               if (item.sold === true) {
                 return item;
               }
-            })
+            }).sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt))
           );
+          // setActiveTrades(activeTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt)));
+          // setPastTrades(pastTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt)));
         }
       })
       .catch((e) => {
@@ -359,9 +361,25 @@ const Sell: React.FC = () => {
     getTradeCardDetails(60);
   }, []);
 
-  // Sort by Price Filter
+  // Sort by Filter
   const [presentAlert] = useIonAlert();
-  const [sortByPrice, setSortByPrice] = useState(false);
+  const [sortByType, setSortByType] = useState({ newest: true, price: false });
+  const handleSortBy = (type: string) => {
+    if (type === 'newest') {
+      const sortedArray1 = activeTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
+      setActiveTrades(sortedArray1);
+      const sortedArray2 = pastTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
+      setPastTrades(sortedArray2);
+      setSortByType({ newest: true, price: false });
+    }
+    if (type === 'price') {
+      const sortedArray1 = activeTrades.sort((a: any, b: any) => a.bookPrice - b.bookPrice);
+      setActiveTrades(sortedArray1);
+      const sortedArray2 = pastTrades.sort((a: any, b: any) => a.bookPrice - b.bookPrice);
+      setPastTrades(sortedArray2);
+      setSortByType({ newest: false, price: true });
+    }
+  }
   return (
     <>
       <IonPage>
@@ -376,43 +394,42 @@ const Sell: React.FC = () => {
               <h1>Sell</h1>
             </IonTitle>
             <IonButtons>
-
-              <IonButton style={{ fontFamily: "Montserrat-sb" }}
-                onClick={(e) => {
-                  presentAlert({
-                    header: 'Sort By',
-                    buttons: ['OK'],
-                    inputs: [
-                      {
-                        label: 'Newest',
-                        type: 'radio',
-                        value: 'Newest',
-                        checked: !sortByPrice,
-                        handler: () => { setSortByPrice(false); }
-                      },
-                      {
-                        label: 'Price',
-                        type: 'radio',
-                        value: 'Price',
-                        checked: sortByPrice,
-                        handler: () => { setSortByPrice(true); }
-                      }
-                    ],
-                  })
-                }
-                }
-              >
-                <IonIcon
-                  slot="end"
-                  style={{
-                    display: "flex",
-                    marginTop: "10px",
-                    fontSize: "28px",
-                  }}
-                  icon={funnelOutline}
-                ></IonIcon>
+              <IonButton style={{ fontFamily: "Montserrat-sb" }}>
               </IonButton>
             </IonButtons>
+            <IonIcon
+              slot="end"
+              style={{
+                display: "flex",
+                marginTop: "10px",
+                fontSize: "28px",
+              }}
+              icon={funnelOutline}
+              color="primary"
+              onClick={() => {
+                presentAlert({
+                  header: 'Sort By',
+                  buttons: ['OK'],
+                  inputs: [
+                    {
+                      label: 'Newest',
+                      type: 'radio',
+                      value: 'Newest',
+                      checked: sortByType.newest,
+                      handler: () => { handleSortBy('newest'); }
+                    },
+                    {
+                      label: 'Price',
+                      type: 'radio',
+                      value: 'Price',
+                      checked: sortByType.price,
+                      handler: () => { handleSortBy('price'); }
+                    }
+                  ],
+                })
+              }
+              }
+            ></IonIcon>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-no-padding">
@@ -456,10 +473,11 @@ const Sell: React.FC = () => {
                 <IonLabel>Past Trades</IonLabel>
               </IonSegmentButton>
             </IonSegment>
-            <div className={sortByPrice ? "trading-area" : "trading-area newest"}>
+            {/* activeTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) */}
+            <div className="trading-area">
               {segment === "activeTrades"
                 ? (activeTrades.length > 0 ?
-                  activeTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) => {
+                  activeTrades.map((element, idx) => {
                     return (
                       <>
                         <IonCard key={idx} className="trade-card">
@@ -497,9 +515,6 @@ const Sell: React.FC = () => {
                                 ₹ {element.bookPrice}
                               </p>
                             </div>
-                            {/* <div className="trade-card-status">
-                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
-                          </div> */}
                           </div>
                           <div className="trade-tick">
                             <img
@@ -513,10 +528,10 @@ const Sell: React.FC = () => {
                   }) : (
                     <div className="noBooks">
                       <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
-                      <p>Currently there are no books available with this name.</p>
+                      <p>Currently there are no active trades.</p>
                     </div>))
                 : (pastTrades.length > 0 ?
-                  (pastTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) => {
+                  (pastTrades.map((element, idx) => {
                     return (
                       <>
                         <IonCard key={idx} className="trade-card">
@@ -592,7 +607,7 @@ const Sell: React.FC = () => {
                   })) : (
                     <div className="noBooks">
                       <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
-                      <p>Currently there are no books available with this name.</p>
+                      <p>Currently there are no past trades.</p>
                     </div>
                   ))
               }

@@ -19,11 +19,13 @@ import {
   ellipse,
   square,
   triangle,
-  homeOutline,
-  searchOutline,
-  heartOutline,
+  home,
+  search,
+  peopleCircle,
+  chatbubbles,
+  bagCheck,
   cartOutline,
-  personCircleOutline,
+  personCircle,
   bookOutline,
   chatbubbleEllipses,
 } from "ionicons/icons";
@@ -32,8 +34,8 @@ import Onboard from "./pages/login/Onboard";
 import PickInterests from "./pages/login/PickInterests";
 import Search from "./pages/Search";
 import Sell from "./pages/Sell";
-import home from "./images/home.png";
-import search from "./images/search.png";
+// import home from "./images/home.png";
+// import search from "./images/search.png";
 import wishlist from "./images/wishlist.png";
 import profile from "./images/profile.png";
 import cart from "./images/cart.png";
@@ -92,25 +94,25 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
             // onClick={refreshPage}
             >
               <IonTabButton tab="homePage" href="/homepage" selected={isSelected[0]}>
-                <IonIcon icon={homeOutline} onClick={() => handleSelect(0)} />
+                <IonIcon icon={home} onClick={() => handleSelect(0)} color={"var(--bs-pText)"} />
                 <IonLabel>Home</IonLabel>
               </IonTabButton>
 
               <IonTabButton tab="search" href="/homepage/Search" selected={isSelected[1]}>
-                <IonIcon icon={searchOutline} onClick={() => handleSelect(1)} />
-                <IonLabel>Search</IonLabel>
+                <IonIcon icon={bagCheck} onClick={() => handleSelect(1)} color={"var(--bs-pText)"} />
+                <IonLabel>Wishlist</IonLabel>
               </IonTabButton>
 
               <IonTabButton tab="chat" href="/homepage/Chat" selected={isSelected[2]}>
-                <IonIcon icon={chatbubbleEllipses} onClick={() => handleSelect(2)} />
+                <IonIcon icon={chatbubbles} onClick={() => handleSelect(2)} color={"var(--bs-pText)"} />
                 <IonLabel>Chat</IonLabel>
               </IonTabButton>
               <IonTabButton tab="sell" href="/homepage/Sell" selected={isSelected[3]}>
-                <IonIcon icon={heartOutline} onClick={() => handleSelect(3)} />
+                <IonIcon icon={peopleCircle} onClick={() => handleSelect(3)} color={"var(--bs-pText)"} />
                 <IonLabel>Sell</IonLabel>
               </IonTabButton>
               <IonTabButton tab="profile" href="/homepage/Profile" selected={isSelected[4]}>
-                <IonIcon icon={personCircleOutline} onClick={() => handleSelect(4)} />
+                <IonIcon icon={personCircle} onClick={() => handleSelect(4)} color={"var(--bs-pText)"} />
                 <IonLabel>Profile</IonLabel>
               </IonTabButton>
               {/* <IonTabButton

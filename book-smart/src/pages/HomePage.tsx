@@ -32,9 +32,10 @@ import {
 import { RefresherEventDetail } from "@ionic/core";
 import "./homePage.css";
 import { useState, useEffect, useRef } from "react";
-import { pin } from "ionicons/icons";
+import { pin, heart, heartOutline, ellipse } from "ionicons/icons";
 import { APIURL } from "../constants";
 import axios from "axios";
+import moment from 'moment';
 
 const defaultImage = "https://via.placeholder.com/200/1200";
 const cardDetails = [
@@ -160,7 +161,6 @@ const Tab1: React.FC = () => {
     axios
       .get(url + `?limit=${lim}&userId=${userId}`)
       .then((resp) => {
-        console.log(resp);
         if (resp.status === 200) {
           var data = resp.data.data;
           for (const element of data) {
@@ -168,7 +168,12 @@ const Tab1: React.FC = () => {
               ? element.bookImageUrl
               : defaultImage;
           }
-          let updateData = data.map((item: any) => ({ ...item, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
+          let updateData = data.map((item: any) => ({
+            ...item, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17),
+            newDate: moment(item.updatedAt).format('YYYYMMDD')
+          }))
+          updateData = updateData.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
+          console.log(updateData);
           setInfo(updateData);
           setFilteredInfo(updateData);
         }
@@ -180,6 +185,7 @@ const Tab1: React.FC = () => {
   const [currUser, setCurrUser] = useState<any>({})
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getCardDetails(60);
+    setSortByType({ newest: true, oldest: false, price: false, popular: false });
     console.log("Begin async operation");
     setTimeout(() => {
       console.log("Async operation has ended");
@@ -190,14 +196,18 @@ const Tab1: React.FC = () => {
   var allTags = info.map((item) => item.tags.map((tag) => tag))
   var uniqueTags: string[] = []
   allTags.map((item) => item.map((tag) => uniqueTags.push(tag.toLowerCase())))
-  var finalTags = Array.from(new Set(uniqueTags))
+  var finalTags = Array.from(new Set(uniqueTags)).sort()
+  finalTags.unshift('All');
 
   // Sending Notify to seller
+  const [isInterested, setIsInterested] = useState<boolean>(false);
   const handleSendNotif = (sellerDetails: any) => {
     let receiverId = sellerDetails.sellerId;
     let bookId = sellerDetails._id;
-    sendNotifyToSeller(receiverId, bookId)
-    console.log(sellerDetails)
+    sendNotifyToSeller(receiverId, bookId);
+    console.log(sellerDetails.interestedBuyers.includes(currUser.userId));
+    setIsInterested(sellerDetails.interestedBuyers.includes(currUser.userId));
+
   }
   const sendNotifyToSeller = (receiverId: string, bookId: string) => {
     const url = APIURL + "v2/sendNotif";
@@ -229,30 +239,50 @@ const Tab1: React.FC = () => {
   };
 
   var selectedInterest: string[] = []
-  const handleInterest = (e: any, idx: number) => {
+  const [interestedTags, setInterestedTags] = useState(selectedInterest);
+  const handleInterestClick = (e: any, idx: number) => {
+    // if (e.detail.checked === true) {
+    //   selectedInterest = [...selectedInterest, finalTags[idx]]
+    // }
+    // else {
+    //   selectedInterest = selectedInterest.filter((item) => { return item !== e.detail.value })
+    // }
+    // if (selectedInterest.length > 0 && selectedInterest.length < 5) {
+    //   var filterData = []
+    //   console.log(selectedInterest)
+    //   for (let i = 0; i < selectedInterest.length; i++) {
+    //     filterData = info.filter((item) => {
+    //       if (item.tags.map((tag) => { return tag.toLowerCase() }).includes(selectedInterest[i])) {
+    //         return item;
+    //       }
+    //     })
+    //     setFilteredInfo(filterData)
+    //   }
+    // }
+    // else {
+    //   setFilteredInfo(info);
+    // }
     if (e.detail.checked === true) {
-      selectedInterest = [...selectedInterest, finalTags[idx]]
+      setInterestedTags([...interestedTags, finalTags[idx]]);
     }
     else {
-      selectedInterest = selectedInterest.filter((item) => { return item !== e.detail.value })
+      setInterestedTags(interestedTags.filter((item) => { return item !== e.detail.value }));
     }
-    if (selectedInterest.length > 0 && selectedInterest.length < 5) {
+    if (interestedTags.length > 0 && interestedTags.length < 5) {
       var filterData = []
-      console.log(selectedInterest)
-      for (let i = 0; i < selectedInterest.length; i++) {
-        filterData = info.filter((item) => {
-          if (item.tags.map((tag) => { return tag.toLowerCase() }).includes(selectedInterest[i])) {
+      for (let i = 0; i < interestedTags.length; i++) {
+        filterData.push(info.filter((item) => {
+          if (item.tags.map((tag) => { return tag.toLowerCase() }).includes(interestedTags[i])) {
             return item;
           }
-        })
-        setFilteredInfo(filterData)
+        }))
+        setFilteredInfo(filterData[0]);
       }
     }
     else {
       setFilteredInfo(info);
     }
   }
-
   const [searchBook, setSearchBook] = useState('')
   const handleSearchBook = (e: any) => {
     // setSearchBook(e.detail.value);
@@ -272,20 +302,8 @@ const Tab1: React.FC = () => {
   }
 
   const [presentAlert] = useIonAlert();
-  const [sortByPrice, setSortByPrice] = useState(false);
+  const [addToWishlist, setAddToWishlist] = useState(false);
   const [cardSkeletonLoaded, setcardSkeletonLoaded] = useState(false);
-  const [sortByOldest, setSortByOldest] = useState(false);
-  const handleSortByOldest = () => {
-    setcardSkeletonLoaded(false);
-    const timer = setTimeout(() => {
-      setcardSkeletonLoaded(true);
-      setSortByOldest(true);
-    }, 2000);
-    return () => {
-      clearTimeout(timer);
-      setcardSkeletonLoaded(false);
-    }
-  }
 
   useEffect(() => {
     getCardDetails(60);
@@ -297,6 +315,37 @@ const Tab1: React.FC = () => {
       setcardSkeletonLoaded(false);
     };
   }, []);
+
+  const [sortByType, setSortByType] = useState({ newest: true, oldest: false, price: false, popular: false });
+  const handleSortBy = (type: string) => {
+    setcardSkeletonLoaded(false);
+    const timer = setTimeout(() => {
+      setcardSkeletonLoaded(true);
+      if (type === 'newest') {
+        // const sortedArray = filteredInfo.sort((a: any, b: any) => b.newDate - a.newDate);
+        const sortedArray = filteredInfo.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
+        setFilteredInfo(sortedArray);
+        console.log(filteredInfo);
+        setSortByType({ newest: true, oldest: false, price: false, popular: false });
+      }
+      if (type === 'price') {
+        const sortedArray = filteredInfo.sort((a: any, b: any) => a.bookPrice - b.bookPrice);
+        setFilteredInfo(sortedArray);
+        console.log(filteredInfo);
+        setSortByType({ newest: false, oldest: false, price: true, popular: false });
+      }
+      if (type === 'oldest') {
+        const sortedArray = filteredInfo.sort((a: any, b: any) => a.updatedAt.localeCompare(b.updatedAt));
+        setFilteredInfo(sortedArray);
+        console.log(filteredInfo);
+        setSortByType({ newest: false, oldest: true, price: false, popular: false });
+      }
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+      setcardSkeletonLoaded(false);
+    }
+  }
 
   return (
     <IonPage className="backg">
@@ -368,15 +417,17 @@ const Tab1: React.FC = () => {
           </div>
         </IonHeader>
 
-        <IonModal trigger="open-modal" initialBreakpoint={0.5} style={{ "--border-radius": "20px" }}>
-          <IonList style={{ padding: "10px" }}>
-            {finalTags.map((item, idx: number) => (
-              <IonItem style={{}}>
-                <IonLabel style={{ marginLeft: "5px", textTransform: "capitalize" }}>{item}</IonLabel>
-                <IonCheckbox value={item} slot="end" onIonChange={(e) => handleInterest(e, idx)}></IonCheckbox>
-              </IonItem>
-            ))}
-          </IonList>
+        <IonModal trigger="open-modal" initialBreakpoint={0.25} breakpoints={[0, 0.25, 0.75]} style={{ "--border-radius": "20px", zoom: "0.95" }} >
+          <IonContent>
+            <IonList style={{ padding: "10px 15px" }} className="ion-padding">
+              {finalTags.map((item, idx: number) => (
+                <IonItem className="ion-no-padding" lines="none">
+                  <IonLabel style={{ marginLeft: "5px", textTransform: "capitalize" }}>{item}</IonLabel>
+                  <IonCheckbox value={item} slot="end" onIonChange={(e) => handleInterestClick(e, idx)}></IonCheckbox>
+                </IonItem>
+              ))}
+            </IonList>
+          </IonContent>
         </IonModal>
 
         <IonModal
@@ -433,7 +484,7 @@ const Tab1: React.FC = () => {
               <div className="HPModal-chips">
                 {sellerDeets.tags.map((tag, index) => (
                   <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", background: "var(--bs-pBg)" }}>
-                    <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "18px", textTransform: "capitalize" }}>{tag}</IonLabel>
+                    <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "18px", textTransform: "capitalize" }}>{tag.toLowerCase()}</IonLabel>
                   </IonChip>
                 ))}
               </div>
@@ -457,12 +508,14 @@ const Tab1: React.FC = () => {
                     Interested?
                   </IonLabel>
                   <IonToggle
+                    checked={sellerDeets.interestedBuyers.includes(currUser.userId)}
                     slot="end"
                     style={{ color: `${interest ? "red" : "green"}` }}
                     onClick={() => {
                       if (interest) {
                         setMsg("Request Retracted!");
                         setShowToast2(true);
+                        setIsInterested(false);
                       } else {
                         setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
                         setShowToast2(true);
@@ -488,16 +541,25 @@ const Tab1: React.FC = () => {
                       buttons: ['OK'],
                       inputs: [
                         {
+                          checked: sortByType.newest,
+                          label: 'Newest',
+                          type: 'radio',
+                          value: 'Newest',
+                          handler: () => { handleSortBy('newest') }
+                        },
+                        {
+                          checked: sortByType.oldest,
                           label: 'Oldest',
                           type: 'radio',
                           value: 'Oldest',
-                          handler: () => { handleSortByOldest(); }
+                          handler: () => { handleSortBy('oldest') }
                         },
                         {
+                          checked: sortByType.price,
                           label: 'Price',
                           type: 'radio',
                           value: 'Price',
-                          handler: () => { setSortByPrice(true) }
+                          handler: () => { handleSortBy('price') }
                         }
                       ],
                     })
@@ -513,185 +575,103 @@ const Tab1: React.FC = () => {
               </span>
               <span className="chip">
                 <IonChip color="warning">
-                  <IonLabel>Most Rated</IonLabel>
+                  <IonLabel>Popular</IonLabel>
                 </IonChip>
               </span>
             </div>
           </div>
-          {/* sort((a: any, b: any) => { return b.bookPrice - a.bookPrice }) */}
-          {sortByPrice ? (<>
-            <div className="homepage-cards-area">
-              {filteredInfo.length > 0 ? (<>
-                {
-                  cardSkeletonLoaded &&
-                  filteredInfo.sort((a: any, b: any) => { return b.bookPrice - a.bookPrice }).map((element: any, index) => {
-                    return (
-                      <>
-                        <IonCard key={index} className="homepage-card" onClick={() => {
-                          setSellerDeets(element);
-                          setShowModal(true);
-                        }}>
-                          <div className="homepage-card-img">
-                            <img alt="Book" className="pic" src={element.bookImageUrl} />
-                          </div>
-                          <div className="homepage-card-content">
-                            <div className="homepage-card-time">
-                              <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{element.date.getDate() + '-' + (element.date.getMonth() + 1) + '-' + element.date.getFullYear()}</span>
-                            </div>
-                            <IonCardTitle style={{
-                              fontSize: "0.87rem", fontFamily: "Montserrat-b"
-                            }}>
-                              {element.bookName.length < 30 ? element.bookName : element.bookName.substring(0, 30) + "..."}
-                            </IonCardTitle>
-                            <IonCardSubtitle style={{ fontSize: "0.7rem", fontFamily: "Montserrat-sb" }}>
-                              {element.bookAuthor}
-                            </IonCardSubtitle>
-                            <div className="homepage-card-chips">
-                              {element.tags.map((tag: string, index: number) => (
-                                <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", margin: "0 5px", background: "var(--bs-pBg)" }}>
-                                  <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "12px", textTransform: "capitalize" }}>{tag}</IonLabel>
-                                </IonChip>
-                              ))}
-                            </div>
-                            <div>
-                              <p style={{ fontSize: "18px", fontFamily: "Montserrat-SB" }}>Price: ₹ {element.bookPrice}</p>
-                            </div>
-                          </div>
-                        </IonCard>
-                      </>
-                    );
-                  })
-                }
-                {
-                  !cardSkeletonLoaded &&
-                  filteredInfo.map((element, index) => {
-                    return (
+          <div className={"homepage-cards-area"}>
+            {filteredInfo.length > 0 ? (<>
+              {
+                cardSkeletonLoaded &&
+                filteredInfo.map((element: any, index) => {
+                  return (
+                    <>
                       <IonCard key={index} className="homepage-card" onClick={() => {
                         setSellerDeets(element);
-                        setShowModal(true)
+                        setShowModal(true);
                       }}>
-                        <div className="homepage-card-img">
-                          <IonThumbnail>
-                            <IonSkeletonText animated={true}
-                              style={{
-                                width: "110px",
-                                minHeight: "140px",
-                                borderRadius: "15px 0 0 15px",
-                                position: "absolute", top: 0, left: 0
-                              }}
-                            ></IonSkeletonText>
-                          </IonThumbnail>
+                        <div className="homepage-card-heart">
+                          <IonIcon icon={addToWishlist ? heart : heartOutline} color="danger" />
                         </div>
-                        <div className="homepage-card-content" style={{ marginLeft: "75px" }}>
-                          <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
-                          <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
+                        <div className="homepage-card-img">
+                          <img alt="Book" className="pic" src={element.bookImageUrl} />
+                        </div>
+                        <div className="homepage-card-content">
+                          <div className="homepage-card-time">
+                            <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{element.date.getDate() + '-' + (element.date.getMonth() + 1) + '-' + element.date.getFullYear()}</span>
+                          </div>
+                          <h2 style={{
+                            fontSize: "0.87rem", fontFamily: "Montserrat-b", margin: 0, color: "black"
+                          }}>
+                            {element.interestedBuyers.includes(currUser.userId) && (
+                              // <div className="interested-notify"></div>
+                              <IonIcon icon={ellipse} color="success" style={{ marginRight: "5px", width: "10px", height: "10px" }} />
+                            )}
+                            {element.bookName.length < 30 ? element.bookName : element.bookName.substring(0, 30) + "..."}
+                          </h2>
+                          <IonCardSubtitle style={{ fontSize: "0.7rem", fontFamily: "Montserrat-sb" }}>
+                            {element.bookAuthor}
+                          </IonCardSubtitle>
                           <div className="homepage-card-chips">
-                            {element.tags.map(() => (
-                              <IonThumbnail slot="start">
-                                <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
-                              </IonThumbnail>
+                            {element.tags.map((tag: string, index: number) => (
+                              <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", margin: "0 5px", background: "var(--bs-pBg)" }}>
+                                <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "12px", textTransform: "capitalize" }}>{tag.toLowerCase()}</IonLabel>
+                              </IonChip>
                             ))}
                           </div>
-                          <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
+                          <div>
+                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-SB" }}>Price: ₹ {element.bookPrice}</p>
+                          </div>
                         </div>
                       </IonCard>
-                    )
-                  })
-                }
-              </>) : (<>
-                <div className="noBooks">
-                  <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
-                  <p>Currently there are no books available with this name.</p>
-                </div>
-              </>)}
-            </div>
-          </>) : (<>
-            <div className={sortByOldest ? "homepage-cards-area" : "homepage-cards-area sortNewest"}>
-              {filteredInfo.length > 0 ? (<>
-                {
-                  cardSkeletonLoaded &&
-                  filteredInfo.map((element: any, index) => {
-                    return (
-                      <>
-                        <IonCard key={index} className="homepage-card" onClick={() => {
-                          setSellerDeets(element);
-                          setShowModal(true);
-                        }}>
-                          <div className="homepage-card-img">
-                            <img alt="Book" className="pic" src={element.bookImageUrl} />
-                          </div>
-                          <div className="homepage-card-content">
-                            <div className="homepage-card-time">
-                              <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{element.date.getDate() + '-' + (element.date.getMonth() + 1) + '-' + element.date.getFullYear()}</span>
-                            </div>
-                            <IonCardTitle style={{
-                              fontSize: "0.87rem", fontFamily: "Montserrat-b"
-                            }}>
-                              {element.bookName.length < 30 ? element.bookName : element.bookName.substring(0, 30) + "..."}
-                            </IonCardTitle>
-                            <IonCardSubtitle style={{ fontSize: "0.7rem", fontFamily: "Montserrat-sb" }}>
-                              {element.bookAuthor}
-                            </IonCardSubtitle>
-                            <div className="homepage-card-chips">
-                              {element.tags.map((tag: string, index: number) => (
-                                <IonChip color="warning" key={index} style={{ color: "black", border: "1px solid black", margin: "0 5px", background: "var(--bs-pBg)" }}>
-                                  <IonLabel style={{ fontFamily: "Montserrat-sb", fontSize: "12px", textTransform: "capitalize" }}>{tag}</IonLabel>
-                                </IonChip>
-                              ))}
-                            </div>
-                            <div>
-                              <p style={{ fontSize: "18px", fontFamily: "Montserrat-SB" }}>Price: ₹ {element.bookPrice}</p>
-                            </div>
-                          </div>
-                        </IonCard>
-                      </>
-                    );
-                  })
-                }
-                {
-                  !cardSkeletonLoaded &&
-                  filteredInfo.map((element, index) => {
-                    return (
-                      <IonCard key={index} className="homepage-card" onClick={() => {
-                        setSellerDeets(element);
-                        setShowModal(true)
-                      }}>
-                        <div className="homepage-card-img">
-                          <IonThumbnail>
-                            <IonSkeletonText animated={true}
-                              style={{
-                                width: "110px",
-                                minHeight: "140px",
-                                borderRadius: "15px 0 0 15px",
-                                position: "absolute", top: 0, left: 0
-                              }}
-                            ></IonSkeletonText>
-                          </IonThumbnail>
+                    </>
+                  );
+                })
+              }
+              {
+                !cardSkeletonLoaded &&
+                filteredInfo.map((element, index) => {
+                  return (
+                    <IonCard key={index} className="homepage-card" onClick={() => {
+                      setSellerDeets(element);
+                      setShowModal(true)
+                    }}>
+                      <div className="homepage-card-img">
+                        <IonThumbnail>
+                          <IonSkeletonText animated={true}
+                            style={{
+                              width: "110px",
+                              minHeight: "140px",
+                              borderRadius: "15px 0 0 15px",
+                              position: "absolute", top: 0, left: 0
+                            }}
+                          ></IonSkeletonText>
+                        </IonThumbnail>
+                      </div>
+                      <div className="homepage-card-content" style={{ marginLeft: "75px" }}>
+                        <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
+                        <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
+                        <div className="homepage-card-chips">
+                          {element.tags.map(() => (
+                            <IonThumbnail slot="start">
+                              <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
+                            </IonThumbnail>
+                          ))}
                         </div>
-                        <div className="homepage-card-content" style={{ marginLeft: "75px" }}>
-                          <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
-                          <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
-                          <div className="homepage-card-chips">
-                            {element.tags.map(() => (
-                              <IonThumbnail slot="start">
-                                <IonSkeletonText animated={true} style={{ 'width': '80%' }}></IonSkeletonText>
-                              </IonThumbnail>
-                            ))}
-                          </div>
-                          <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
-                        </div>
-                      </IonCard>
-                    )
-                  })
-                }
-              </>) : (<>
-                <div className="noBooks">
-                  <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
-                  <p>Currently there are no books available with this name.</p>
-                </div>
-              </>)}
-            </div>
-          </>)}
+                        <IonSkeletonText animated={true} style={{ 'width': '100%' }}></IonSkeletonText>
+                      </div>
+                    </IonCard>
+                  )
+                })
+              }
+            </>) : (<>
+              <div className="noBooks">
+                <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
+                <p>Currently there are no books available with this name.</p>
+              </div>
+            </>)}
+          </div>
         </IonGrid>
       </IonContent >
     </IonPage >

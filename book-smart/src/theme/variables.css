@@ -134,6 +134,16 @@ http://ionicframework.com/docs/theming/ */
 
 }
 
+ion-item-divider {
+  --background: var(--bs-sText);
+  width: 30vw;
+  height: 5px;
+  border-radius: 27px;
+  margin-left: 20px;
+  margin-top: 5px;
+  min-height: 8px;
+}
+
 .mainHeader {
   background-color: #0d8b85;
   color: #fff;
