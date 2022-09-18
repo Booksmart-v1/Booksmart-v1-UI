@@ -563,6 +563,7 @@ const Tab1: React.FC = () => {
                       if (interest) {
                         setMsg("Request Retracted!");
                         setShowToast2(true);
+                        setIsInterested(false);
                       } else {
                         setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
                         setShowToast2(true);
