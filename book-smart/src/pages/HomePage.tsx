@@ -174,6 +174,8 @@ const Tab1: React.FC = () => {
           }))
           updateData = updateData.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
           console.log(updateData);
+          setInfo(updateData);
+          setFilteredInfo(updateData);
         }
       })
       .catch((e) => {
