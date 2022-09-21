@@ -28,11 +28,13 @@ import {
   IonSearchbar,
   IonCheckbox,
   useIonAlert,
+  IonFab,
+  IonFabButton,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import "./homePage.css";
 import { useState, useEffect, useRef } from "react";
-import { pin, heart, heartOutline, ellipse } from "ionicons/icons";
+import { pin, heart, heartOutline, ellipse, close } from "ionicons/icons";
 import { APIURL } from "../constants";
 import axios from "axios";
 import moment from "moment";
@@ -204,11 +206,6 @@ const Tab1: React.FC = () => {
     }, 2000);
   }
 
-  var allTags = info.map((item) => item.tags.map((tag) => tag));
-  var uniqueTags: string[] = [];
-  allTags.map((item) => item.map((tag) => uniqueTags.push(tag.toLowerCase())));
-  var finalTags = Array.from(new Set(uniqueTags)).sort();
-  finalTags.unshift("All");
 
   // Sending Notify to seller
   const [isInterested, setIsInterested] = useState<boolean>(false);
@@ -248,42 +245,64 @@ const Tab1: React.FC = () => {
       });
   };
 
-  var selectedInterest: string[] = [];
-  const [interestedTags, setInterestedTags] = useState(selectedInterest);
+  // Interest Chip
+  var allTags = info.map((item) => item.tags.map((tag) => tag))
+  var uniqueTags: string[] = []
+  allTags.map((item) => item.map((tag) => uniqueTags.push(tag.toLowerCase())))
+  var finalTags = Array.from(new Set(uniqueTags)).sort();
+
+  var tags = finalTags.map((item) => { return { name: item, isChecked: false } })
+  // const [interestedTags, setInterestedTags] = useState(tags);
+  const [selectAll, setSelectAll] = useState(true);
   const handleInterestClick = (e: any, idx: number) => {
-    if (e.detail.checked === true) {
-      setInterestedTags([...interestedTags, finalTags[idx]]);
-    } else {
-      setInterestedTags(
-        interestedTags.filter((item) => {
-          return item !== e.detail.value;
-        })
-      );
+    if (e.detail.value === "All" && e.detail.checked === true && idx === -1) {
+      setSelectAll(true);
+      setFilteredInfo(info);
+      tags = tags.map((item) => { return { ...item, isChecked: false } });
+      // var newTags = tags.map((item) => { return { ...item, isChecked: false } })
     }
-    if (interestedTags.length > 0 && interestedTags.length < 5) {
-      var filterData = [];
-      for (let i = 0; i < interestedTags.length; i++) {
-        filterData.push(
-          info.filter((item) => {
-            if (
-              item.tags
-                .map((tag) => {
-                  return tag.toLowerCase();
-                })
-                .includes(interestedTags[i])
-            ) {
+    else {
+      setSelectAll(false);
+      if (e.detail.checked === true) {
+        tags = tags.map((tag) => {
+          if (tag.name === e.detail.value) {
+            return { ...tag, isChecked: true };
+          }
+          else {
+            return tag;
+          }
+        });
+      }
+      else {
+        tags = tags.map((tag) => {
+          if (tag.name === e.detail.value) {
+            return { ...tag, isChecked: false };
+          }
+          else {
+            return tag;
+          }
+        });
+      }
+      console.log(tags);
+      var selectedTags = tags.filter((item) => { if (item.isChecked === true) { return item } })
+      console.log(selectedTags);
+      if (selectedTags.length > 0) {
+        selectedTags.forEach((t) => {
+          setFilteredInfo(info.filter((item) => {
+            if (item.tags.map((tag) => { return tag.toLowerCase() }).includes(t.name)) {
               return item;
             }
-          })
-        );
-        setFilteredInfo(filterData[0]);
+          }))
+        })
       }
-    } else {
-      setFilteredInfo(info);
+      else {
+        setFilteredInfo(info);
+      }
+
     }
   };
 
-  const [searchBook, setSearchBook] = useState("");
+  const [searchBook, setSearchBook] = useState('')
 
   const handleSearchBook = (e: any) => {
     // setSearchBook(e.detail.value);
@@ -449,26 +468,26 @@ const Tab1: React.FC = () => {
           </div>
         </IonHeader>
 
-        <IonModal
-          trigger="open-modal"
-          initialBreakpoint={0.25}
-          breakpoints={[0, 0.25, 0.75]}
-          style={{ "--border-radius": "20px", zoom: "0.95" }}
-        >
+        <IonModal trigger="open-modal" initialBreakpoint={0.25} breakpoints={[0, 0.25, 0.75]} style={{ "--border-radius": "20px", zoom: "0.95" }} >
+          {/* <IonFab vertical="top" horizontal="center" slot="fixed" style={{ margin: "0 0 0 -27px" }}>
+            <IonFabButton>
+              <IonIcon icon={close} />
+            </IonFabButton>
+          </IonFab> */}
+
           <IonContent>
-            <IonList style={{ padding: "10px 15px" }} className="ion-padding">
-              {finalTags.map((item, idx: number) => (
+            <IonList style={{ padding: "30px 15px" }} className="ion-padding">
+              <IonItem className="ion-no-padding" lines="none">
+                <IonLabel style={{ marginLeft: "5px", textTransform: "capitalize", fontFamily: "Montserrat-sb" }}>All</IonLabel>
+                <IonCheckbox value="All" slot="end" checked={selectAll}
+                  onIonChange={(e) => { setSelectAll(!selectAll); handleInterestClick(e, -1) }}
+                ></IonCheckbox>
+              </IonItem>
+              {tags.map((item, idx: number) => (
                 <IonItem className="ion-no-padding" lines="none">
-                  <IonLabel
-                    style={{ marginLeft: "5px", textTransform: "capitalize" }}
-                  >
-                    {item}
-                  </IonLabel>
-                  <IonCheckbox
-                    value={item}
-                    slot="end"
-                    onIonChange={(e) => handleInterestClick(e, idx)}
-                  ></IonCheckbox>
+                  <IonLabel style={{ marginLeft: "5px", textTransform: "capitalize", fontFamily: "Montserrat-sb" }}>{item.name}</IonLabel>
+                  <IonCheckbox value={item.name} slot="end" onIonChange={(e) => handleInterestClick(e, idx)} disabled={selectAll}></IonCheckbox>
+
                 </IonItem>
               ))}
             </IonList>
