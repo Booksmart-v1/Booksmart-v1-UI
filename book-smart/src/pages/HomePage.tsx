@@ -228,7 +228,11 @@ const Tab1: React.FC = () => {
     let bookId = sellerDetails._id;
     sendNotifyToSeller(receiverId, bookId, msg);
   };
-  const sendNotifyToSeller = (receiverId: string, bookId: string, msg: string) => {
+  const sendNotifyToSeller = (
+    receiverId: string,
+    bookId: string,
+    msg: string
+  ) => {
     if (msg === "send") {
       var url = APIURL + "v2/sendNotif";
       var userId = "";
@@ -256,8 +260,7 @@ const Tab1: React.FC = () => {
         .catch((e) => {
           console.log(e);
         });
-    }
-    else {
+    } else {
       var url = APIURL + "v2/removeInterestNotification";
       var userId = "";
       var username = "";
@@ -338,7 +341,10 @@ const Tab1: React.FC = () => {
             }
           })
         );
+      } else {
+        setSelectAll(true);
       }
+
       setTags(currTag);
     }
   };
@@ -737,18 +743,20 @@ const Tab1: React.FC = () => {
                 <IonToggle
                   slot="end"
                   style={{ color: `${interest ? "green" : "red"}` }}
+                  checked={interest}
                   onClick={() => {
                     if (interest) {
-                      setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
-                      setInterest(true);
-                      setShowToast2(true);
-                      handleSendNotif(sellerDeets, "send");
-                    } else {
                       setMsg("Request Retracted!");
                       handleSendNotif(sellerDeets, "retract");
                       setShowToast2(true);
                       setInterest(false);
+                    } else {
+                      setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
+                      setInterest(true);
+                      setShowToast2(true);
+                      handleSendNotif(sellerDeets, "send");
                     }
+                    getCardDetails(60);
                   }}
                 ></IonToggle>
               </IonItem>
@@ -864,17 +872,17 @@ const Tab1: React.FC = () => {
                               {element.interestedBuyers.includes(
                                 currUser.userId
                               ) && (
-                                  // <div className="interested-notify"></div>
-                                  <IonIcon
-                                    icon={ellipse}
-                                    color="success"
-                                    style={{
-                                      marginRight: "5px",
-                                      width: "10px",
-                                      height: "10px",
-                                    }}
-                                  />
-                                )}
+                                // <div className="interested-notify"></div>
+                                <IonIcon
+                                  icon={ellipse}
+                                  color="success"
+                                  style={{
+                                    marginRight: "5px",
+                                    width: "10px",
+                                    height: "10px",
+                                  }}
+                                />
+                              )}
                               {element.bookName.length < 30
                                 ? element.bookName
                                 : element.bookName.substring(0, 30) + "..."}
