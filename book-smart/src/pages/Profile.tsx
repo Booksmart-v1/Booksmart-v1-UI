@@ -176,7 +176,7 @@ const Profile = () => {
         console.log(e);
       });
   };
-
+  console.log(notifyArray);
   useEffect(() => {
     getNotify();
   }, []);
@@ -300,7 +300,26 @@ const Profile = () => {
   }
 
   const history = useHistory();
-
+  const handleDeleteClick = (notifId: string) => {
+    deleteNotify(notifId);
+  }
+  const deleteNotify = (notifId: string) => {
+    const url = APIURL + "v2/removeNotif";
+    axios
+      .post(url, {
+        notifId: notifId,
+      })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          let data = resp.data.data;
+          console.log(data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
   return (
     <IonPage className="md">
       <IonHeader>
@@ -331,10 +350,10 @@ const Profile = () => {
                   setShowPopover({ showPopover: false, event: undefined })
                 }
               >
-                <IonItem button onClick={() => {}}>
+                <IonItem button onClick={() => { }}>
                   <IonLabel className="profile-orders">My Orders</IonLabel>
                 </IonItem>
-                <IonItem button onClick={() => {}}>
+                <IonItem button onClick={() => { }}>
                   <IonLabel className="profile-purchases">
                     My Purchases
                   </IonLabel>
@@ -952,6 +971,10 @@ const Profile = () => {
                           </p>
                         </div>
                       </IonItem>
+                      <div style={{ position: "absolute", bottom: "3px", right: "10px", zIndex: "100" }}>
+                        <IonIcon icon={trash} color="danger" slot="end"
+                          onClick={() => { handleDeleteClick(item._id) }} />
+                      </div>
                       <IonPopover
                         reference="event"
                         isOpen={notifyArray[idx].isPopOverOpen}
@@ -1038,7 +1061,7 @@ const Profile = () => {
                                   ],
                                 })
                               }
-                              // onClick={() => { handleAcceptClick(notifyArray[idx]) }}
+                            // onClick={() => { handleAcceptClick(notifyArray[idx]) }}
                             >
                               <IonIcon
                                 icon={checkmarkOutline}
@@ -1137,7 +1160,7 @@ const Profile = () => {
             onClick={() => {
               localStorage.removeItem("user");
               localStorage.removeItem("chatToken");
-              // document.location.reload()
+              document.location.reload()
               history.push("/login");
             }}
           >
