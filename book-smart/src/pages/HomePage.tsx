@@ -223,39 +223,65 @@ const Tab1: React.FC = () => {
   // Sending Notify to seller
   const [isInterested, setIsInterested] = useState<boolean>(false);
 
-  const handleSendNotif = (sellerDetails: any) => {
+  const handleSendNotif = (sellerDetails: any, msg: string) => {
     let receiverId = sellerDetails.sellerId;
     let bookId = sellerDetails._id;
-    sendNotifyToSeller(receiverId, bookId);
-    console.log(sellerDetails);
+    sendNotifyToSeller(receiverId, bookId, msg);
   };
-  const sendNotifyToSeller = (receiverId: string, bookId: string) => {
-    const url = APIURL + "v2/sendNotif";
-    var userId = "";
-    var username = "";
-    const a = localStorage.getItem("user");
-    if (a) {
-      userId = JSON.parse(a).id;
-      username = JSON.parse(a).name;
+  const sendNotifyToSeller = (receiverId: string, bookId: string, msg: string) => {
+    if (msg === "send") {
+      var url = APIURL + "v2/sendNotif";
+      var userId = "";
+      var username = "";
+      const a = localStorage.getItem("user");
+      if (a) {
+        userId = JSON.parse(a).id;
+        username = JSON.parse(a).name;
+      }
+      axios
+        .post(url, {
+          userId: userId,
+          userName: username,
+          receiverId: receiverId,
+          type: "interest",
+          bookAdId: bookId,
+        })
+        .then((resp) => {
+          console.log(resp);
+          if (resp.status === 200) {
+            let data = resp.data.data;
+            console.log(data);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     }
-    axios
-      .post(url, {
-        userId: userId,
-        userName: username,
-        receiverId: receiverId,
-        type: "interest",
-        bookAdId: bookId,
-      })
-      .then((resp) => {
-        console.log(resp);
-        if (resp.status === 200) {
-          let data = resp.data.data;
-          console.log(data);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    else {
+      var url = APIURL + "v2/removeInterestNotification";
+      var userId = "";
+      var username = "";
+      const a = localStorage.getItem("user");
+      if (a) {
+        userId = JSON.parse(a).id;
+        username = JSON.parse(a).name;
+      }
+      axios
+        .post(url, {
+          userId: userId,
+          bookAdId: bookId,
+        })
+        .then((resp) => {
+          console.log(resp);
+          if (resp.status === 200) {
+            let data = resp.data.data;
+            console.log(data);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   };
   let allTags = info.map((item: any) => item.tags.map((tag: any) => tag));
   let uniqueTags: string[] = [];
@@ -710,18 +736,18 @@ const Tab1: React.FC = () => {
                 </IonLabel>
                 <IonToggle
                   slot="end"
-                  checked={interest}
                   style={{ color: `${interest ? "green" : "red"}` }}
                   onClick={() => {
                     if (interest) {
-                      setMsg("Request Retracted!");
-                      setInterest(!interest);
-                      setShowToast2(true);
-                    } else {
                       setMsg(`Request Sent to ${sellerDeets.sellerName}!`);
-                      setInterest(!interest);
+                      setInterest(true);
                       setShowToast2(true);
-                      handleSendNotif(sellerDeets);
+                      handleSendNotif(sellerDeets, "send");
+                    } else {
+                      setMsg("Request Retracted!");
+                      handleSendNotif(sellerDeets, "retract");
+                      setShowToast2(true);
+                      setInterest(false);
                     }
                   }}
                 ></IonToggle>
@@ -838,17 +864,17 @@ const Tab1: React.FC = () => {
                               {element.interestedBuyers.includes(
                                 currUser.userId
                               ) && (
-                                // <div className="interested-notify"></div>
-                                <IonIcon
-                                  icon={ellipse}
-                                  color="success"
-                                  style={{
-                                    marginRight: "5px",
-                                    width: "10px",
-                                    height: "10px",
-                                  }}
-                                />
-                              )}
+                                  // <div className="interested-notify"></div>
+                                  <IonIcon
+                                    icon={ellipse}
+                                    color="success"
+                                    style={{
+                                      marginRight: "5px",
+                                      width: "10px",
+                                      height: "10px",
+                                    }}
+                                  />
+                                )}
                               {element.bookName.length < 30
                                 ? element.bookName
                                 : element.bookName.substring(0, 30) + "..."}
