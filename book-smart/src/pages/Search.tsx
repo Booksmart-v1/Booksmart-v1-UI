@@ -23,9 +23,19 @@ import { chevronForwardOutline, closeCircle, pin, chevronBackOutline, addCircle,
 import React, { useState } from "react";
 import "./search.css";
 import catLogo from "../images/logo.png"
-
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y, Autoplay, EffectFade } from 'swiper';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import 'swiper/css/autoplay';
+import 'swiper/css/effect-fade';
 
 const Search: React.FC = () => {
+  SwiperCore.use([Autoplay])
   // const [chipData, setChipData] = React.useState([
   //   { key: 0, label: "Health", hide: false },
   //   { key: 1, label: "Love", hide: false },
@@ -371,12 +381,12 @@ const Search: React.FC = () => {
 </div>
 </IonContent>
 </IonPage > }*/
-  const defaultImage = "https://via.placeholder.com/200/1200";
 
+  const defaultImage = "https://via.placeholder.com/200/1200";
   return (
     <IonPage>
       <IonHeader className="searchHead" style={{ width: "100%" }}>
-        <IonToolbar style={{ width: "100%", padding: "10px", "--background": "var(--bs-pBg)", }}>
+        <IonToolbar style={{ width: "100%", padding: "10px" }}>
           <IonTitle
             style={{
               color: "var(--bs-pText)",
@@ -389,23 +399,48 @@ const Search: React.FC = () => {
           </IonTitle>
         </IonToolbar>
       </IonHeader>
-      {/* <div className="wishlist-header">
-        <div className="wishlist-price">
-          Total: <span style={{ fontSize: "30px", fontFamily: "Montserrat-b" }}>₹ 195</span>
-        </div>
-      </div> */}
+      <div className="swiper-area">
+        <Swiper style={{ height: "15vh", background: "var(--bs-pText)" }}
+          // install Swiper modules
+          modules={[Navigation, Pagination, Scrollbar, Autoplay, EffectFade]}
+          // spaceBetween={50}
+          slidesPerView={1}
+          // autoplay={true}
+          autoplay={true}
+          loop={true}
+          // navigation
+          pagination={{ clickable: true }}
+          // scrollbar={{ draggable: true }}
+          onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={() => console.log('slide change')}
+        // effect="fade"
+        >
+          <SwiperSlide style={{ padding: "0 15px" }}>
+            <h2 style={{ textAlign: "left", fontFamily: "Montserrat-sb" }}>Fiction</h2>
+          </SwiperSlide>
+          <SwiperSlide style={{ padding: "0 15px" }}>
+            <h2 style={{ textAlign: "left", fontFamily: "Montserrat-sb" }}>Horror & Thriller</h2>
+          </SwiperSlide>
+          <SwiperSlide style={{ padding: "0 15px" }}>
+            <h2 style={{ textAlign: "left", fontFamily: "Montserrat-sb" }}>Love</h2>
+          </SwiperSlide>
+          <SwiperSlide style={{ padding: "0 15px" }}>
+            <h2 style={{ textAlign: "left", fontFamily: "Montserrat-sb" }}>Health</h2>
+          </SwiperSlide>
+        </Swiper>
+      </div>
       <IonContent className="wishlist-area">
         <div className="wishlist-books">
           <div className="wishlist-card">
             <div className="wishlist-img">
-              <img src={defaultImage} alt="wishlist-book" style={{ width: "90px", height: "135px", borderRadius: "10%" }} />
+              <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
             </div>
             <div className="wishlist-content">
               <h2>The Great Gatsby</h2>
               <p>₹ 65</p>
-              <div style={{ margin: "0 10px", display: "flex", justifyContent: "flex-end" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <IonButtons>
-                  <IonButton className="wishlist-buybtn" style={{ fontSize: "20px" }}>
+                  <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
                     Buy Now
                   </IonButton>
                 </IonButtons>
@@ -414,14 +449,14 @@ const Search: React.FC = () => {
           </div>
           <div className="wishlist-card">
             <div className="wishlist-img">
-              <img src={defaultImage} alt="wishlist-book" style={{ width: "90px", height: "135px", borderRadius: "10%" }} />
+              <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
             </div>
             <div className="wishlist-content">
               <h2>The Great Gatsby</h2>
               <p>₹ 65</p>
-              <div style={{ margin: "0 10px", display: "flex", justifyContent: "flex-end" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <IonButtons>
-                  <IonButton className="wishlist-buybtn" style={{ fontSize: "20px" }}>
+                  <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
                     Buy Now
                   </IonButton>
                 </IonButtons>
@@ -430,14 +465,30 @@ const Search: React.FC = () => {
           </div>
           <div className="wishlist-card">
             <div className="wishlist-img">
-              <img src={defaultImage} alt="wishlist-book" style={{ width: "90px", height: "135px", borderRadius: "10%" }} />
+              <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
             </div>
             <div className="wishlist-content">
               <h2>The Great Gatsby</h2>
               <p>₹ 65</p>
-              <div style={{ margin: "0 10px", display: "flex", justifyContent: "flex-end" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <IonButtons>
-                  <IonButton className="wishlist-buybtn" style={{ fontSize: "20px" }}>
+                  <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
+                    Buy Now
+                  </IonButton>
+                </IonButtons>
+              </div>
+            </div>
+          </div>
+          <div className="wishlist-card">
+            <div className="wishlist-img">
+              <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
+            </div>
+            <div className="wishlist-content">
+              <h2>The Great Gatsby</h2>
+              <p>₹ 65</p>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <IonButtons>
+                  <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
                     Buy Now
                   </IonButton>
                 </IonButtons>
