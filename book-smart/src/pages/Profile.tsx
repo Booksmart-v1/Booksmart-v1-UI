@@ -973,7 +973,24 @@ const Profile = () => {
                       </IonItem>
                       <div style={{ position: "absolute", bottom: "3px", right: "10px", zIndex: "100" }}>
                         <IonIcon icon={trash} color="danger" slot="end"
-                          onClick={() => { handleDeleteClick(item._id) }} />
+                          onClick={() =>
+                            presentNotifyHandleAlert({
+                              header: "Are you sure you want to delete this notification?",
+                              buttons: [
+                                {
+                                  text: "Cancel",
+                                  role: "cancel",
+                                },
+                                {
+                                  text: "Delete",
+                                  role: "confirm",
+                                  handler: () => {
+                                    handleDeleteClick(item._id);
+                                  },
+                                },
+                              ],
+                            })
+                          } />
                       </div>
                       <IonPopover
                         reference="event"
