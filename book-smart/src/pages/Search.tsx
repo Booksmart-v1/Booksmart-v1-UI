@@ -400,7 +400,8 @@ const Search: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <div className="swiper-area">
-        <Swiper style={{ height: "15vh", background: "var(--bs-pText)" }}
+        {/* <Swiper style={{ height: "15vh", background: "var(--bs-pText)" }} */}
+        <Swiper style={{ height: "15vh" }}
           // install Swiper modules
           modules={[Navigation, Pagination, Scrollbar, Autoplay, EffectFade]}
           // spaceBetween={50}
