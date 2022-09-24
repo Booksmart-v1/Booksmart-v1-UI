@@ -145,13 +145,13 @@ ion-item-divider {
   font-family: "Montserrat-sb";
 }
 
-.wishlist-area {
-  --background: var(--bs-pText);
-}
-
 .swiper-area {
   height: 15vh;
-  background: var(--bs-pText);
+  /* background: var(--bs-pText); */
+  background: url("https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .swiper-pagination {
@@ -172,6 +172,11 @@ ion-item-divider {
 
 .swiper-pagination-bullet-active {
   background-color: white;
+}
+
+.wishlist-area {
+  /* --background: var(--bs-pText); */ 
+  --background: url("https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg");
 }
 
 .wishlist-books {
