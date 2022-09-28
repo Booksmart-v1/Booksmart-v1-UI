@@ -119,6 +119,13 @@ ion-item-divider {
   border-radius: 10px;
 } */
 
+.searchHead {
+  background: transparent;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .wishlist-header {
   width: 90%;
@@ -146,12 +153,13 @@ ion-item-divider {
 }
 
 .swiper-area {
-  height: 15vh;
+  height: 25vh;
   /* background: var(--bs-pText); */
   background: url("https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  background-blend-mode: darken;
 }
 
 .swiper-pagination {
@@ -175,7 +183,9 @@ ion-item-divider {
 }
 
 .wishlist-area {
-  /* --background: var(--bs-pText); */ 
+  /* --background: var(--bs-pText); */
+  position: absolute;
+  top: 20%;
   --background: url("https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg");
 }
 
@@ -199,7 +209,7 @@ ion-item-divider {
 
 .wishlist-card {
   width: 85%;
-  height: 120px;
+  min-height: 120px;
   margin: 3px 0;
   display: flex;
   justify-content: flex-start;
@@ -211,19 +221,8 @@ ion-item-divider {
 }
 
 .wishlist-content {
-  height: 120px;
+  min-height: 120px;
+  padding: 10px 0;
   width: 75%;
   margin: 0 0 0 10px;
-}
-
-.wishlist-content h2 {
-  font-family: "Montserrat-b";
-  color: var(--bs-sText);
-  font-size: 18px;
-}
-
-.wishlist-content p {
-  font-family: "Montserrat-sb";
-  color: var(--bs-pText);
-  font-size: 16px;
 }

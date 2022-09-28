@@ -143,6 +143,7 @@ const Tab1: React.FC = () => {
   const [filteredInfo, setFilteredInfo] = useState(cardDetails);
   const [sellerDeets, setSellerDeets] = useState(cardDetails[0]);
   const [interest, setInterest] = useState(false);
+  const [wishListed, setWishListed] = useState(false);
   const [showToast1, setShowToast1] = useState(false);
   const [showToast2, setShowToast2] = useState(false);
   const [msg, setMsg] = useState("");
@@ -170,13 +171,15 @@ const Tab1: React.FC = () => {
               ? element.bookImageUrl
               : defaultImage;
           }
+          console.log(wishListHeart);
           let updateData = data.map((item: any) => ({
             ...item,
             date: new Date(item.updatedAt.slice(0, -1)),
             time: new Date(item.updatedAt)
               .toLocaleString(undefined, { timeZone: "Asia/Kolkata" })
               .substring(12, 17),
-            newDate: moment(item.updatedAt).format("YYYYMMDD"),
+            newDate: moment(item.updatedAt).format("YYYYMMDD")
+            , isLiked: wishListHeart.includes(item.bookId)
           }));
           updateData = updateData.sort((a: any, b: any) =>
             b.updatedAt.localeCompare(a.updatedAt)
@@ -219,9 +222,6 @@ const Tab1: React.FC = () => {
       event.detail.complete();
     }, 2000);
   }
-
-  // Sending Notify to seller
-  const [isInterested, setIsInterested] = useState<boolean>(false);
 
   const handleSendNotif = (sellerDetails: any, msg: string) => {
     let receiverId = sellerDetails.sellerId;
@@ -368,11 +368,11 @@ const Tab1: React.FC = () => {
   };
 
   const [presentAlert] = useIonAlert();
-  const [addToWishlist, setAddToWishlist] = useState(false);
   const [cardSkeletonLoaded, setcardSkeletonLoaded] = useState(false);
 
   useEffect(() => {
-    getCardDetails(60);
+    getWishlistDetails();
+    // getCardDetails(60);
     const timer = setTimeout(() => {
       setcardSkeletonLoaded(true);
     }, 2000);
@@ -437,6 +437,63 @@ const Tab1: React.FC = () => {
       clearTimeout(timer);
       setcardSkeletonLoaded(false);
     };
+  };
+
+  // Add to Wishlist
+  const [showWishlistToast1, setShowWishlistToast1] = useState(false);
+
+  const [showWishlistToast2, setShowWishlistToast2] = useState(false);
+
+  const addToWishlist = (bookId: string) => {
+    var url = APIURL + "v2/addBookToWishlist";
+    var userId = "";
+    var username = "";
+    console.log(bookId);
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    console.log(userId);
+    axios
+      .post(url, {
+        userId: userId,
+        bookId: bookId,
+      })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          let data = resp.data.data;
+          console.log(data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+  const [wishListHeart, setWishListHeart] = useState<any>([])
+  const getWishlistDetails = () => {
+    var url = APIURL + "v2/getWishlist";
+    var userId = "";
+    var username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios
+      .get(url + `?userId=${userId}`)
+      .then((resp) => {
+        if (resp.status === 200) {
+          var data = resp.data.data;
+          let wishListIds = Array.from(new Set(data[0].bookIds))
+          setWishListHeart(wishListIds)
+          getCardDetails(60);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (
@@ -831,23 +888,46 @@ const Tab1: React.FC = () => {
                         <IonCard
                           key={index}
                           className="homepage-card"
-                          onClick={() => {
+                          onClick={(e) => {
                             setSellerDeets(element);
-                            console.log(element.interestedBuyers);
-                            console.log(currUser.userId);
                             const con: boolean =
                               element.interestedBuyers.includes(
                                 currUser.userId
                               );
-                            console.log(con);
+                            console.log(e.target)
                             setInterest(con);
-                            setShowModal(true);
+                            if (e.target === e.currentTarget) setShowModal(true);
                           }}
                         >
+                          <IonToast
+                            isOpen={showWishlistToast1}
+                            onDidDismiss={() => setShowWishlistToast1(false)}
+                            message="Book added to wishlist!"
+                            duration={1500}
+                          />
+                          <IonToast
+                            isOpen={showWishlistToast2}
+                            onDidDismiss={() => setShowWishlistToast2(false)}
+                            message="Book removed from wishlist!"
+                            duration={1500}
+                          />
                           <div className="homepage-card-heart">
                             <IonIcon
-                              icon={addToWishlist ? heart : heartOutline}
+                              key={index}
+                              icon={element.isLiked ? heart : heartOutline}
                               color="danger"
+                              onClick={() => {
+                                if (wishListed) {
+                                  setWishListed(false);
+                                  // setShowWishlistToast2(true);
+                                }
+                                else {
+                                  addToWishlist(element.bookId);
+                                  setWishListed(true);
+                                  // setShowWishlistToast1(true);
+                                }
+                                getWishlistDetails();
+                              }}
                             />
                           </div>
                           <div className="homepage-card-img">
@@ -872,17 +952,17 @@ const Tab1: React.FC = () => {
                               {element.interestedBuyers.includes(
                                 currUser.userId
                               ) && (
-                                // <div className="interested-notify"></div>
-                                <IonIcon
-                                  icon={ellipse}
-                                  color="success"
-                                  style={{
-                                    marginRight: "5px",
-                                    width: "10px",
-                                    height: "10px",
-                                  }}
-                                />
-                              )}
+                                  // <div className="interested-notify"></div>
+                                  <IonIcon
+                                    icon={ellipse}
+                                    color="success"
+                                    style={{
+                                      marginRight: "5px",
+                                      width: "10px",
+                                      height: "10px",
+                                    }}
+                                  />
+                                )}
                               {element.bookName.length < 30
                                 ? element.bookName
                                 : element.bookName.substring(0, 30) + "..."}
