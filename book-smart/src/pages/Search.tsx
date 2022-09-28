@@ -19,8 +19,8 @@ import {
   IonToast,
   IonButton,
 } from "@ionic/react";
-import { chevronForwardOutline, closeCircle, pin, chevronBackOutline, addCircle, search } from "ionicons/icons";
-import React, { useState } from "react";
+import { chevronForwardOutline, closeCircle, pin, chevronBackOutline, addCircle, search, arrowBack } from "ionicons/icons";
+import React, { useState, useEffect } from "react";
 import "./search.css";
 import catLogo from "../images/logo.png"
 // Import Swiper React components
@@ -33,6 +33,10 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import 'swiper/css/autoplay';
 import 'swiper/css/effect-fade';
+import axios from "axios";
+import { APIURL } from "../constants";
+import moment from "moment";
+
 
 const Search: React.FC = () => {
   SwiperCore.use([Autoplay])
@@ -381,27 +385,131 @@ const Search: React.FC = () => {
 </div>
 </IonContent>
 </IonPage > }*/
+  const [info, setInfo] = useState([]);
+  const [wishListData, setWishListData] = useState([]);
+  const getWishlistDetails = () => {
+    var url = APIURL + "v2/getWishlist";
+    var userId = "";
+    var username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios
+      .get(url + `?userId=${userId}`)
+      .then((resp) => {
+        if (resp.status === 200) {
+          var data = resp.data.data;
+          let wishListIds = Array.from(new Set(data[0].bookIds))
+          getWishListCardDetails(wishListIds);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
+  useEffect(() => {
+    getWishlistDetails();
+  }, []);
   const defaultImage = "https://via.placeholder.com/200/1200";
+  const getWishListCardDetails = (wishListIds: any) => {
+    const url = APIURL + "v2/getBooks";
+    console.log(wishListIds);
+    axios
+      .get(url)
+      .then((resp) => {
+        if (resp.status === 200) {
+          var data = resp.data.data;
+          var arr: any = []
+          for (let i = 0; i < wishListIds.length; i++) {
+            data.filter((item: any) => {
+              if (item._id === wishListIds[i]) {
+                arr.push(item);
+              }
+            })
+          }
+          setWishListData(arr);
+          setInfo(data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  console.log(wishListData);
+  console.log(info);
+  const addToWishlist = (bookId: string) => {
+    var url = APIURL + "v2/addBookToWishlist";
+    var userId = "";
+    var username = "";
+    console.log(bookId);
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    console.log(userId);
+    axios
+      .post(url, {
+        userId: userId,
+        bookId: bookId,
+      })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          let data = resp.data.data;
+          console.log(data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+  // Search for wishlist book
+  const [searchBook, setSearchBook] = useState("");
+  const handleSearchBook = (e: any) => {
+    const searchText = e.detail.value;
+    setSearchBook(searchText);
+    if (searchText !== "") {
+      const xyz = info.filter((item: any) => {
+        if (item.bookName.toLowerCase().includes(searchText.toLowerCase())) {
+          return item;
+        }
+      });
+      setWishListData(xyz);
+    } else {
+      // setWishListData(info);
+      getWishlistDetails()
+      // getWishListCardDetails(wishListIds);
+    }
+  };
+
   return (
     <IonPage>
-      <IonHeader className="searchHead" style={{ width: "100%" }}>
-        <IonToolbar style={{ width: "100%", padding: "10px" }}>
-          <IonTitle
+      <div className="swiper-area">
+        <div className="searchHead">
+          {/* <IonToolbar style={{ "--background": "transparent", padding: "0 5px", displ}}> */}
+          <IonSearchbar
+            placeholder="Add your favourite books"
             style={{
-              color: "var(--bs-pText)",
-              textAlign: "center",
-              fontSize: "24px",
-              fontFamily: "Montserrat-B",
+              "--background": "white",
+              "--placeholder-color": "black",
+              width: "90%",
+              fontFamily: "Montserrat-sb"
+            }}
+            value={searchBook}
+            onIonChange={(e) => {
+              handleSearchBook(e);
             }}
           >
-            Wishlist
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <div className="swiper-area">
+          </IonSearchbar>
+          <IonIcon icon={addCircle} color="red" size="large" slot="end"></IonIcon>
+          {/* </IonToolbar> */}
+        </div>
         {/* <Swiper style={{ height: "15vh", background: "var(--bs-pText)" }} */}
-        <Swiper style={{ height: "15vh" }}
+        <Swiper style={{ height: "10vh" }}
           // install Swiper modules
           modules={[Navigation, Pagination, Scrollbar, Autoplay, EffectFade]}
           // spaceBetween={50}
@@ -412,90 +520,48 @@ const Search: React.FC = () => {
           // navigation
           pagination={{ clickable: true }}
           // scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
+          // onSwiper={(swiper) => console.log(swiper)}
           onSlideChange={() => console.log('slide change')}
         // effect="fade"
         >
           <SwiperSlide style={{ padding: "0 15px" }}>
-            <h2 style={{ textAlign: "left", fontFamily: "Montserrat-sb" }}>Fiction</h2>
+            <p style={{ textAlign: "left", fontFamily: "Montserrat-sb", fontSize: "26px" }}>Fiction</p>
           </SwiperSlide>
           <SwiperSlide style={{ padding: "0 15px" }}>
-            <h2 style={{ textAlign: "left", fontFamily: "Montserrat-sb" }}>Horror & Thriller</h2>
+            <p style={{ textAlign: "left", fontFamily: "Montserrat-sb", fontSize: "26px" }}>Horror & Thriller</p>
           </SwiperSlide>
           <SwiperSlide style={{ padding: "0 15px" }}>
-            <h2 style={{ textAlign: "left", fontFamily: "Montserrat-sb" }}>Love</h2>
+            <p style={{ textAlign: "left", fontFamily: "Montserrat-sb", fontSize: "26px" }}>Love</p>
           </SwiperSlide>
           <SwiperSlide style={{ padding: "0 15px" }}>
-            <h2 style={{ textAlign: "left", fontFamily: "Montserrat-sb" }}>Health</h2>
+            <p style={{ textAlign: "left", fontFamily: "Montserrat-sb", fontSize: "26px" }}>Health</p>
           </SwiperSlide>
         </Swiper>
       </div>
       <IonContent className="wishlist-area">
         <div className="wishlist-books">
-          <div className="wishlist-card">
-            <div className="wishlist-img">
-              <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
-            </div>
-            <div className="wishlist-content">
-              <h2>The Great Gatsby</h2>
-              <p>₹ 65</p>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <IonButtons>
-                  <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
-                    Buy Now
-                  </IonButton>
-                </IonButtons>
+          {wishListData.map((item: any, idx: number) => {
+            return (
+              <div className="wishlist-card" key={idx}>
+                <div className="wishlist-img">
+                  <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
+                </div>
+                <div className="wishlist-content">
+                  <p style={{ fontSize: "16px", color: "var(--bs-sText)", fontFamily: "Montserrat-b" }}>{item.bookName}</p>
+                  <p style={{ fontSize: "14px", margin: "10px 0", fontFamily: "Montserrat-sb", color: "var(--bs-pText)" }}>{item.bookAuthor}</p>
+                  <p>₹ 65</p>
+                  {/* <div style={{ display: "flex", justifyContent: "flex-end" }}> */}
+                  <IonButtons style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
+                      Buy Now
+                    </IonButton>
+                  </IonButtons>
+                  {/* </div> */}
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="wishlist-card">
-            <div className="wishlist-img">
-              <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
-            </div>
-            <div className="wishlist-content">
-              <h2>The Great Gatsby</h2>
-              <p>₹ 65</p>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <IonButtons>
-                  <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
-                    Buy Now
-                  </IonButton>
-                </IonButtons>
-              </div>
-            </div>
-          </div>
-          <div className="wishlist-card">
-            <div className="wishlist-img">
-              <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
-            </div>
-            <div className="wishlist-content">
-              <h2>The Great Gatsby</h2>
-              <p>₹ 65</p>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <IonButtons>
-                  <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
-                    Buy Now
-                  </IonButton>
-                </IonButtons>
-              </div>
-            </div>
-          </div>
-          <div className="wishlist-card">
-            <div className="wishlist-img">
-              <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
-            </div>
-            <div className="wishlist-content">
-              <h2>The Great Gatsby</h2>
-              <p>₹ 65</p>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <IonButtons>
-                  <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
-                    Buy Now
-                  </IonButton>
-                </IonButtons>
-              </div>
-            </div>
-          </div>
+            )
+          })}
+
         </div>
       </IonContent>
     </IonPage >
