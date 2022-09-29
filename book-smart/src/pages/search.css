@@ -155,7 +155,7 @@ ion-item-divider {
 .swiper-area {
   height: 25vh;
   /* background: var(--bs-pText); */
-  background: url("https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg");
+  background: url("https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg"), linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -185,7 +185,7 @@ ion-item-divider {
 .wishlist-area {
   /* --background: var(--bs-pText); */
   position: absolute;
-  top: 20%;
+  top: 22%;
   --background: url("https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg");
 }
 
