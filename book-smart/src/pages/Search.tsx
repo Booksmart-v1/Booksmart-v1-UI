@@ -386,7 +386,7 @@ const Search: React.FC = () => {
 </IonContent>
 </IonPage > }*/
   const [info, setInfo] = useState([]);
-  const [wishListData, setWishListData] = useState([]);
+  const [wishListData, setWishListData] = useState<any>([]);
   const getWishlistDetails = () => {
     var url = APIURL + "v2/getWishlist";
     var userId = "";
@@ -411,12 +411,12 @@ const Search: React.FC = () => {
   };
 
   useEffect(() => {
+    getCardDetails(60);
     getWishlistDetails();
   }, []);
   const defaultImage = "https://via.placeholder.com/200/1200";
   const getWishListCardDetails = (wishListIds: any) => {
     const url = APIURL + "v2/getBooks";
-    console.log(wishListIds);
     axios
       .get(url)
       .then((resp) => {
@@ -438,8 +438,8 @@ const Search: React.FC = () => {
         console.log(e);
       });
   };
-  console.log(wishListData);
-  console.log(info);
+  // console.log(wishListData);
+  // console.log(info);
   const addToWishlist = (bookId: string) => {
     var url = APIURL + "v2/addBookToWishlist";
     var userId = "";
@@ -485,7 +485,30 @@ const Search: React.FC = () => {
       // getWishListCardDetails(wishListIds);
     }
   };
-
+  const [bookAdAvailable, setBookAdAvailable] = useState<any>();
+  // console.log(wishListData.map((value: any) => bookAdAvailable.includes(value._id))); // to check whether bookads are in common with database
+  const getCardDetails = (lim: Number) => {
+    const url = APIURL + "v2/getBookAds";
+    var userId = "1233";
+    var username = "Aagam";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+      // setCurrUser({ ...currUser, userId: userId, username: username });
+    }
+    axios
+      .get(url + `?limit=${lim}&userId=${userId}`)
+      .then((resp) => {
+        if (resp.status === 200) {
+          var data = resp.data.data;
+          setBookAdAvailable(data.map((item: any) => { return item.bookId }));
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   return (
     <IonPage>
       <div className="swiper-area">
@@ -505,11 +528,11 @@ const Search: React.FC = () => {
             }}
           >
           </IonSearchbar>
-          <IonIcon icon={addCircle} color="red" size="large" slot="end"></IonIcon>
+          <IonIcon icon={addCircle} color="red" size="large" slot="end" onClick={() => { addToWishlist(wishListData[0]._id) }}></IonIcon>
           {/* </IonToolbar> */}
         </div>
         {/* <Swiper style={{ height: "15vh", background: "var(--bs-pText)" }} */}
-        <Swiper style={{ height: "10vh" }}
+        <Swiper style={{ height: "12vh" }}
           // install Swiper modules
           modules={[Navigation, Pagination, Scrollbar, Autoplay, EffectFade]}
           // spaceBetween={50}
@@ -521,7 +544,7 @@ const Search: React.FC = () => {
           pagination={{ clickable: true }}
           // scrollbar={{ draggable: true }}
           // onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log('slide change')}
+          // onSlideChange={() => console.log('slide change')}
         // effect="fade"
         >
           <SwiperSlide style={{ padding: "0 15px" }}>
@@ -551,11 +574,20 @@ const Search: React.FC = () => {
                   <p style={{ fontSize: "14px", margin: "10px 0", fontFamily: "Montserrat-sb", color: "var(--bs-pText)" }}>{item.bookAuthor}</p>
                   <p>₹ 65</p>
                   {/* <div style={{ display: "flex", justifyContent: "flex-end" }}> */}
-                  <IonButtons style={{ display: "flex", justifyContent: "flex-end" }}>
+                  {/* <IonButtons style={{ display: "flex", justifyContent: "flex-end" }}>
                     <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
                       Buy Now
                     </IonButton>
-                  </IonButtons>
+                  </IonButtons> */}
+                  {bookAdAvailable.includes(item._id) ? (
+                    <>
+                      <IonButtons style={{ display: "flex", justifyContent: "flex-end" }}>
+                        <IonButton className="wishlist-buybtn" style={{ fontSize: "15px" }}>
+                          Buy Now
+                        </IonButton>
+                      </IonButtons>
+                    </>
+                  ) : (<></>)}
                   {/* </div> */}
                 </div>
               </div>
