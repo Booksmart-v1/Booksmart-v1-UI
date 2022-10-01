@@ -45,6 +45,7 @@ import {
   RefresherEventDetail,
   IonRefresher,
   IonRefresherContent,
+  useIonAlert,
 } from "@ionic/react";
 import { Storage } from "@capacitor/storage";
 
@@ -299,9 +300,6 @@ const Sell: React.FC = () => {
     }
   };
 
-  const goBack = () => {
-    history.goBack();
-  };
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getTradeCardDetails(60);
     console.log("Begin async operation");
@@ -342,31 +340,99 @@ const Sell: React.FC = () => {
               if (item.sold === false) {
                 return item;
               }
-            })
+            }).sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt))
           );
           setPastTrades(
             data.filter((item: any) => {
               if (item.sold === true) {
                 return item;
               }
-            })
+            }).sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt))
           );
+          // setActiveTrades(activeTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt)));
+          // setPastTrades(pastTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt)));
         }
       })
       .catch((e) => {
         console.log(e);
       });
   };
-  // console.log(tradeInfo)
-  console.log(activeTrades.concat(pastTrades));
 
   useEffect(() => {
     getTradeCardDetails(60);
   }, []);
 
+  // Sort by Filter
+  const [presentAlert] = useIonAlert();
+  const [sortByType, setSortByType] = useState({ newest: true, price: false });
+  const handleSortBy = (type: string) => {
+    if (type === 'newest') {
+      const sortedArray1 = activeTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
+      setActiveTrades(sortedArray1);
+      const sortedArray2 = pastTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
+      setPastTrades(sortedArray2);
+      setSortByType({ newest: true, price: false });
+    }
+    if (type === 'price') {
+      const sortedArray1 = activeTrades.sort((a: any, b: any) => a.bookPrice - b.bookPrice);
+      setActiveTrades(sortedArray1);
+      const sortedArray2 = pastTrades.sort((a: any, b: any) => a.bookPrice - b.bookPrice);
+      setPastTrades(sortedArray2);
+      setSortByType({ newest: false, price: true });
+    }
+  }
   return (
     <>
       <IonPage>
+        <IonHeader className="sell-header">
+          <IonToolbar className="sell-toolbar">
+            <IonTitle
+              style={{
+                marginTop: "1px",
+                marginBottom: "5px",
+              }}
+            >
+              <h1>Sell</h1>
+            </IonTitle>
+            <IonButtons>
+              <IonButton style={{ fontFamily: "Montserrat-sb" }}>
+              </IonButton>
+            </IonButtons>
+            <IonIcon
+              slot="end"
+              style={{
+                display: "flex",
+                marginTop: "10px",
+                fontSize: "28px",
+              }}
+              icon={funnelOutline}
+              color="primary"
+              onClick={() => {
+                presentAlert({
+                  header: 'Sort By',
+                  buttons: ['OK'],
+                  inputs: [
+                    {
+                      label: 'Newest',
+                      type: 'radio',
+                      value: 'Newest',
+                      checked: sortByType.newest,
+                      handler: () => { handleSortBy('newest'); }
+                    },
+                    {
+                      label: 'Price',
+                      type: 'radio',
+                      value: 'Price',
+                      checked: sortByType.price,
+                      handler: () => { handleSortBy('price'); }
+                    }
+                  ],
+                })
+              }
+              }
+            ></IonIcon>
+          </IonToolbar>
+        </IonHeader>
         <IonContent className="ion-no-padding">
           <IonRefresher
             slot="fixed"
@@ -386,65 +452,7 @@ const Sell: React.FC = () => {
             <p> Fetching your recent Trades!✌️</p>
             <IonRefresherContent></IonRefresherContent>
           </IonRefresher>
-          {/* {screen === "choose" ? (
-            <> */}
-          <IonHeader className="sell-header">
-            <IonToolbar className="sell-toolbar">
-              <IonTitle
-                style={{
-                  marginTop: "1px",
-                  marginBottom: "5px",
-                }}
-              >
-                <h1>Sell</h1>
-              </IonTitle>
-              <IonButtons>
-                <IonButton
-                  onClick={(e: any) => {
-                    e.persist();
-                    setShowPopover({ showPopover: true, event: e });
-                  }}
-                >
-                  <IonPopover
-                    event={popoverState.event}
-                    isOpen={popoverState.showPopover}
-                    onDidDismiss={() =>
-                      setShowPopover({ showPopover: false, event: undefined })
-                    }
-                  >
-                    <IonItem button onClick={() => {}}>
-                      <IonLabel className="profile-orders">
-                        Books Purchased
-                      </IonLabel>
-                    </IonItem>
-                    <IonItem button onClick={() => {}}>
-                      <IonLabel className="profile-purchases">
-                        Books Sold
-                      </IonLabel>
-                    </IonItem>
-                  </IonPopover>
-                  <IonIcon
-                    slot="end"
-                    style={{
-                      display: "flex",
-                      marginTop: "10px",
-                      fontSize: "28px",
-                    }}
-                    icon={funnelOutline}
-                  ></IonIcon>
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          {/* <IonGrid className="">
-                <IonCard className="ola">
-                  <IonCardHeader>
-                    <IonCardTitle className="title">
-                      Choose Genre of Book{" "}
-                    </IonCardTitle>
-                  </IonCardHeader>
-                </IonCard>
-              </IonGrid> */}
+
           <div>
             <IonSegment
               onIonChange={(e) => {
@@ -455,8 +463,6 @@ const Sell: React.FC = () => {
                 fontFamily: "Montserrat-SB",
                 fontSize: "1.1rem",
                 color: "var(--bs-pText)",
-                // position: "fixed",
-                // zIndex: "21",
               }}
               mode="md"
               value={segment}
@@ -468,9 +474,11 @@ const Sell: React.FC = () => {
                 <IonLabel>Past Trades</IonLabel>
               </IonSegmentButton>
             </IonSegment>
-            <div className="trades-area">
+            {/* activeTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) */}
+            <div className="trading-area">
               {segment === "activeTrades"
-                ? activeTrades.map((element, idx) => {
+                ? (activeTrades.length > 0 ?
+                  activeTrades.map((element, idx) => {
                     return (
                       <>
                         <IonCard key={idx} className="trade-card">
@@ -508,9 +516,6 @@ const Sell: React.FC = () => {
                                 ₹ {element.bookPrice}
                               </p>
                             </div>
-                            {/* <div className="trade-card-status">
-                            <p style={{ fontSize: "18px", fontFamily: "Montserrat-sb" }}>Status: {element.sold ? <span style={{ color: "var(--ion-color-success)" }}>SOLD</span> : <span style={{ color: "var(--ion-color-danger)" }}>UNSOLD</span>}</p>
-                          </div> */}
                           </div>
                           <div className="trade-tick">
                             <img
@@ -521,8 +526,13 @@ const Sell: React.FC = () => {
                         </IonCard>
                       </>
                     );
-                  })
-                : pastTrades.map((element, idx) => {
+                  }) : (
+                    <div className="noBooks">
+                      <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
+                      <p>Currently there are no active trades.</p>
+                    </div>))
+                : (pastTrades.length > 0 ?
+                  (pastTrades.map((element, idx) => {
                     return (
                       <>
                         <IonCard key={idx} className="trade-card">
@@ -594,8 +604,14 @@ const Sell: React.FC = () => {
                           </div>
                         </IonCard>
                       </>
-                    );
-                  })}
+                    )
+                  })) : (
+                    <div className="noBooks">
+                      <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
+                      <p>Currently there are no past trades.</p>
+                    </div>
+                  ))
+              }
             </div>
             <IonFabList>
               <IonModal

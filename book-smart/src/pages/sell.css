@@ -1,5 +1,13 @@
 .trading-area {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.newest {
+    flex-direction: column-reverse;
 }
 
 .trade-card {
@@ -48,6 +56,17 @@
     font-family: "Montserrat-b";
 }
 
-.trade-tick{
+.trade-tick {
     width: 20%;
+}
+
+.noBooks {
+    position: absolute;
+    top: 40%;
+    width: 75%;
+    height: 15vh;
+    text-align: center;
+    color: #888888;
+    font-size: 20px;
+    font-family: "Montserrat-b";
 }

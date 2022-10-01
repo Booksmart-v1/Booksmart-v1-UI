@@ -79,6 +79,7 @@
   position: relative;
   border-bottom: 1px solid gray;
   width: 100%;
+  padding: 0 10px;
 }
 
 .notifyCard-content {
@@ -92,6 +93,12 @@
   font-size: 14px;
 }
 
+.notifyCard-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .notify-date {
   position: absolute;
   top: 20px;
@@ -101,13 +108,14 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  color: #888888;
 }
 
 .notify-time {
   position: absolute;
   top: 36px;
   right: 25px;
-  width: 30%;
+  width: 50%;
   font-size: 16px;
   display: flex;
   justify-content: flex-end;
@@ -115,17 +123,17 @@
 }
 
 .notify-unread {
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background-color: lightblue;
   margin: 0 5px;
 }
 
-.notifyCards-area ion-popover {
+ion-popover {
   --backdrop-opacity: 0.5;
-  --width: 97%;
-  --offset-y: -100px
+  --width: 95%;
+  --offset-y: -100px;
 }
 
 .popover-close-btn {

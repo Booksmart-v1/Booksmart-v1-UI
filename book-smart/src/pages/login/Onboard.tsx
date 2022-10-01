@@ -154,26 +154,24 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
   return (
     <>
       <IonPage>
-        <IonContent className="md bg ion-no-padding" scrollY={false}>
+        <IonContent className="md bg ion-no-padding" scrollY={false} style={{
+          "--background": "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url(https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg) no-repeat center center / cover",
+        }}>
           <div className="bod">
-            <IonButton
+            <IonButton fill="clear" color="dark"
               slot="start"
               onClick={() => {
                 otpSent ? setOtpSent(!otpSent) : history.goBack();
                 setPhone("");
               }}
               style={{
-                marginRight: "280px",
+                marginRight: "320px",
                 marginTop: "-80px",
-                backgroundColor: "transparent",
-                background: "transparent",
                 border: "none",
-                // opacity: "0.7",
-                color: "white",
                 fontWeight: "bold",
               }}
             >
-              <IonIcon slot="icon-only" color="white" icon={arrowBackOutline} />
+              <IonIcon slot="icon-only" color="light" icon={arrowBackOutline} />
             </IonButton>
             {otpSent ? (
               <OtpInput
@@ -208,52 +206,54 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                 ></IonItemDivider>
                 {page === "signup" ? (
                   <>
-                    <div className="number">
-                      <p
-                        style={{
-                          fontFamily: "Montserrat-SB !important",
-                          fontWeight: "bold",
-                          fontSize: "18",
-                        }}
-                      >
-                        {"Name"}
-                      </p>
-                      <IonItem style={{ marginTop: "10px" }}>
-                        {/* <IonLabel position="floating"> Email</IonLabel> */}
-                        <IonInput
-                          type="text"
-                          value={name}
-                          placeholder="Enter name"
-                          onIonChange={(e: any) => {
-                            setName(e.target.value);
+                    <div style={{margin: "50px 0 0 110px", width: "100%"}}>
+                      <div className="number">
+                        <p
+                          style={{
+                            fontFamily: "Montserrat-SB !important",
+                            fontWeight: "bold",
+                            fontSize: "18",
                           }}
-                          required
-                        ></IonInput>
-                      </IonItem>
-                    </div>
-                    <div className="number">
-                      <p
-                        style={{
-                          fontFamily: "Montserrat-SB !important",
-                          fontWeight: "bold",
-                          fontSize: "18",
-                        }}
-                      >
-                        {"Email"}
-                      </p>
-                      <IonItem style={{ marginTop: "10px" }}>
-                        {/* <IonLabel position="floating"> Email</IonLabel> */}
-                        <IonInput
-                          type="text"
-                          value={email}
-                          placeholder="Enter email"
-                          onIonChange={(e: any) => {
-                            setEmail(e.target.value);
+                        >
+                          {"Name"}
+                        </p>
+                        <IonItem style={{ marginTop: "10px", width: "100%" }}>
+                          {/* <IonLabel position="floating"> Email</IonLabel> */}
+                          <IonInput
+                            type="text"
+                            value={name}
+                            placeholder="Enter name"
+                            onIonChange={(e: any) => {
+                              setName(e.target.value);
+                            }}
+                            required
+                          ></IonInput>
+                        </IonItem>
+                      </div>
+                      <div className="number">
+                        <p
+                          style={{
+                            fontFamily: "Montserrat-SB !important",
+                            fontWeight: "bold",
+                            fontSize: "18",
                           }}
-                          required
-                        ></IonInput>
-                      </IonItem>
-                    </div>
+                        >
+                          {"Email"}
+                        </p>
+                        <IonItem style={{ marginTop: "10px", width: "100%" }}>
+                          {/* <IonLabel position="floating"> Email</IonLabel> */}
+                          <IonInput
+                            type="text"
+                            value={email}
+                            placeholder="Enter email"
+                            onIonChange={(e: any) => {
+                              setEmail(e.target.value);
+                            }}
+                            required
+                          ></IonInput>
+                        </IonItem>
+                      </div>
+                    </div>  
                   </>
                 ) : (
                   <></>

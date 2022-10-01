@@ -32,8 +32,8 @@ body {
   border: none;
   border-radius: 25px 25px 0 0;
   background: var(--ion-color-medium-contrast) !important;
-  min-height: 83%;
-  max-height: 88%;
+  min-height: 88%;
+  max-height: 90%;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
@@ -94,8 +94,9 @@ ion-label.sc-ion-select-popover-ios {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px 0 25px 0;
   max-height: 88%;
+  position: relative;
   /* margin: 0 0 40px 0; */
 }
 
@@ -106,13 +107,13 @@ ion-label.sc-ion-select-popover-ios {
 .homepage-card {
   width: 95%;
   min-height: 140px;
+  position: relative;
   margin: 10px 0;
   border-radius: 15px;
   border: 1px solid #e5af48;
   display: flex;
   align-items: center;
   text-align: center;
-  position: relative;
 }
 
 .homepage-card-img img {
@@ -124,7 +125,7 @@ ion-label.sc-ion-select-popover-ios {
 .homepage-card-content {
   margin-left: 15px;
   min-height: 140px;
-  max-width: 50%;
+  max-width: 60%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -132,9 +133,17 @@ ion-label.sc-ion-select-popover-ios {
   text-align: left;
 }
 
-.homepage-card-time {
+.homepage-card-heart {
   position: absolute;
   top: 10px;
+  right: 10px;
+  font-size: 24px;
+  font-family: "Montserrat-sb";
+}
+
+.homepage-card-time {
+  position: absolute;
+  bottom: 10px;
   right: 10px;
   font-size: 13px;
   font-family: "Montserrat-sb";
@@ -143,6 +152,7 @@ ion-label.sc-ion-select-popover-ios {
 
 .homepage-card-chips {
   display: flex;
+  text-transform: capitalize;
   justify-content: center;
   text-align: center;
   align-items: flex-start;
@@ -280,4 +290,23 @@ ion-label.sc-ion-select-popover-ios {
   align-items: center;
   margin: 0 auto;
   padding: 10px;
+}
+
+.noBooks {
+  position: absolute;
+  top: 600%;
+  width: 80%;
+  height: 15vh;
+  text-align: center;
+  color: #888888;
+  font-size: 20px;
+  font-family: "Montserrat-b";
+}
+
+.interested-notify {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: lightblue;
+  margin: 0 5px;
 }
