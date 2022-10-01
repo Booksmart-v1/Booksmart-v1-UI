@@ -1,7 +1,6 @@
 .header-interest {
   height: 60px;
   width: 100%;
-  /* background: var(--bs-pBg) !important; */
 }
 
 .cards1 {
@@ -86,7 +85,6 @@
 }
 
 .scale {
-  /* perspective(650px) rotateX(20deg) */
   transform: rotateY(360deg) scale(0.8);
 }
 
