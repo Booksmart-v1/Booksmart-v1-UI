@@ -1,27 +1,19 @@
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
-  IonIcon,
   IonLabel,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
   setupIonicReact,
-  useIonViewWillEnter,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { ellipse, square, triangle } from "ionicons/icons";
-import Tab1 from "./pages/HomePage";
-import Tab2 from "./pages/Search";
-import Tab3 from "./pages/Sell";
 import Onboard from "./pages/login/Onboard";
 import PickInterests from "./pages/login/PickInterests";
 import Welcome from "./pages/login/Welcome";
 
 import Home from "./Home";
-import Login from "./Login";
-import Logo from "./images/logo.png";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -40,8 +32,6 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */ 
 import "./theme/variables.css";
-import Search from "./pages/Search";
-import Sell from "./pages/Sell";
 import React, { useEffect, useState } from "react";
 
 setupIonicReact();

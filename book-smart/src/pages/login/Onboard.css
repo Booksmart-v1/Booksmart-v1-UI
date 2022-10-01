@@ -3,12 +3,6 @@ ion-content {
 }
 
 .bg {
-  /* --background: url("../../images/login_bg1.jpg") !important;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat; */
   width: 100%;
   height: 750vh;
   display: flex;

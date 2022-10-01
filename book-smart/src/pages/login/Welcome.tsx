@@ -1,19 +1,12 @@
 import React from "react";
 import {
   IonContent,
-  IonText,
   IonRow,
   IonCol,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonButton,
   IonImg,
 } from "@ionic/react";
-// import { CreateAnimation, Animation } from "@ionic/react";
-// import { LottieSplashScreen } from '@awesome-cordova-plugins/lottie-splash-screen';
-import ExploreContainer from "../../components/ExploreContainer";
 import "./welcome.css";
 import logo from "../../images/main_bg.jpg";
 import leaf from "../../images/leaf.png";
@@ -23,18 +16,6 @@ import { useHistory } from "react-router-dom";
 
 const Welcome: React.FC = () => {
   const history = useHistory();
-
-  // const showLottieScreen = async () => {
-  //   //await LottieSplashScreen.show('../../lottie/72170-books.json',false,100,100);
-  // };
-  // React.useEffect(() => {
-  //   // showLottieScreen();
-  //   // const timer = setTimeout(async () => {
-  //   //   await LottieSplashScreen.hide()
-  //   // }, 10000);
-  //   // return () => clearTimeout(timer);
-  // }, []);
-
   return (
     <IonPage className="ion-no-padding">
       {/* <CreateAnimation
@@ -81,10 +62,6 @@ const Welcome: React.FC = () => {
         >
           Sign Up
         </IonButton>
-        {/* <br /> <br />
-        <br />
-        <br />
-        <br /> */}
         <IonCol className="text-center"></IonCol>
       </IonContent>
       <IonImg className="woman" src={logo} />

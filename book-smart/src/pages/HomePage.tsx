@@ -5,7 +5,6 @@ import {
   IonToolbar,
   IonCard,
   IonCardSubtitle,
-  IonCardTitle,
   IonGrid,
   IonItem,
   IonChip,
@@ -21,20 +20,16 @@ import {
   IonToggle,
   IonItemDivider,
   IonList,
-  IonSelect,
-  IonSelectOption,
   IonSkeletonText,
   IonThumbnail,
   IonSearchbar,
   IonCheckbox,
   useIonAlert,
-  IonFab,
-  IonFabButton,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import "./homePage.css";
-import { useState, useEffect, useRef } from "react";
-import { pin, heart, heartOutline, ellipse, close } from "ionicons/icons";
+import { useState, useEffect } from "react";
+import { heart, heartOutline, ellipse, close } from "ionicons/icons";
 import { APIURL } from "../constants";
 import axios from "axios";
 import moment from "moment";
@@ -128,15 +123,6 @@ const cardDetails = [
     interestedBuyers: ["1", "2", "3"],
   },
 ];
-
-// const tempSellerDetails = {
-//   sellerName: "Taarush Bhatia",
-//   sellerId: "1",
-//   sellerAddress: "Pune",
-//   sellerPincode: "411037",
-//   interestedBuyers: ["1", "2", "3"],
-//   bookPrice: "200",
-// };
 
 const Tab1: React.FC = () => {
   const [info, setInfo] = useState(cardDetails);
@@ -393,7 +379,6 @@ const Tab1: React.FC = () => {
     const timer = setTimeout(() => {
       setcardSkeletonLoaded(true);
       if (type === "newest") {
-        // const sortedArray = filteredInfo.sort((a: any, b: any) => b.newDate - a.newDate);
         const sortedArray = filteredInfo.sort((a: any, b: any) =>
           b.updatedAt.localeCompare(a.updatedAt)
         );
@@ -578,12 +563,6 @@ const Tab1: React.FC = () => {
           breakpoints={[0, 0.25, 0.75]}
           style={{ "--border-radius": "20px", zoom: "0.95" }}
         >
-          {/* <IonFab vertical="top" horizontal="center" slot="fixed" style={{ margin: "0 0 0 -27px" }}>
-            <IonFabButton>
-              <IonIcon icon={close} />
-            </IonFabButton>
-          </IonFab> */}
-
           <IonContent>
             <IonList style={{ padding: "30px 15px" }} className="ion-padding">
               <IonItem className="ion-no-padding" lines="none">
@@ -888,15 +867,14 @@ const Tab1: React.FC = () => {
                         <IonCard
                           key={index}
                           className="homepage-card"
-                          onClick={(e) => {
+                          onClick={() => {
                             setSellerDeets(element);
                             const con: boolean =
                               element.interestedBuyers.includes(
                                 currUser.userId
                               );
-                            console.log(e.target)
                             setInterest(con);
-                            if (e.target === e.currentTarget) setShowModal(true);
+                            setShowModal(true);
                           }}
                         >
                           <IonToast
@@ -916,7 +894,7 @@ const Tab1: React.FC = () => {
                               key={index}
                               icon={element.isLiked ? heart : heartOutline}
                               color="danger"
-                              onClick={() => {
+                              onClick={(e) => {
                                 if (wishListed) {
                                   setWishListed(false);
                                   // setShowWishlistToast2(true);
@@ -927,6 +905,7 @@ const Tab1: React.FC = () => {
                                   // setShowWishlistToast1(true);
                                 }
                                 getWishlistDetails();
+                                e.stopPropagation();
                               }}
                             />
                           </div>

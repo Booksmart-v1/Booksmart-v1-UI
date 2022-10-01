@@ -1,44 +1,26 @@
-import React, { Profiler, useEffect } from "react";
-import { Redirect, Route } from "react-router-dom";
+import React from "react";
+import { Route } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
   IonLabel,
-  IonPage,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
   setupIonicReact,
-  useIonViewWillEnter,
-  //   setupIonicReact
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { useParams } from "react-router";
 import {
-  ellipse,
-  square,
-  triangle,
   home,
-  search,
   peopleCircle,
   chatbubbles,
   bagCheck,
-  cartOutline,
   personCircle,
-  bookOutline,
-  chatbubbleEllipses,
 } from "ionicons/icons";
 import HomePage from "./pages/HomePage";
-import Onboard from "./pages/login/Onboard";
-import PickInterests from "./pages/login/PickInterests";
 import Search from "./pages/Search";
 import Sell from "./pages/Sell";
-// import home from "./images/home.png";
-// import search from "./images/search.png";
-import wishlist from "./images/wishlist.png";
-import profile from "./images/profile.png";
-import cart from "./images/cart.png";
 import Profile from "./pages/Profile";
 import Chat from "./pages/Chat";
 
