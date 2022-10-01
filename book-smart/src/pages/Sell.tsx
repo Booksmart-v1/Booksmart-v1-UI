@@ -271,6 +271,7 @@ const Sell: React.FC = () => {
           bookPrice: price,
           bookAuthor: book.bookAuthor,
           bookCondition: condition,
+          bookImageUrl: photos[0].webviewPath,
           tags: book.tags,
           sellerAddress: address,
           sellerPincode: pincode,

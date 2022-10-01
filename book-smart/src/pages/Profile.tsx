@@ -104,6 +104,40 @@ const Profile = () => {
     setShowSettingsModal(false)
   }
 
+  const getProfile = (lim: Number) => {
+    let userId = "1233";
+    let username = "Aagam";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    let url = APIURL + "v2/getUser";
+
+    axios.get(url+`?userId=${userId}`)
+    .then((res)=>{
+      console.log(res);
+      if(res.status===200){
+        //set profile details
+      }
+    }).catch((e)=>{
+      console.log(e);
+    })
+
+    url = APIURL + "v2/getMyBookAds";
+
+    axios.get(url+`?userId=${userId}&limit=${lim}`)
+    .then((res)=>{
+      console.log(res);
+      if(res.status===200){
+        //set book details
+      }
+    }).catch((e)=>{
+      console.log(e);
+    })
+
+  }
+
   // TOGGLE REVISED TECHNIQUE
   // var toggleCheck = [false, false, false, false];
   // var showToggleToast = [false, false, false, false];
@@ -164,6 +198,7 @@ const Profile = () => {
 
   useEffect(() => {
     getNotify();
+    // getProfile();
   }, [])
 
   const handlePopOverClick = (id: number, action: boolean) => {
