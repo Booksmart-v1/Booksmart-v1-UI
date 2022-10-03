@@ -1,17 +1,5 @@
 import React from "react";
-import {
-  IonContent,
-  IonText,
-  IonRow,
-  IonCol,
-  IonHeader,
-  IonPage,
-  IonToolbar,
-  IonIcon,
-  IonRippleEffect,
-  IonToast,
-} from "@ionic/react";
-
+import { IonContent, IonText, IonRow, IonCol, IonHeader, IonPage, IonToolbar, IonIcon, IonRippleEffect, IonToast } from "@ionic/react";
 import "./pickInterests.css";
 import logo from "../../images/history.jpg";
 import { useHistory } from "react-router";
@@ -61,7 +49,6 @@ const PickInterests: React.FC = () => {
   const history = useHistory();
   const [pickedInterests, setPickedInterests] = React.useState<boolean[]>(vals);
   const [showToast1, setShowToast1] = React.useState(false);
-  // const [checkBoxState, setcheckBoxState] = useState(vals)
 
   const toggleSelection = (id: number) => {
     setPickedInterests(prevState => prevState.map((item, idx) => idx === id ? !item : item));

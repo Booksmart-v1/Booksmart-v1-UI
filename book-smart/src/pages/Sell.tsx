@@ -4,36 +4,21 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonSearchbar,
-  IonCardHeader,
   IonCard,
   IonCardSubtitle,
   IonCardTitle,
-  IonCardContent,
   IonGrid,
   IonRow,
   IonCol,
   IonItem,
-  IonAvatar,
-  IonChip,
   IonLabel,
-  IonListHeader,
-  useIonViewWillEnter,
-  IonList,
-  IonItemSliding,
-  IonItemOptions,
-  IonItemOption,
   IonInput,
   IonFooter,
   IonRippleEffect,
-  IonTextarea,
   IonButtons,
   IonButton,
   IonIcon,
-  IonBackButton,
-  IonPopover,
   IonModal,
-  IonText,
   IonFab,
   IonFabButton,
   IonSegment,
@@ -47,41 +32,16 @@ import {
   IonRefresherContent,
   useIonAlert,
 } from "@ionic/react";
-import { Storage } from "@capacitor/storage";
-
-// import { addOutline } from "ionicons/icons";
-import ExploreContainer from "../components/ExploreContainer";
 import "./wishlist.css";
-import rectangle from "../images/Rectangle.png";
-import book from "../images/book.jpg";
-import logo from "../images/history.jpg";
 import "./sell.css";
 import React, { useEffect, useState } from "react";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
 import {
   add,
-  settings,
-  share,
-  person,
-  arrowForwardCircle,
-  arrowBackCircle,
-  arrowUpCircle,
-  logoVimeo,
-  logoFacebook,
-  logoInstagram,
-  logoTwitter,
   camera,
   funnelOutline,
-  pricetagsSharp,
-} from "ionicons/icons";
-import {
-  addCircleOutline,
-  addOutline,
-  arrowBackOutline,
-  ellipsisHorizontal,
 } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
-import { fileURLToPath } from "url";
 import axios from "axios";
 import { APIURL } from "../constants";
 const SellCardDettails = [
@@ -123,12 +83,6 @@ const tempbook = {
 const Sell: React.FC = () => {
   const [info, setInfo] = useState(SellCardDettails);
 
-  const [genres, setGenres] = React.useState([
-    { key: 0, label: "Health" },
-    { key: 1, label: "Love" },
-    { key: 2, label: "Horror" },
-    { key: 3, label: "Fiction" },
-  ]);
   const [segment, setSegment] = React.useState("activeTrades");
   const [loading, setLoading] = React.useState(false);
   const [screen, setScreen] = React.useState("details");
@@ -141,11 +95,7 @@ const Sell: React.FC = () => {
   const [pincode, setPincode] = React.useState("");
   const [book, setBook] = React.useState(tempbook);
   const [showToast1, setShowToast1] = useState(false);
-
-  const [popoverState, setShowPopover] = useState({
-    showPopover: false,
-    event: undefined,
-  });
+  
   const [showModal, setShowModal] = useState(false);
 
   const { photos, takePhoto } = usePhotoGallery();

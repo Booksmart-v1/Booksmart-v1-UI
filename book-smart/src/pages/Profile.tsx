@@ -40,7 +40,6 @@ import {
 import "./Profile.css";
 import { RefresherEventDetail } from "@ionic/core";
 import profile from "../images/profile-image.jpg";
-// import { useHistory } from "react-router-dom";
 import {
   chatboxEllipsesOutline,
   ellipsisHorizontal,
@@ -76,11 +75,6 @@ const Profile = () => {
   const [editStatus, setEditStatus] = useState(false);
 
   // -----------
-  const a = localStorage.getItem("user");
-  if (a) {
-    var userId = JSON.parse(a).id;
-    var username = JSON.parse(a).name;
-  }
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const [changeName, setChangeName] = useState("Username");
@@ -177,11 +171,9 @@ const Profile = () => {
   const getNotify = () => {
     const url = APIURL + "v2/getUserNotifs";
     let userId = "";
-    let username = "";
     const a = localStorage.getItem("user");
     if (a) {
       userId = JSON.parse(a).id;
-      username = JSON.parse(a).name;
     }
     axios
       .get(url + `?userId=${userId}`)
@@ -201,7 +193,6 @@ const Profile = () => {
               .toLocaleString(undefined, { timeZone: "Asia/Kolkata" })
               .substring(12, 17),
           }));
-          // let updateData = data.map((item: any) => ({ ...item, isPopOverOpen: false, date: new Date(item.updatedAt.slice(0, -1)), time: new Date(item.updatedAt).toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }).substring(12, 17) }))
           console.log(updateData);
           setNotifyArray(updateData);
         }
@@ -983,10 +974,6 @@ const Profile = () => {
                         </div>
                         <div className="notify-date">
                           {item.timeSince}
-                          {/* <span style={{ color: "var(--bs-sText)", marginLeft: "10px" }}>{item.time}</span> */}
-                          {/* {!item.isRead && (
-                            <div className="notify-unread"></div>
-                          )} */}
                         </div>
                         <div className="notifyCard-content">
                           <h2
@@ -1211,8 +1198,8 @@ const Profile = () => {
             onClick={() => {
               localStorage.removeItem("user");
               localStorage.removeItem("chatToken");
-              document.location.reload()
               history.push("/login");
+              document.location.reload()
             }}
           >
             <IonCol size="12">

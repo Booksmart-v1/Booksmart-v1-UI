@@ -1,52 +1,13 @@
-import {
-  IonContent,
-  IonText,
-  IonRow,
-  IonCol,
-  IonHeader,
-  useIonToast,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonButton,
-  IonImg,
-  IonIcon,
-  IonButtons,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonFooter,
-  IonToast,
-  IonItemDivider,
-} from "@ionic/react";
-// import ExploreContainer from '../../components/ExploreContainer';
-// import '../Tab3.css';
-// import "./welcome.css";
-// import logo from "../../images/woman.png";
-// import leaf from "../../images/leaf.png";
-// import ellipse from "../../images/ellipse.png";
-// import SignIn from '../../components/sign-in/SignIn';
-// import SignUp from '../../components/sign-up/SignUp';
+import { IonContent, IonText, IonPage, IonButton, IonIcon, IonItem, IonInput, IonToast, IonItemDivider } from "@ionic/react";
 import React from "react";
-import { RouteComponentProps, useParams } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Onboard.css";
-import {
-  arrowBack,
-  arrowBackOutline,
-  arrowForward,
-  calendarNumber,
-  informationCircle,
-} from "ionicons/icons";
+import { arrowBackOutline, arrowForward, informationCircle } from "ionicons/icons";
 import OtpInput from "react-otp-input";
-import mainLogo from "../../images/logo.png";
 import { useHistory } from "react-router-dom";
-import { IonSlides, IonSlide } from "@ionic/react";
-import { dismiss } from "@ionic/core/dist/types/utils/overlays";
 import axios from "axios";
 import { APIURL } from "../../constants";
-import { Channel } from "stream-chat-react";
-import { channelReducer } from "stream-chat-react/dist/components/Channel/channelState";
 
 interface UserDetailPageProps
   extends RouteComponentProps<{
@@ -61,10 +22,8 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
   const [phone, setPhone] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [id, setID] = useState(null);
-  // const [present, dismiss] = useIonToast();
   const [showToast1, setShowToast1] = useState(false);
   const [msg, setMsg] = useState("");
-  // const [showToast2, setShowToast2] = useState(false);
   const handleChange = (num: string) => setOtp(num);
   const history = useHistory();
 
@@ -179,10 +138,6 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                 onChange={handleChange}
                 numInputs={6}
                 separator={<span>-</span>}
-                // containerStyle={{
-                //   backgroundColor: 'white',
-                //   height: '65px',
-                // }}
                 inputStyle={{
                   margin: "6px",
                   backgroundColor: "white",
@@ -206,7 +161,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                 ></IonItemDivider>
                 {page === "signup" ? (
                   <>
-                    <div style={{margin: "50px 0 0 110px", width: "100%"}}>
+                    <div style={{ margin: "50px 0 0 110px", width: "100%" }}>
                       <div className="number">
                         <p
                           style={{
@@ -253,7 +208,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                           ></IonInput>
                         </IonItem>
                       </div>
-                    </div>  
+                    </div>
                   </>
                 ) : (
                   <></>
