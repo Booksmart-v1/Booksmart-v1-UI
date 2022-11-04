@@ -31,16 +31,16 @@ import {
   IonRefresher,
   IonRefresherContent,
   useIonAlert,
+  IonList,
+  IonSelect,
+  IonSelectOption,
+  IonAlert,
 } from "@ionic/react";
 import "./wishlist.css";
 import "./sell.css";
 import React, { useEffect, useState } from "react";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
-import {
-  add,
-  camera,
-  funnelOutline,
-} from "ionicons/icons";
+import { add, camera, funnelOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { APIURL } from "../constants";
@@ -74,7 +74,7 @@ const SellCardDettails = [
   },
 ];
 const tempbook = {
-  bookId: null,
+  bookId: "123",
   bookName: "Book",
   bookAuthor: "Roald Dahl",
   bookDescription: "This is a book",
@@ -95,7 +95,7 @@ const Sell: React.FC = () => {
   const [pincode, setPincode] = React.useState("");
   const [book, setBook] = React.useState(tempbook);
   const [showToast1, setShowToast1] = useState(false);
-  
+
   const [showModal, setShowModal] = useState(false);
 
   const { photos, takePhoto } = usePhotoGallery();
@@ -263,6 +263,7 @@ const Sell: React.FC = () => {
   // const [tradeInfo, setTradeInfo] = useState<any[]>([]);
   const [activeTrades, setActiveTrades] = useState<any[]>([]);
   const [pastTrades, setPastTrades] = useState<any[]>([]);
+
   const defaultImage = "https://via.placeholder.com/200/1200";
   const getTradeCardDetails = (lim: Number) => {
     const url = APIURL + "v2/getMyBookAds";
@@ -279,24 +280,29 @@ const Sell: React.FC = () => {
         if (resp.status === 200) {
           // console.log(resp.data.data);
           let data = resp.data.data.selling;
+          console.log(data);
           for (const element of data) {
             element.bookImageUrl = element.bookImageUrl
               ? element.bookImageUrl
               : defaultImage;
           }
           setActiveTrades(
-            data.filter((item: any) => {
-              if (item.sold === false) {
-                return item;
-              }
-            }).sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt))
+            data
+              .filter((item: any) => {
+                if (item.sold === false) {
+                  return item;
+                }
+              })
+              .sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt))
           );
           setPastTrades(
-            data.filter((item: any) => {
-              if (item.sold === true) {
-                return item;
-              }
-            }).sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt))
+            data
+              .filter((item: any) => {
+                if (item.sold === true) {
+                  return item;
+                }
+              })
+              .sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt))
           );
           // setActiveTrades(activeTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt)));
           // setPastTrades(pastTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt)));
@@ -313,23 +319,32 @@ const Sell: React.FC = () => {
 
   // Sort by Filter
   const [presentAlert] = useIonAlert();
+  const [showAlert, setShowAlert] = useState(false);
   const [sortByType, setSortByType] = useState({ newest: true, price: false });
   const handleSortBy = (type: string) => {
-    if (type === 'newest') {
-      const sortedArray1 = activeTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
+    if (type === "newest") {
+      const sortedArray1 = activeTrades.sort((a: any, b: any) =>
+        b.updatedAt.localeCompare(a.updatedAt)
+      );
       setActiveTrades(sortedArray1);
-      const sortedArray2 = pastTrades.sort((a: any, b: any) => b.updatedAt.localeCompare(a.updatedAt));
+      const sortedArray2 = pastTrades.sort((a: any, b: any) =>
+        b.updatedAt.localeCompare(a.updatedAt)
+      );
       setPastTrades(sortedArray2);
       setSortByType({ newest: true, price: false });
     }
-    if (type === 'price') {
-      const sortedArray1 = activeTrades.sort((a: any, b: any) => a.bookPrice - b.bookPrice);
+    if (type === "price") {
+      const sortedArray1 = activeTrades.sort(
+        (a: any, b: any) => a.bookPrice - b.bookPrice
+      );
       setActiveTrades(sortedArray1);
-      const sortedArray2 = pastTrades.sort((a: any, b: any) => a.bookPrice - b.bookPrice);
+      const sortedArray2 = pastTrades.sort(
+        (a: any, b: any) => a.bookPrice - b.bookPrice
+      );
       setPastTrades(sortedArray2);
       setSortByType({ newest: false, price: true });
     }
-  }
+  };
   return (
     <>
       <IonPage>
@@ -344,8 +359,7 @@ const Sell: React.FC = () => {
               <h1>Sell</h1>
             </IonTitle>
             <IonButtons>
-              <IonButton style={{ fontFamily: "Montserrat-sb" }}>
-              </IonButton>
+              <IonButton style={{ fontFamily: "Montserrat-sb" }}></IonButton>
             </IonButtons>
             <IonIcon
               slot="end"
@@ -358,27 +372,30 @@ const Sell: React.FC = () => {
               color="primary"
               onClick={() => {
                 presentAlert({
-                  header: 'Sort By',
-                  buttons: ['OK'],
+                  header: "Sort By",
+                  buttons: ["OK"],
                   inputs: [
                     {
-                      label: 'Newest',
-                      type: 'radio',
-                      value: 'Newest',
+                      label: "Newest",
+                      type: "radio",
+                      value: "Newest",
                       checked: sortByType.newest,
-                      handler: () => { handleSortBy('newest'); }
+                      handler: () => {
+                        handleSortBy("newest");
+                      },
                     },
                     {
-                      label: 'Price',
-                      type: 'radio',
-                      value: 'Price',
+                      label: "Price",
+                      type: "radio",
+                      value: "Price",
                       checked: sortByType.price,
-                      handler: () => { handleSortBy('price'); }
-                    }
+                      handler: () => {
+                        handleSortBy("price");
+                      },
+                    },
                   ],
-                })
-              }
-              }
+                });
+              }}
             ></IonIcon>
           </IonToolbar>
         </IonHeader>
@@ -425,8 +442,8 @@ const Sell: React.FC = () => {
             </IonSegment>
             {/* activeTrades.sort((a, b) => { return a.bookPrice - b.bookPrice }).map((element, idx) */}
             <div className="trading-area">
-              {segment === "activeTrades"
-                ? (activeTrades.length > 0 ?
+              {segment === "activeTrades" ? (
+                activeTrades.length > 0 ? (
                   activeTrades.map((element, idx) => {
                     return (
                       <>
@@ -475,92 +492,102 @@ const Sell: React.FC = () => {
                         </IonCard>
                       </>
                     );
-                  }) : (
-                    <div className="noBooks">
-                      <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
-                      <p>Currently there are no active trades.</p>
-                    </div>))
-                : (pastTrades.length > 0 ?
-                  (pastTrades.map((element, idx) => {
-                    return (
-                      <>
-                        <IonCard key={idx} className="trade-card">
-                          <div className="trade-card-img">
-                            <img
-                              alt="Book"
-                              className="pic"
-                              src={element.bookImageUrl}
-                            />
-                          </div>
-                          <div className="trade-card-content">
-                            <IonCardTitle
+                  })
+                ) : (
+                  <div className="noBooks">
+                    <img
+                      src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif"
+                      alt="Sorry"
+                      width={"100px"}
+                    />
+                    <p>Currently there are no active trades.</p>
+                  </div>
+                )
+              ) : pastTrades.length > 0 ? (
+                pastTrades.map((element, idx) => {
+                  return (
+                    <>
+                      <IonCard key={idx} className="trade-card">
+                        <div className="trade-card-img">
+                          <img
+                            alt="Book"
+                            className="pic"
+                            src={element.bookImageUrl}
+                          />
+                        </div>
+                        <div className="trade-card-content">
+                          <IonCardTitle
+                            style={{
+                              fontSize: "12px",
+                              fontFamily: "Montserrat-b",
+                            }}
+                          >
+                            {element.bookName}
+                          </IonCardTitle>
+                          <IonCardSubtitle
+                            style={{
+                              fontSize: "10px",
+                              fontFamily: "Montserrat-sb",
+                            }}
+                          >
+                            {element.bookAuthor}
+                          </IonCardSubtitle>
+                          <div>
+                            <p
                               style={{
-                                fontSize: "12px",
-                                fontFamily: "Montserrat-b",
+                                fontSize: "18px",
+                                fontFamily: "Montserrat-SB",
                               }}
                             >
-                              {element.bookName}
-                            </IonCardTitle>
-                            <IonCardSubtitle
+                              Price: ₹ {element.bookPrice}
+                            </p>
+                          </div>
+                          <div className="trade-card-status">
+                            <p
                               style={{
-                                fontSize: "10px",
+                                fontSize: "20px",
                                 fontFamily: "Montserrat-sb",
                               }}
                             >
-                              {element.bookAuthor}
-                            </IonCardSubtitle>
-                            <div>
-                              <p
-                                style={{
-                                  fontSize: "18px",
-                                  fontFamily: "Montserrat-SB",
-                                }}
-                              >
-                                Price: ₹ {element.bookPrice}
-                              </p>
-                            </div>
-                            <div className="trade-card-status">
-                              <p
-                                style={{
-                                  fontSize: "20px",
-                                  fontFamily: "Montserrat-sb",
-                                }}
-                              >
-                                Status:{" "}
-                                {element.sold ? (
-                                  <span
-                                    style={{
-                                      color: "var(--ion-color-success)",
-                                    }}
-                                  >
-                                    SOLD
-                                  </span>
-                                ) : (
-                                  <span
-                                    style={{ color: "var(--ion-color-danger)" }}
-                                  >
-                                    UNSOLD
-                                  </span>
-                                )}
-                              </p>
-                            </div>
+                              Status:{" "}
+                              {element.sold ? (
+                                <span
+                                  style={{
+                                    color: "var(--ion-color-success)",
+                                  }}
+                                >
+                                  SOLD
+                                </span>
+                              ) : (
+                                <span
+                                  style={{ color: "var(--ion-color-danger)" }}
+                                >
+                                  UNSOLD
+                                </span>
+                              )}
+                            </p>
                           </div>
-                          <div className="trade-tick">
-                            <img
-                              src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
-                              alt=""
-                            />
-                          </div>
-                        </IonCard>
-                      </>
-                    )
-                  })) : (
-                    <div className="noBooks">
-                      <img src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif" alt="Sorry" width={"100px"} />
-                      <p>Currently there are no past trades.</p>
-                    </div>
-                  ))
-              }
+                        </div>
+                        <div className="trade-tick">
+                          <img
+                            src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
+                            alt=""
+                          />
+                        </div>
+                      </IonCard>
+                    </>
+                  );
+                })
+              ) : (
+                <div className="noBooks">
+                  <img
+                    src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif"
+                    alt="Sorry"
+                    width={"100px"}
+                  />
+                  <p>Currently there are no past trades.</p>
+                </div>
+              )}
             </div>
             <IonFabList>
               <IonModal
@@ -611,6 +638,8 @@ const Sell: React.FC = () => {
                         <IonItem style={{ marginTop: "10px" }}>
                           {/* <IonLabel position="floating"> Email</IonLabel> */}
                           <IonInput
+                            required
+                            type="number"
                             placeholder="Enter ISBN"
                             // disabled={true}
                             value={isbn}
@@ -641,6 +670,7 @@ const Sell: React.FC = () => {
                         <IonItem style={{ marginTop: "10px" }}>
                           {/* <IonLabel position="floating"> Email</IonLabel> */}
                           <IonInput
+                            required
                             type="text"
                             disabled={true}
                             value={name}
@@ -679,30 +709,48 @@ const Sell: React.FC = () => {
                             fontSize: "18",
                           }}
                         ></p>
-                        <IonItem style={{ marginTop: "10px" }}>
-                          {/* <IonLabel position="floating"> Email</IonLabel> */}
-                          <IonInput
-                            placeholder="Book Condition"
-                            value={condition}
-                            onIonChange={(e: any) => {
-                              setCondition(e.target.value);
-                            }}
-                          ></IonInput>
-                        </IonItem>
+
+                        <IonList>
+                          <IonItem>
+                            <IonSelect
+                              placeholder="Book Condition"
+                              value={condition}
+                              onIonChange={(e: any) => {
+                                setCondition(e.target.value);
+                              }}
+                            >
+                              <IonSelectOption value="old">Old</IonSelectOption>
+                              <IonSelectOption value="new">New</IonSelectOption>
+                            </IonSelect>
+                          </IonItem>
+                        </IonList>
                       </div>
                       <div className="number">
                         <p
                           style={{
-                            fontFamily: "Montserrat-SB !important",
-                            fontWeight: "bold",
+                            fontFamily: "Montserrat-B !important",
                             fontSize: "18",
                           }}
                         ></p>
-                        <IonItem style={{ marginTop: "10px" }}>
-                          {/* <IonLabel position="floating"> Email</IonLabel> */}
+                        <IonItem
+                          style={{
+                            marginTop: "10px",
+                            fontFamily: "Montserrat-B !important",
+                            fontSize: "18",
+                          }}
+                        >
+                          {/* <IonLabel position="floating">Address</IonLabel> */}
                           <IonInput
-                            placeholder="Address"
+                            placeholder="Locality"
                             value={address}
+                            onClick={() =>
+                              presentAlert({
+                                header: "Alert",
+                                message:
+                                  "Please enter your locality correctly as your Ads will be shown accordingly.",
+                                buttons: ["OK"],
+                              })
+                            }
                             onIonChange={(e: any) => {
                               setAddress(e.target.value);
                             }}
@@ -713,11 +761,16 @@ const Sell: React.FC = () => {
                         <p
                           style={{
                             fontFamily: "Montserrat-SB !important",
-                            fontWeight: "bold",
                             fontSize: "18",
                           }}
                         ></p>
-                        <IonItem style={{ marginTop: "10px" }}>
+                        <IonItem
+                          style={{
+                            marginTop: "10px",
+                            fontFamily: "Montserrat-SB !important",
+                            fontSize: "18",
+                          }}
+                        >
                           {/* <IonLabel position="floating"> Email</IonLabel> */}
                           <IonInput
                             placeholder="Pincode"
@@ -738,6 +791,7 @@ const Sell: React.FC = () => {
                         ></p>
                         <IonItem style={{ marginTop: "10px" }}>
                           {/* <IonLabel position="floating"> Email</IonLabel> */}
+                          ₹ &nbsp;&nbsp;
                           <IonInput
                             placeholder="Book Price"
                             value={price}
@@ -768,6 +822,7 @@ const Sell: React.FC = () => {
                           type="text"
                           value={name}
                           placeholder="Enter name"
+                          disabled={true}
                           onIonChange={(e: any) => {
                             setName(e.target.value);
                           }}
@@ -798,11 +853,21 @@ const Sell: React.FC = () => {
                     </>
                   )}
                 </IonContent>
-
+                <IonAlert
+                  isOpen={showAlert}
+                  onDidDismiss={() => setShowAlert(false)}
+                  header="Alert"
+                  message="Please enter a valid ISBN"
+                  buttons={["OK"]}
+                />
                 <IonFooter>
                   <button
                     onClick={() => {
-                      changeScreen();
+                      if (isbn.length === 10 || isbn.length === 13) {
+                        changeScreen();
+                      } else {
+                        setShowAlert(true);
+                      }
                     }}
                     className="long-cta"
                   >

@@ -10,6 +10,10 @@ import {
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';
 import { Capacitor } from '@capacitor/core';
+import axios from "axios";
+import { APIURL } from "../constants";
+
+
 
 export interface UserPhoto {
   filepath: string;
@@ -21,7 +25,7 @@ const PHOTO_STORAGE_PATH = 'photos';
 export function usePhotoGallery() {
 
     const [photos, setPhotos] = useState<UserPhoto[]>([]);
-
+    const url = APIURL + "v2/uploadImageS3";
     useEffect(() => {
       const loadSaved = async () => {
         const { value } = await Storage.get({ key: PHOTO_STORAGE_PATH });
@@ -78,13 +82,45 @@ export function usePhotoGallery() {
 
 
     const takePhoto = async () => {
-        const photo = await Camera.getPhoto({
+
+      
+       const photo = await Camera.getPhoto({
         resultType: CameraResultType.Uri,
         source: CameraSource.Camera,
         quality: 100,
         });
+        
+        console.log(photo);
 
         const fileName = new Date().getTime() + '.jpeg';
+        var bodyFormData = new FormData();
+        bodyFormData.append("CapacitorStorage.photos",fileName);
+        console.log(bodyFormData.get('CapacitorStorage.photos'));
+
+
+ axios
+      .post(url,
+        
+        { data: bodyFormData,
+          headers: { "Content-Type": `multipart/form-data` }},
+    )
+      .then(async (resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+            console.log(resp);
+            console.log(photo);
+            console.log(photo.webPath);
+
+            // const file = require(photo.webPath?photo.webPath: '' );
+            // console.log(file);
+            
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+   
 
         const savedFileImage = await savePicture(photo, fileName);
         const newPhotos = [savedFileImage, ...photos];
