@@ -55,9 +55,45 @@ export function usePhotoGallery() {
           path: photo.path!,
         });
         base64Data = file.data;
+        console.log(file);
+        console.log(base64Data);
+
       } else {
         base64Data = await base64FromPath(photo.webPath!);
       }
+      console.log(base64Data);
+      var bodyFormData = new FormData();
+      bodyFormData.append("img-upload",base64Data);
+      console.log(bodyFormData.get('img-upload'));
+
+
+      axios
+        .post(url,
+          
+          bodyFormData,{
+    headers: {
+     'accept': 'application/json',
+     'Accept-Language': 'en-US,en;q=0.8',
+     'Content-Type': `multipart/form-data;`,
+    }
+   }
+      )
+        .then(async (resp) => {
+          console.log(resp);
+          if (resp.status === 200) {
+              console.log(resp);
+              console.log(base64Data);
+              // console.log(photo.webPath);
+
+              // const file = require(photo.webPath?photo.webPath: '' );
+              // console.log(file);
+              
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
       const savedFile = await Filesystem.writeFile({
         path: fileName,
         data: base64Data,
@@ -93,32 +129,7 @@ export function usePhotoGallery() {
         console.log(photo);
 
         const fileName = new Date().getTime() + '.jpeg';
-        var bodyFormData = new FormData();
-        bodyFormData.append("CapacitorStorage.photos",fileName);
-        console.log(bodyFormData.get('CapacitorStorage.photos'));
-
-
- axios
-      .post(url,
         
-        { data: bodyFormData,
-          headers: { "Content-Type": `multipart/form-data` }},
-    )
-      .then(async (resp) => {
-        console.log(resp);
-        if (resp.status === 200) {
-            console.log(resp);
-            console.log(photo);
-            console.log(photo.webPath);
-
-            // const file = require(photo.webPath?photo.webPath: '' );
-            // console.log(file);
-            
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
 
    
 
