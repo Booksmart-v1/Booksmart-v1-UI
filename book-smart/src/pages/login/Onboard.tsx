@@ -4,7 +4,8 @@ import { RouteComponentProps } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Onboard.css";
 import { arrowBackOutline, arrowForward, informationCircle } from "ionicons/icons";
-import OtpInput from "react-otp-input";
+import { SmsRetriever } from '@ionic-native/sms-retriever';
+// import OtpInput from "react-otp-input";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { APIURL } from "../../constants";
@@ -28,9 +29,37 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
   const history = useHistory();
 
   useEffect(() => {
+    SmsRetriever.getAppHash()
+      .then((res: any) => console.log(res))
+      .catch((error: any) => console.error(error));
+    
+  }, []);
+
+  useEffect(() => {
     console.log(match.params.page);
     setPage(match.params.page);
+    
   }, [match.params.page]);
+
+  const start = () => {
+    SmsRetriever.startWatching()
+      .then((res: any) => {
+        console.log(res);
+        processSMS(res);
+      })
+      .catch((error: any) => console.error(error));
+  }
+
+  const processSMS = (data: any) => {
+    const message = data.Message;
+    if (message !== -1) {
+      setOtp(message.slice(44, 50));
+      console.log(otp);
+      // handleClick();
+      // setOTPMessage('OTP received. Proceed to register');
+      // presentToast('SMS received with correct app hash', 'bottom', 1500);
+    }
+  }
 
   const handleClick = () => {
     if (!otpSent) {
@@ -49,6 +78,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
             if (res.status === 200) {
               setOtpSent(true);
               setID(res.data.data.userId);
+              start();
             }
             setShowToast1(true);
           })
@@ -69,6 +99,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
             if (res.status === 200) {
               setOtpSent(true);
               setID(res.data.data.userId);
+              start();
             }
             setShowToast1(true);
           })
@@ -133,21 +164,33 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
               <IonIcon slot="icon-only" color="light" icon={arrowBackOutline} />
             </IonButton>
             {otpSent ? (
-              <OtpInput
-                value={otp}
-                onChange={handleChange}
-                numInputs={6}
-                separator={<span>-</span>}
-                inputStyle={{
-                  margin: "6px",
-                  backgroundColor: "white",
-                  height: "57px",
-                  width: "9vw",
-                  color: "black",
-                  fontFamily: "Montserrat-SB !important",
-                  fontSize: "16",
-                }}
-              />
+              // <OtpInput
+              //   value={otp}
+              //   onChange={handleChange}
+              //   numInputs={6}
+              //   separator={<span>-</span>}
+              //   inputStyle={{
+              //     margin: "6px",
+              //     backgroundColor: "white",
+              //     height: "57px",
+              //     width: "9vw",
+              //     color: "black",
+              //     fontFamily: "Montserrat-SB !important",
+              //     fontSize: "16",
+              //   }}
+              // />
+              <IonItem style={{ marginTop: "10px", width: "70%" }}>
+                          {/* <IonLabel position="floating"> Email</IonLabel> */}
+                          <IonInput
+                            type="text"
+                            value={otp}
+                            placeholder="Enter OTP"
+                            onIonChange={(e: any) => {
+                              setOtp(e.target.value);
+                            }}
+                            required
+                          ></IonInput>
+                        </IonItem>
             ) : (
               <>
                 <IonText className="login-text">
