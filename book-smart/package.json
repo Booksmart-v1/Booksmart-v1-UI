@@ -32,6 +32,7 @@
     "concurrently": "^7.1.0",
     "cordova-plugin-lottie-splashscreen": "^0.9.6",
     "cordova-plugin-sms-retriever-manager": "^1.0.3",
+    "geolocation": "^0.2.0",
     "ionicons": "^5.4.0",
     "lottie-react": "^2.2.1",
     "moment": "^2.29.4",
