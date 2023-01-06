@@ -38,6 +38,7 @@
     "cordova-plugin-request-location-accuracy": "^2.3.0",
     "cordova-plugin-sms-retriever-manager": "^1.0.3",
     "google-map-react": "^2.2.0",
+    "geolocation": "^0.2.0",
     "ionicons": "^5.4.0",
     "lottie-react": "^2.2.1",
     "moment": "^2.29.4",

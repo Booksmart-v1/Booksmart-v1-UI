@@ -25,11 +25,21 @@ import {
   IonSearchbar,
   IonCheckbox,
   useIonAlert,
+  IonRow,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import "./homePage.css";
 import { useState, useEffect } from "react";
-import { heart, heartOutline, ellipse, close } from "ionicons/icons";
+import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
+
+import {
+  heart,
+  heartOutline,
+  ellipse,
+  close,
+  location,
+  navigateCircle,
+} from "ionicons/icons";
 import { APIURL } from "../constants";
 import axios from "axios";
 import moment from "moment";
@@ -164,8 +174,8 @@ const Tab1: React.FC = () => {
             time: new Date(item.updatedAt)
               .toLocaleString(undefined, { timeZone: "Asia/Kolkata" })
               .substring(12, 17),
-            newDate: moment(item.updatedAt).format("YYYYMMDD")
-            , isLiked: wishListHeart.includes(item.bookId)
+            newDate: moment(item.updatedAt).format("YYYYMMDD"),
+            isLiked: wishListHeart.includes(item.bookId),
           }));
           updateData = updateData.sort((a: any, b: any) =>
             b.updatedAt.localeCompare(a.updatedAt)
@@ -455,8 +465,8 @@ const Tab1: React.FC = () => {
       .catch((e) => {
         console.log(e);
       });
-  }
-  const [wishListHeart, setWishListHeart] = useState<any>([])
+  };
+  const [wishListHeart, setWishListHeart] = useState<any>([]);
   const getWishlistDetails = () => {
     var url = APIURL + "v2/getWishlist";
     var userId = "";
@@ -471,8 +481,8 @@ const Tab1: React.FC = () => {
       .then((resp) => {
         if (resp.status === 200) {
           var data = resp.data.data;
-          let wishListIds = Array.from(new Set(data[0].bookIds))
-          setWishListHeart(wishListIds)
+          let wishListIds = Array.from(new Set(data[0].bookIds));
+          setWishListHeart(wishListIds);
           getCardDetails(60);
         }
       })
@@ -541,6 +551,20 @@ const Tab1: React.FC = () => {
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
         <IonHeader style={{ margin: "10px auto 25px auto", width: "95%" }}>
+          <IonIcon
+            icon={location}
+            style={{
+              // margin: "10px auto 25px auto",
+              color: "white",
+              size: "large",
+              width: "20px",
+              height: "20px",
+            }}
+            onClick={() => {
+              setShowModal(true);
+            }}
+          />
+
           <div className="homesearch">
             <IonSearchbar
               placeholder="Search for a book"
@@ -799,7 +823,87 @@ const Tab1: React.FC = () => {
             </IonFooter>
           )}
         </IonModal>
-
+        <IonModal
+          isOpen={showModal}
+          swipeToClose={true}
+          mode="ios"
+          initialBreakpoint={1}
+          breakpoints={[0.8, 1]}
+          title="Location"
+          keyboardClose={true}
+          onDidDismiss={() => setShowModal(false)}
+          className="HPModal"
+        >
+          <IonHeader>
+            <IonToolbar style={{ minHeight: "7vh" }}>
+              <h2
+                style={{
+                  textAlign: "center",
+                  fontFamily: "Montserrat-B",
+                  color: "var(--bs-pText)",
+                  fontSize: "25px",
+                  marginLeft: "60px",
+                }}
+              >
+                Location
+              </h2>
+              <IonButtons slot="end">
+                <IonButton
+                  onClick={() => {
+                    setShowModal(false);
+                  }}
+                  slot="end"
+                  mode="ios"
+                >
+                  Close
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <IonItem
+              style={{}}
+              onClick={() => {
+                if ("geolocation" in navigator) {
+                  console.log("Available");
+                  navigator.geolocation.getCurrentPosition(function (position) {
+                    console.log("Latitude is :", position.coords.latitude);
+                    console.log("Longitude is :", position.coords.longitude);
+                  });
+                } else {
+                  console.log("Not Available");
+                }
+              }}
+            >
+              <IonRow>
+                <IonItem>
+                  <IonIcon
+                    icon={navigateCircle}
+                    color="success"
+                    style={{
+                      marginRight: "5px",
+                      width: "25px",
+                      height: "25px",
+                    }}
+                  />
+                </IonItem>
+                <IonItem>
+                  <IonLabel>
+                    <h3
+                      style={{
+                        color: "blue",
+                        fontFamily: "Montserrat-SB",
+                        fontSize: "18px",
+                      }}
+                    >
+                      Use Current Location
+                    </h3>
+                  </IonLabel>
+                </IonItem>
+              </IonRow>
+            </IonItem>
+          </IonContent>
+        </IonModal>
         <IonGrid className="oola">
           <div style={{ position: "fixed", width: "100%", zIndex: "10" }}>
             <div className="chips">
@@ -898,8 +1002,7 @@ const Tab1: React.FC = () => {
                                 if (wishListed) {
                                   setWishListed(false);
                                   // setShowWishlistToast2(true);
-                                }
-                                else {
+                                } else {
                                   addToWishlist(element.bookId);
                                   setWishListed(true);
                                   // setShowWishlistToast1(true);
@@ -923,7 +1026,7 @@ const Tab1: React.FC = () => {
                             <h2
                               style={{
                                 fontSize: "0.87rem",
-                                fontFamily: "Montserrat-b",
+                                fontFamily: "Montserrat-B",
                                 margin: 0,
                                 color: "black",
                               }}
@@ -931,17 +1034,17 @@ const Tab1: React.FC = () => {
                               {element.interestedBuyers.includes(
                                 currUser.userId
                               ) && (
-                                  // <div className="interested-notify"></div>
-                                  <IonIcon
-                                    icon={ellipse}
-                                    color="success"
-                                    style={{
-                                      marginRight: "5px",
-                                      width: "10px",
-                                      height: "10px",
-                                    }}
-                                  />
-                                )}
+                                // <div className="interested-notify"></div>
+                                <IonIcon
+                                  icon={ellipse}
+                                  color="success"
+                                  style={{
+                                    marginRight: "5px",
+                                    width: "10px",
+                                    height: "10px",
+                                  }}
+                                />
+                              )}
                               {element.bookName.length < 30
                                 ? element.bookName
                                 : element.bookName.substring(0, 30) + "..."}
