@@ -134,6 +134,11 @@ const cardDetails = [
   },
 ];
 
+interface Loc {
+  lat: number;
+  lon: number;
+}
+
 const Tab1: React.FC = () => {
   const [info, setInfo] = useState(cardDetails);
   const [filteredInfo, setFilteredInfo] = useState(cardDetails);
@@ -145,6 +150,8 @@ const Tab1: React.FC = () => {
   const [msg, setMsg] = useState("");
 
   const [showModal, setShowModal] = useState(false);
+  const [latitude, setLatitude] = useState(19.1239285);
+  const [longitude, setLongitude] = useState(72.9094407);
 
   // const User = localStorage.getItem("user");
   const getCardDetails = (lim: Number) => {
@@ -162,24 +169,45 @@ const Tab1: React.FC = () => {
       .then((resp) => {
         if (resp.status === 200) {
           var data = resp.data.data;
+          console.log(data);
           for (const element of data) {
             element.bookImageUrl = element.bookImageUrl
               ? element.bookImageUrl
               : defaultImage;
+
+            element.lat = element.lat ? element.lat : 19.121;
+            element.lon = element.lon ? element.lon : 72.899;
           }
+          console.log(data);
           console.log(wishListHeart);
-          let updateData = data.map((item: any) => ({
+          let updateData = data.map((item: any) => {
+
+            // const ab: Loc = getLatLon(item);
+
+            return ({
             ...item,
             date: new Date(item.updatedAt.slice(0, -1)),
             time: new Date(item.updatedAt)
               .toLocaleString(undefined, { timeZone: "Asia/Kolkata" })
               .substring(12, 17),
+            // lat: ab.lat,
+            // lon: ab.lon,
             newDate: moment(item.updatedAt).format("YYYYMMDD"),
             isLiked: wishListHeart.includes(item.bookId),
-          }));
+          });
+        });
           updateData = updateData.sort((a: any, b: any) =>
             b.updatedAt.localeCompare(a.updatedAt)
           );
+          updateData = updateData.filter((item: any)=> {
+            console.log(latitude);
+            console.log(item.lat);
+            console.log(longitude);
+            console.log(item.lon);
+            const d = distance(latitude,item.lat,longitude,item.lon);
+            console.log(d);
+            return d<10;
+          })
           console.log(updateData);
           setInfo(updateData);
           setFilteredInfo(updateData);
@@ -203,6 +231,43 @@ const Tab1: React.FC = () => {
         console.log(e);
       });
   };
+
+  const getLatLon = (item: any) : Loc => {
+    const options = {
+  method: 'GET',
+  url: `https://india-pincode-with-latitude-and-longitude.p.rapidapi.com/api/v1/pincode/${item.sellerPincode}`,
+  headers: {
+    'X-RapidAPI-Key': '97cc9d3ae5mshc34d4671b043d42p1451eajsnb18bf2761e25',
+    'X-RapidAPI-Host': 'india-pincode-with-latitude-and-longitude.p.rapidapi.com'
+  }
+};
+  axios.get(`https://india-pincode-with-latitude-and-longitude.p.rapidapi.com/api/v1/pincode/${item.sellerPincode}`,{
+    headers: {
+    'X-RapidAPI-Key': '97cc9d3ae5mshc34d4671b043d42p1451eajsnb18bf2761e25',
+    'X-RapidAPI-Host': 'india-pincode-with-latitude-and-longitude.p.rapidapi.com'
+  }
+  }).then((response) => {
+	console.log(response.data);
+  const ans: Loc = {
+    lat: response.data[0].lat,
+    lon: response.data[0].lng,
+  }
+  return ans;
+}).catch((error) => {
+	console.error(error);
+  const ans: Loc = {
+    lat: 19.121,
+    lon: 72.899,
+  }
+  return ans;
+});
+const ans: Loc = {
+    lat: 19.223,
+    lon: 71.333,
+  }
+  return ans;
+  }
+
   const [currUser, setCurrUser] = useState<any>({});
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getCardDetails(60);
@@ -365,9 +430,21 @@ const Tab1: React.FC = () => {
 
   const [presentAlert] = useIonAlert();
   const [cardSkeletonLoaded, setcardSkeletonLoaded] = useState(false);
+  
 
   useEffect(() => {
     getWishlistDetails();
+    if ("geolocation" in navigator) {
+      console.log("Available");
+      navigator.geolocation.getCurrentPosition(function (position) {
+        console.log("Latitude is :", position.coords.latitude);
+        console.log("Longitude is :", position.coords.longitude);
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      });
+    } else {
+      console.log("Not Available");
+    }
     // getCardDetails(60);
     const timer = setTimeout(() => {
       setcardSkeletonLoaded(true);
@@ -490,6 +567,37 @@ const Tab1: React.FC = () => {
         console.log(e);
       });
   };
+
+  const distance = (lat1: number, lat2: number, lon1: number, lon2: number) =>
+    {
+   
+        // The math module contains a function
+        // named toRadians which converts from
+        // degrees to radians.
+        lon1 =  lon1 * Math.PI / 180;
+        lon2 = lon2 * Math.PI / 180;
+        lat1 = lat1 * Math.PI / 180;
+        lat2 = lat2 * Math.PI / 180;
+   
+        // Haversine formula
+        let dlon = lon2 - lon1;
+        let dlat = lat2 - lat1;
+        let a = Math.pow(Math.sin(dlat / 2), 2)
+                 + Math.cos(lat1) * Math.cos(lat2)
+                 * Math.pow(Math.sin(dlon / 2),2);
+               
+        let c = 2 * Math.asin(Math.sqrt(a));
+   
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        let r = 6371;
+   
+        // calculate the result
+        return(c * r);
+    }
+
+    
+
 
   return (
     <IonPage className="backg">
