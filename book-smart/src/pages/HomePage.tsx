@@ -147,6 +147,7 @@ const Tab1: React.FC = () => {
   const [wishListed, setWishListed] = useState(false);
   const [showToast1, setShowToast1] = useState(false);
   const [showToast2, setShowToast2] = useState(false);
+
   const [msg, setMsg] = useState("");
 
   const [showModal, setShowModal] = useState(false);
@@ -181,33 +182,32 @@ const Tab1: React.FC = () => {
           console.log(data);
           console.log(wishListHeart);
           let updateData = data.map((item: any) => {
-
             // const ab: Loc = getLatLon(item);
 
-            return ({
-            ...item,
-            date: new Date(item.updatedAt.slice(0, -1)),
-            time: new Date(item.updatedAt)
-              .toLocaleString(undefined, { timeZone: "Asia/Kolkata" })
-              .substring(12, 17),
-            // lat: ab.lat,
-            // lon: ab.lon,
-            newDate: moment(item.updatedAt).format("YYYYMMDD"),
-            isLiked: wishListHeart.includes(item.bookId),
+            return {
+              ...item,
+              date: new Date(item.updatedAt.slice(0, -1)),
+              time: new Date(item.updatedAt)
+                .toLocaleString(undefined, { timeZone: "Asia/Kolkata" })
+                .substring(12, 17),
+              // lat: ab.lat,
+              // lon: ab.lon,
+              newDate: moment(item.updatedAt).format("YYYYMMDD"),
+              isLiked: wishListHeart.includes(item.bookId),
+            };
           });
-        });
           updateData = updateData.sort((a: any, b: any) =>
             b.updatedAt.localeCompare(a.updatedAt)
           );
-          updateData = updateData.filter((item: any)=> {
-            console.log(latitude);
-            console.log(item.lat);
-            console.log(longitude);
-            console.log(item.lon);
-            const d = distance(latitude,item.lat,longitude,item.lon);
+          updateData = updateData.filter((item: any) => {
+            // console.log(latitude);
+            // console.log(item.lat);
+            // console.log(longitude);
+            // console.log(item.lon);
+            const d = distance(latitude, item.lat, longitude, item.lon);
             console.log(d);
-            return d<10;
-          })
+            return d < 10;
+          });
           console.log(updateData);
           setInfo(updateData);
           setFilteredInfo(updateData);
@@ -232,41 +232,50 @@ const Tab1: React.FC = () => {
       });
   };
 
-  const getLatLon = (item: any) : Loc => {
+  const getLatLon = (item: any): Loc => {
     const options = {
-  method: 'GET',
-  url: `https://india-pincode-with-latitude-and-longitude.p.rapidapi.com/api/v1/pincode/${item.sellerPincode}`,
-  headers: {
-    'X-RapidAPI-Key': '97cc9d3ae5mshc34d4671b043d42p1451eajsnb18bf2761e25',
-    'X-RapidAPI-Host': 'india-pincode-with-latitude-and-longitude.p.rapidapi.com'
-  }
-};
-  axios.get(`https://india-pincode-with-latitude-and-longitude.p.rapidapi.com/api/v1/pincode/${item.sellerPincode}`,{
-    headers: {
-    'X-RapidAPI-Key': '97cc9d3ae5mshc34d4671b043d42p1451eajsnb18bf2761e25',
-    'X-RapidAPI-Host': 'india-pincode-with-latitude-and-longitude.p.rapidapi.com'
-  }
-  }).then((response) => {
-	console.log(response.data);
-  const ans: Loc = {
-    lat: response.data[0].lat,
-    lon: response.data[0].lng,
-  }
-  return ans;
-}).catch((error) => {
-	console.error(error);
-  const ans: Loc = {
-    lat: 19.121,
-    lon: 72.899,
-  }
-  return ans;
-});
-const ans: Loc = {
-    lat: 19.223,
-    lon: 71.333,
-  }
-  return ans;
-  }
+      method: "GET",
+      url: `https://india-pincode-with-latitude-and-longitude.p.rapidapi.com/api/v1/pincode/${item.sellerPincode}`,
+      headers: {
+        "X-RapidAPI-Key": "97cc9d3ae5mshc34d4671b043d42p1451eajsnb18bf2761e25",
+        "X-RapidAPI-Host":
+          "india-pincode-with-latitude-and-longitude.p.rapidapi.com",
+      },
+    };
+    axios
+      .get(
+        `https://india-pincode-with-latitude-and-longitude.p.rapidapi.com/api/v1/pincode/${item.sellerPincode}`,
+        {
+          headers: {
+            "X-RapidAPI-Key":
+              "97cc9d3ae5mshc34d4671b043d42p1451eajsnb18bf2761e25",
+            "X-RapidAPI-Host":
+              "india-pincode-with-latitude-and-longitude.p.rapidapi.com",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        const ans: Loc = {
+          lat: response.data[0].lat,
+          lon: response.data[0].lng,
+        };
+        return ans;
+      })
+      .catch((error) => {
+        console.error(error);
+        const ans: Loc = {
+          lat: 19.121,
+          lon: 72.899,
+        };
+        return ans;
+      });
+    const ans: Loc = {
+      lat: 19.223,
+      lon: 71.333,
+    };
+    return ans;
+  };
 
   const [currUser, setCurrUser] = useState<any>({});
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
@@ -430,7 +439,6 @@ const ans: Loc = {
 
   const [presentAlert] = useIonAlert();
   const [cardSkeletonLoaded, setcardSkeletonLoaded] = useState(false);
-  
 
   useEffect(() => {
     
@@ -569,36 +577,31 @@ const ans: Loc = {
       });
   };
 
-  const distance = (lat1: number, lat2: number, lon1: number, lon2: number) =>
-    {
-   
-        // The math module contains a function
-        // named toRadians which converts from
-        // degrees to radians.
-        lon1 =  lon1 * Math.PI / 180;
-        lon2 = lon2 * Math.PI / 180;
-        lat1 = lat1 * Math.PI / 180;
-        lat2 = lat2 * Math.PI / 180;
-   
-        // Haversine formula
-        let dlon = lon2 - lon1;
-        let dlat = lat2 - lat1;
-        let a = Math.pow(Math.sin(dlat / 2), 2)
-                 + Math.cos(lat1) * Math.cos(lat2)
-                 * Math.pow(Math.sin(dlon / 2),2);
-               
-        let c = 2 * Math.asin(Math.sqrt(a));
-   
-        // Radius of earth in kilometers. Use 3956
-        // for miles
-        let r = 6371;
-   
-        // calculate the result
-        return(c * r);
-    }
+  const distance = (lat1: number, lat2: number, lon1: number, lon2: number) => {
+    // The math module contains a function
+    // named toRadians which converts from
+    // degrees to radians.
+    lon1 = (lon1 * Math.PI) / 180;
+    lon2 = (lon2 * Math.PI) / 180;
+    lat1 = (lat1 * Math.PI) / 180;
+    lat2 = (lat2 * Math.PI) / 180;
 
-    
+    // Haversine formula
+    let dlon = lon2 - lon1;
+    let dlat = lat2 - lat1;
+    let a =
+      Math.pow(Math.sin(dlat / 2), 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
 
+    let c = 2 * Math.asin(Math.sqrt(a));
+
+    // Radius of earth in kilometers. Use 3956
+    // for miles
+    let r = 6371;
+
+    // calculate the result
+    return c * r;
+  };
 
   return (
     <IonPage className="backg">
@@ -660,20 +663,6 @@ const ans: Loc = {
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
         <IonHeader style={{ margin: "10px auto 25px auto", width: "95%" }}>
-          <IonIcon
-            icon={location}
-            style={{
-              // margin: "10px auto 25px auto",
-              color: "white",
-              size: "large",
-              width: "20px",
-              height: "20px",
-            }}
-            onClick={() => {
-              setShowModal(true);
-            }}
-          />
-
           <div className="homesearch">
             <IonSearchbar
               placeholder="Search for a book"
@@ -932,7 +921,7 @@ const ans: Loc = {
             </IonFooter>
           )}
         </IonModal>
-        <IonModal
+        {/* <IonModal
           isOpen={showModal}
           swipeToClose={true}
           mode="ios"
@@ -1012,7 +1001,7 @@ const ans: Loc = {
               </IonRow>
             </IonItem>
           </IonContent>
-        </IonModal>
+        </IonModal> */}
         <IonGrid className="oola">
           <div style={{ position: "fixed", width: "100%", zIndex: "10" }}>
             <div className="chips">
