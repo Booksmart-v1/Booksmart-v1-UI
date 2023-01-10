@@ -49,7 +49,7 @@ import {
   image,
   send
 } from "ionicons/icons";
-import React, { useState, Component } from "react";
+import React, { useState, Component, useEffect } from "react";
 import { close } from "fs";
 import {
   Chat,
@@ -66,6 +66,7 @@ import {
   UploadsPreview,
   EmojiPicker,
   SendButton,
+  useChannelTruncatedListener,
 } from "stream-chat-react";
 import { StreamChat } from "stream-chat";
 
@@ -218,6 +219,47 @@ const ChatScreen = () => {
   ]
   const [chatModal, setChatModal] = useState(chatArray[0]);
   const [showChatModal, setShowChatModal] = useState(false);
+
+  const getChatRooms = () => {
+    
+    var userId = "";
+    var username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    var url = APIURL + "v2/getOneUser";
+    let chatUsers: any[] = [];
+    axios.get(url+`?userId=${userId}`)
+      .then((resp)=>{
+        console.log(resp);
+        chatUsers = resp.data.data.usersInContact;
+      })
+      .catch((e)=>{
+      console.log(e);
+    });
+    url = APIURL + "v2/initiateChat";
+
+    chatUsers.forEach((id)=>{
+      axios.post(url,{
+        sellerId: userId,
+        buyerId: id,
+      }).then((resp)=>{
+        console.log(resp);
+      }).catch((e)=>{
+        console.log(e);
+      })
+    });
+
+  };
+
+  useEffect(()=>{
+    getChatRooms();
+  },[]);
+
+
+
   return (
     // <IonPage className="ios">
     //   <Chat client={client} theme={"messaging dark"}>

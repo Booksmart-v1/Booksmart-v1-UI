@@ -433,7 +433,7 @@ const ans: Loc = {
   
 
   useEffect(() => {
-    getWishlistDetails();
+    
     if ("geolocation" in navigator) {
       console.log("Available");
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -445,6 +445,7 @@ const ans: Loc = {
     } else {
       console.log("Not Available");
     }
+    getWishlistDetails();
     // getCardDetails(60);
     const timer = setTimeout(() => {
       setcardSkeletonLoaded(true);
