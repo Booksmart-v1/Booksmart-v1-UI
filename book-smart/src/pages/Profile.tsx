@@ -236,6 +236,23 @@ const Profile = () => {
     let receiverId = sellerDetails.senderId;
     let bookId = sellerDetails.bookAdId;
     let notifId = sellerDetails._id;
+    const url = APIURL + "v2/initiateChat";
+    let userId = "";
+    let username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    axios.post(url,{
+      sellerId: userId,
+      buyerId: receiverId,
+      chatInitiator: username,
+    }).then((resp)=>{
+      console.log(resp);
+    }).catch((e)=>{
+      console.log(e);
+    });
     sendAcceptNotifyToSeller(receiverId, bookId, notifId);
     setShowAcceptToast(true);
   };

@@ -219,6 +219,7 @@ const ChatScreen = () => {
   ]
   const [chatModal, setChatModal] = useState(chatArray[0]);
   const [showChatModal, setShowChatModal] = useState(false);
+  const [chats, setChats] = useState(chatArray);
 
   const getChatRooms = () => {
     
@@ -235,28 +236,71 @@ const ChatScreen = () => {
       .then((resp)=>{
         console.log(resp);
         chatUsers = resp.data.data.usersInContact;
-      })
-      .catch((e)=>{
-      console.log(e);
-    });
-    url = APIURL + "v2/initiateChat";
+        console.log(chatUsers)
+
+        url = APIURL + "v2/initiateChat";
+
+    let chatInfo: any[] =[];
 
     chatUsers.forEach((id)=>{
+      console.log(id);
       axios.post(url,{
         sellerId: userId,
         buyerId: id,
       }).then((resp)=>{
         console.log(resp);
+        let name = "";
+
+        var url = APIURL + "v2/getOneUser";
+
+        axios.get(url+`?userId=${userId}`)
+          .then((resp)=>{
+            console.log(resp);
+            name = resp.data.data.name;
+            console.log(name);
+          })
+          .catch((e)=>{
+          console.log(e);
+        });
+
+        const id1 = resp.data.data._id;
+
+        url = APIURL + "v2/getMessagesInChatRoom";
+
+        axios.get(url+`?chatRoomId=${id1}`).then((resp)=>{
+          console.log(resp);
+          const lastMsg = resp.data.data[0]?resp.data.data[0].message:"Say hello to your new friend!";
+
+          chatInfo=[ ...chatInfo, {
+            name: name,
+            message: lastMsg,
+          }];
+          console.log(chatInfo);
+        }).catch((e)=>{ 
+          console.log(e);
+        })
+
       }).catch((e)=>{
         console.log(e);
       })
     });
+    console.log(chatInfo);
+    setChats(chatInfo);
+      })
+      .catch((e)=>{
+      console.log(e);
+    });
+    
+    
 
+
+    
   };
 
   useEffect(()=>{
     getChatRooms();
-  },[]);
+    console.log(chats);
+  },[chats]);
 
 
 
@@ -287,7 +331,7 @@ const ChatScreen = () => {
       </IonToolbar>
       <IonContent>
         <div className="chat-area">
-          {chatArray.map((item, idx) => (
+          {chats.map((item, idx) => (
             <>
               <IonItem lines='none' onClick={() => {
                 setChatModal(item);

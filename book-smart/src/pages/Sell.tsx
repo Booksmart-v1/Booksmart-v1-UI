@@ -74,7 +74,7 @@ const SellCardDettails = [
   },
 ];
 const tempbook = {
-  bookId: "123",
+  bookId: "",
   bookName: "Book",
   bookAuthor: "Roald Dahl",
   bookDescription: "This is a book",
@@ -120,6 +120,7 @@ const Sell: React.FC = () => {
       .then((resp) => {
         console.log(resp);
         if (resp.status === 200) {
+          console.log(resp);
           setName(resp.data.data.bookName);
           setDescr(resp.data.data.bookDescription);
           setBook(resp.data.data);
@@ -137,9 +138,10 @@ const Sell: React.FC = () => {
     else {
       // get Book details from book name
       // const tempbook = ;
+      console.log(book);
       let id = book.bookId;
       console.log(id);
-      if (id === null) {
+      if (id === null || id === undefined) {
         const url = APIURL + "v2/addBooks";
         axios
           .post(url, {
@@ -222,7 +224,7 @@ const Sell: React.FC = () => {
           bookPrice: price,
           bookAuthor: book.bookAuthor,
           bookCondition: condition,
-          bookImageUrl: photos[0].webviewPath,
+          // bookImageUrl: photos[0].webviewPath,
           tags: book.tags,
           sellerAddress: address,
           sellerPincode: pincode,
