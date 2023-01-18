@@ -47,7 +47,7 @@ import {
   trash,
   heart,
   image,
-  send
+  send,
 } from "ionicons/icons";
 import React, { useState, Component, useEffect } from "react";
 import { close } from "fs";
@@ -194,35 +194,40 @@ const ChatScreen = () => {
   //   // consume `MessageInputContext` and render custom component here
   // };
 
-  const defaultProfileImg = "https://ionicframework.com/docs/demos/api/avatar/avatar.svg"
+  const defaultProfileImg =
+    "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
   const chatArray = [
     {
       name: "Jonathan Perry",
-      message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+      message:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
     },
     {
       name: "Joseph Burns",
-      message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+      message:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
     },
     {
       name: "John Doe",
-      message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+      message:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
     },
     {
       name: "Jane Doe",
-      message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+      message:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
     },
     {
       name: "Kane Adams",
-      message: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
-    }
-  ]
+      message:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+    },
+  ];
   const [chatModal, setChatModal] = useState(chatArray[0]);
   const [showChatModal, setShowChatModal] = useState(false);
   const [chats, setChats] = useState(chatArray);
 
-  const getChatRooms = () => {
-    
+  const getChatRooms = async () => {
     var userId = "";
     var username = "";
     const a = localStorage.getItem("user");
@@ -232,77 +237,85 @@ const ChatScreen = () => {
     }
     var url = APIURL + "v2/getOneUser";
     let chatUsers: any[] = [];
-    axios.get(url+`?userId=${userId}`)
-      .then((resp)=>{
+    await axios
+      .get(url + `?userId=${userId}`)
+      .then((resp) => {
         console.log(resp);
         chatUsers = resp.data.data.usersInContact;
-        console.log(chatUsers)
+        console.log(chatUsers);
 
-        url = APIURL + "v2/initiateChat";
+        var url = APIURL + "v2/initiateChat";
 
-    let chatInfo: any[] =[];
+        let chatInfo: any[] = [];
 
-    chatUsers.forEach((id)=>{
-      console.log(id);
-      axios.post(url,{
-        sellerId: userId,
-        buyerId: id,
-      }).then((resp)=>{
-        console.log(resp);
-        let name = "";
+        chatUsers.forEach(async (id) => {
+          console.log(id);
+          await axios
+            .post(url, {
+              sellerId: userId,
+              buyerId: id,
+            })
+            .then(async (resp) => {
+              console.log(resp);
+              let name = "";
 
-        var url = APIURL + "v2/getOneUser";
+              var url = APIURL + "v2/getOneUser";
 
-        axios.get(url+`?userId=${userId}`)
-          .then((resp)=>{
-            console.log(resp);
-            name = resp.data.data.name;
-            console.log(name);
-          })
-          .catch((e)=>{
-          console.log(e);
-        });
+              await axios
+                .get(url + `?userId=${userId}`)
+                .then((resp) => {
+                  console.log(resp);
+                  name = resp.data.data.name;
+                  console.log(name);
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
 
-        const id1 = resp.data.data._id;
+              const id1 = resp["data"]["data"]["chatRoomId"];
+              console.log(id1);
+              url = APIURL + "v2/getMessagesInChatRoom";
 
-        url = APIURL + "v2/getMessagesInChatRoom";
+              await axios
+                .get(url + `?chatRoomId=${id1}`)
+                .then((resp) => {
+                  console.log(resp);
+                  const lastMsg = resp.data.data[0]
+                    ? resp.data.data[0].message
+                    : "Say hello to your new friend!";
 
-        axios.get(url+`?chatRoomId=${id1}`).then((resp)=>{
-          console.log(resp);
-          const lastMsg = resp.data.data[0]?resp.data.data[0].message:"Say hello to your new friend!";
-
-          chatInfo=[ ...chatInfo, {
-            name: name,
-            message: lastMsg,
-          }];
+                  chatInfo = [
+                    ...chatInfo,
+                    {
+                      name: name,
+                      message: lastMsg,
+                    },
+                  ];
+                  console.log(chatInfo);
+                  console.log(chatInfo.length);
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
+            })
+            .catch((e) => {
+              console.log(e);
+            });
           console.log(chatInfo);
-        }).catch((e)=>{ 
-          console.log(e);
-        })
-
-      }).catch((e)=>{
+          setChats(chatInfo);
+        });
+      })
+      .catch((e) => {
         console.log(e);
-      })
-    });
-    console.log(chatInfo);
-    setChats(chatInfo);
-      })
-      .catch((e)=>{
-      console.log(e);
-    });
-    
-    
-
-
-    
+      });
   };
 
-  useEffect(()=>{
-    getChatRooms();
-    console.log(chats);
-  },[chats]);
-
-
+  useEffect(() => {
+    (async () => {
+      await getChatRooms();
+      console.log(chats);
+    })();
+  }, []);
 
   return (
     // <IonPage className="ios">
@@ -324,7 +337,7 @@ const ChatScreen = () => {
       <IonToolbar className="chat-header">
         <h2>Messages</h2>
         <IonButtons slot="end">
-          <IonButton onClick={() => { }}>
+          <IonButton onClick={() => {}}>
             <IonIcon icon={ellipsisVertical} color="dark"></IonIcon>
           </IonButton>
         </IonButtons>
@@ -333,20 +346,33 @@ const ChatScreen = () => {
         <div className="chat-area">
           {chats.map((item, idx) => (
             <>
-              <IonItem lines='none' onClick={() => {
-                setChatModal(item);
-                setShowChatModal(true);
-              }}>
+              <IonItem
+                lines="none"
+                onClick={() => {
+                  setChatModal(item);
+                  setShowChatModal(true);
+                }}
+              >
                 <div className="chat-card">
                   <div className="chat-card-img">
                     <img src={defaultProfileImg} alt="abc" />
                   </div>
                   <div className="chat-card-content">
-                    <p style={{ fontFamily: "Montserrat-b", fontSize: "18px" }}>{item.name}</p>
-                    <p style={{ fontFamily: "Montserrat-sb", fontSize: "12px", margin: "5px 0" }}><span style={{ color: "gray" }}>
-                      {/* Lorem ipsum dolor sit, amet elit. Necessitatibus, minima. */}
-                      {item.message}
-                    </span></p>
+                    <p style={{ fontFamily: "Montserrat-b", fontSize: "18px" }}>
+                      {item.name}
+                    </p>
+                    <p
+                      style={{
+                        fontFamily: "Montserrat-sb",
+                        fontSize: "12px",
+                        margin: "5px 0",
+                      }}
+                    >
+                      <span style={{ color: "gray" }}>
+                        {/* Lorem ipsum dolor sit, amet elit. Necessitatibus, minima. */}
+                        {item.message}
+                      </span>
+                    </p>
                   </div>
                   <div className="chat-card-time">
                     <span style={{ color: "var(--bs-sText)" }}>16:40</span>
@@ -361,38 +387,71 @@ const ChatScreen = () => {
         <IonHeader>
           <IonToolbar style={{ padding: "10px 0" }}>
             <IonButtons slot="start">
-              <IonButton onClick={() => { setShowChatModal(false) }}>
+              <IonButton
+                onClick={() => {
+                  setShowChatModal(false);
+                }}
+              >
                 <IonIcon icon={arrowBackOutline} color="dark"></IonIcon>
               </IonButton>
             </IonButtons>
             <IonTitle style={{ width: "100%" }}>
-              <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", width: "100%" }}>
-                <img src={defaultProfileImg} alt="abc" style={{ width: "35px", height: "35px", borderRadius: "50%", marginRight: "10px" }} />
-                <h2 style={{ textAlign: "center", fontFamily: "Montserrat-B", color: "var(--bs-pText)", fontSize: "20px", margin: "5px 0" }}>{chatModal.name}</h2>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <img
+                  src={defaultProfileImg}
+                  alt="abc"
+                  style={{
+                    width: "35px",
+                    height: "35px",
+                    borderRadius: "50%",
+                    marginRight: "10px",
+                  }}
+                />
+                <h2
+                  style={{
+                    textAlign: "center",
+                    fontFamily: "Montserrat-B",
+                    color: "var(--bs-pText)",
+                    fontSize: "20px",
+                    margin: "5px 0",
+                  }}
+                >
+                  {chatModal.name}
+                </h2>
               </div>
             </IonTitle>
             <IonButtons slot="end">
-              <IonButton onClick={() => { }}>
+              <IonButton onClick={() => {}}>
                 <IonIcon icon={ellipsisVertical} color="dark"></IonIcon>
               </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <IonContent className="ion-padding">
-        </IonContent>
+        <IonContent className="ion-padding"></IonContent>
         <IonFooter>
           <IonToolbar style={{ padding: "10px 0" }}>
             <IonButtons slot="start">
-              <IonButton onClick={() => { }}>
+              <IonButton onClick={() => {}}>
                 <IonIcon icon={addCircle} color="dark"></IonIcon>
               </IonButton>
             </IonButtons>
             <IonItem style={{ borderRadius: "50px", border: "1px solid gray" }}>
-              <IonTextarea style={{ fontFamily: "Montserrat-sb", maxHeight: "15px" }} autofocus={true} placeholder="Enter Message..." maxlength={150}
-              // value={text} onIonChange={e => setText(e.detail.value!)}
+              <IonTextarea
+                style={{ fontFamily: "Montserrat-sb", maxHeight: "15px" }}
+                autofocus={true}
+                placeholder="Enter Message..."
+                maxlength={150}
+                // value={text} onIonChange={e => setText(e.detail.value!)}
               ></IonTextarea>
               <IonButtons slot="end">
-                <IonButton onClick={() => { }}>
+                <IonButton onClick={() => {}}>
                   <IonIcon icon={send} color="dark" size="small"></IonIcon>
                 </IonButton>
               </IonButtons>
