@@ -201,31 +201,27 @@ const ChatScreen = () => {
       name: "Jonathan Perry",
       message:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+      messages: [],
+      roomId: "123",
+      time: "17:06",
+      date: "2023-01-22"
     },
     {
       name: "Joseph Burns",
       message:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+      messages: [],
+      roomId: "123",
+      time: "17:06",
+      date: "2023-01-22"
     },
-    {
-      name: "John Doe",
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
-    },
-    {
-      name: "Jane Doe",
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
-    },
-    {
-      name: "Kane Adams",
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
-    },
+    
   ];
   const [chatModal, setChatModal] = useState(chatArray[0]);
   const [showChatModal, setShowChatModal] = useState(false);
   const [chats, setChats] = useState(chatArray);
+  // const [selIndex, SetSelIndex] = useState(0);
+  const [text, setText] = useState("");
 
   const getChatRooms = async () => {
     var userId = "";
@@ -250,7 +246,7 @@ const ChatScreen = () => {
 
         chatUsers.forEach(async (id) => {
           console.log(id);
-          await axios
+          await axios 
             .post(url, {
               sellerId: userId,
               buyerId: id,
@@ -262,7 +258,7 @@ const ChatScreen = () => {
               var url = APIURL + "v2/getOneUser";
 
               await axios
-                .get(url + `?userId=${userId}`)
+                .get(url + `?userId=${id}`)
                 .then((resp) => {
                   console.log(resp);
                   name = resp.data.data.name;
@@ -280,8 +276,16 @@ const ChatScreen = () => {
                 .get(url + `?chatRoomId=${id1}`)
                 .then((resp) => {
                   console.log(resp);
-                  const lastMsg = resp.data.data[0]
-                    ? resp.data.data[0].message
+                  const lastMsg = resp.data.data[resp.data.data.length-1]
+                    ? resp.data.data[resp.data.data.length-1].message
+                    : "Say hello to your new friend!";
+
+                  const time = resp.data.data[resp.data.data.length-1]
+                  ? resp.data.data[resp.data.data.length-1].createdAt.substring(11,16)
+                    : "Say hello to your new friend!";
+
+                  const date = resp.data.data[resp.data.data.length-1]
+                    ? resp.data.data[resp.data.data.length-1].createdAt.substring(0,10)
                     : "Say hello to your new friend!";
 
                   chatInfo = [
@@ -289,6 +293,10 @@ const ChatScreen = () => {
                     {
                       name: name,
                       message: lastMsg,
+                      messages: resp.data.data,
+                      roomId: id1,
+                      time: time,
+                      date: date,
                     },
                   ];
                   console.log(chatInfo);
@@ -310,11 +318,38 @@ const ChatScreen = () => {
       });
   };
 
+  const postMessage = async () => {
+
+    var userId = "";
+    var username = "";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    var url = APIURL + "v2/postInChatRoom";
+
+    await axios.post(url,{
+      chatRoomId: chatModal.roomId,
+      message: text,
+      postedByUser: userId,
+
+    }).then((res)=>{
+      console.log(res);
+      if(res.data.success){
+        setText("");
+      }
+    }).catch((e)=>{
+      console.log(e);
+    });
+
+  }
+
   useEffect(() => {
-    (async () => {
+    setInterval(async () => {
       await getChatRooms();
       console.log(chats);
-    })();
+    }, 10000);
   }, []);
 
   return (
@@ -375,7 +410,7 @@ const ChatScreen = () => {
                     </p>
                   </div>
                   <div className="chat-card-time">
-                    <span style={{ color: "var(--bs-sText)" }}>16:40</span>
+                    <span style={{ color: "var(--bs-sText)" }}>{item.time}</span>
                   </div>
                 </div>
               </IonItem>
@@ -448,10 +483,12 @@ const ChatScreen = () => {
                 autofocus={true}
                 placeholder="Enter Message..."
                 maxlength={150}
-                // value={text} onIonChange={e => setText(e.detail.value!)}
+                value={text} onIonChange={e => setText(e.detail.value!)}
               ></IonTextarea>
               <IonButtons slot="end">
-                <IonButton onClick={() => {}}>
+                <IonButton onClick={() => {
+                  postMessage();
+                }}>
                   <IonIcon icon={send} color="dark" size="small"></IonIcon>
                 </IonButton>
               </IonButtons>
