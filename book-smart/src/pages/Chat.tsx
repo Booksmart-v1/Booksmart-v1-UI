@@ -76,6 +76,7 @@ import "@ionic/core/css/ionic.bundle.css";
 import "stream-chat-react/dist/css/index.css";
 import { APIURL } from "../constants";
 import axios from "axios";
+import ChatModal from "./ChatModal";
 const ChatScreen = () => {
   // let a = localStorage.getItem("user");
   // console.log(a);
@@ -196,12 +197,14 @@ const ChatScreen = () => {
 
   const defaultProfileImg =
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
+
+  const a: any[] = [];
   const chatArray = [
     {
       name: "Jonathan Perry",
       message:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
-      messages: [],
+      messages: a,
       roomId: "123",
       time: "17:06",
       date: "2023-01-22"
@@ -210,7 +213,7 @@ const ChatScreen = () => {
       name: "Joseph Burns",
       message:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
-      messages: [],
+      messages: a,
       roomId: "123",
       time: "17:06",
       date: "2023-01-22"
@@ -222,6 +225,7 @@ const ChatScreen = () => {
   const [chats, setChats] = useState(chatArray);
   // const [selIndex, SetSelIndex] = useState(0);
   const [text, setText] = useState("");
+  const [userId, setUserId] = useState("");
 
   const getChatRooms = async () => {
     var userId = "";
@@ -231,6 +235,7 @@ const ChatScreen = () => {
       userId = JSON.parse(a).id;
       username = JSON.parse(a).name;
     }
+    setUserId(userId);
     var url = APIURL + "v2/getOneUser";
     let chatUsers: any[] = [];
     await axios
@@ -368,6 +373,12 @@ const ChatScreen = () => {
     //     </Channel>
     //   </Chat>
     // </IonPage>
+    
+      showChatModal?
+      <ChatModal item={chatModal} setShowChatModal={setShowChatModal} text={text} setText={setText} postMessage={postMessage} userId={userId} />
+    :
+      
+    
     <IonPage>
       <IonToolbar className="chat-header">
         <h2>Messages</h2>
@@ -418,7 +429,7 @@ const ChatScreen = () => {
           ))}
         </div>
       </IonContent>
-      <IonModal isOpen={showChatModal}>
+      {/* <IonModal isOpen={showChatModal}>
         <IonHeader>
           <IonToolbar style={{ padding: "10px 0" }}>
             <IonButtons slot="start">
@@ -469,7 +480,24 @@ const ChatScreen = () => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-        <IonContent className="ion-padding"></IonContent>
+        <IonContent className="ion-padding">
+          {
+            chatModal.messages.map((item, idx) => {
+              return (
+                <div className="bubbleWrapper">
+                    <div className={`${item.postedByUser===userId?"inlineContainer own":"inlineContainer"}`}>
+                      <img className="inlineIcon" alt="haha" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png" />
+                      <div className={`${item.postedByUser===userId?"ownBubble own":"otherBubble other"}`}>
+                        {item.message}
+                      </div>
+                    </div>
+                    <span className={`${item.postedByUser===userId?"own":"other"}`}>{item.createdAt.substring(11,16)}</span>
+                </div>
+              );
+            })
+          }
+          
+        </IonContent>
         <IonFooter>
           <IonToolbar style={{ padding: "10px 0" }}>
             <IonButtons slot="start">
@@ -495,8 +523,9 @@ const ChatScreen = () => {
             </IonItem>
           </IonToolbar>
         </IonFooter>
-      </IonModal>
+      </IonModal> */}
     </IonPage>
+              
   );
 };
 
