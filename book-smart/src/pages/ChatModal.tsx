@@ -78,132 +78,156 @@ import { APIURL } from "../constants";
 import axios from "axios";
 
 interface chat {
-    name: string,
-    message:
-    string,
-    messages: any[],
-    roomId: string,
-    time: string,
-    date: string,
-};
-
-interface prop {
-    item: chat,
-    setShowChatModal: any,
-    text: string,
-    setText: any,
-    postMessage: any,
-    userId: string,
-
+  name: string;
+  message: string;
+  messages: any[];
+  roomId: string;
+  time: string;
+  date: string;
 }
 
-const ChatModal = ({item, setShowChatModal, text, setText, postMessage, userId}: prop) => {
+interface prop {
+  item: chat;
+  setShowChatModal: any;
+  text: string;
+  setText: any;
+  postMessage: any;
+  userId: string;
+}
 
-    const defaultProfileImg =
+const ChatModal = ({
+  item,
+  setShowChatModal,
+  text,
+  setText,
+  postMessage,
+  userId,
+}: prop) => {
+  const defaultProfileImg =
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
 
-    return (
-
-        <IonPage>
-            <IonHeader>
-          <IonToolbar style={{ padding: "10px 0" }}>
-            <IonButtons slot="start">
-              <IonButton
-                onClick={() => {
-                  setShowChatModal(false);
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar style={{ padding: "10px 0" }}>
+          <IonButtons slot="start">
+            <IonButton
+              onClick={() => {
+                setShowChatModal(false);
+              }}
+            >
+              <IonIcon icon={arrowBackOutline} color="dark"></IonIcon>
+            </IonButton>
+          </IonButtons>
+          <IonTitle style={{ width: "100%" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <img
+                src={defaultProfileImg}
+                alt="abc"
+                style={{
+                  width: "35px",
+                  height: "35px",
+                  borderRadius: "50%",
+                  marginRight: "10px",
+                }}
+              />
+              <h2
+                style={{
+                  textAlign: "center",
+                  fontFamily: "Montserrat-B",
+                  color: "var(--bs-pText)",
+                  fontSize: "20px",
+                  margin: "5px 0",
                 }}
               >
-                <IonIcon icon={arrowBackOutline} color="dark"></IonIcon>
-              </IonButton>
-            </IonButtons>
-            <IonTitle style={{ width: "100%" }}>
+                {item.name}
+              </h2>
+            </div>
+          </IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => {}}>
+              <IonIcon icon={ellipsisVertical} color="dark"></IonIcon>
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        {item.messages.map((item, idx) => {
+          return (
+            <div className="bubbleWrapper">
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                  width: "100%",
-                }}
+                className={`${
+                  item.postedByUser === userId
+                    ? "inlineContainer own"
+                    : "inlineContainer"
+                }`}
               >
                 <img
-                  src={defaultProfileImg}
-                  alt="abc"
-                  style={{
-                    width: "35px",
-                    height: "35px",
-                    borderRadius: "50%",
-                    marginRight: "10px",
-                  }}
+                  className="inlineIcon"
+                  alt="haha"
+                  src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png"
                 />
-                <h2
-                  style={{
-                    textAlign: "center",
-                    fontFamily: "Montserrat-B",
-                    color: "var(--bs-pText)",
-                    fontSize: "20px",
-                    margin: "5px 0",
-                  }}
+                <div
+                  className={`${
+                    item.postedByUser === userId
+                      ? "ownBubble own"
+                      : "otherBubble other"
+                  }`}
                 >
-                  {item.name}
-                </h2>
-              </div>
-            </IonTitle>
-            <IonButtons slot="end">
-              <IonButton onClick={() => {}}>
-                <IonIcon icon={ellipsisVertical} color="dark"></IonIcon>
-              </IonButton>
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding">
-          {
-            item.messages.map((item, idx) => {
-              return (
-                <div className="bubbleWrapper">
-                    <div className={`${item.postedByUser===userId?"inlineContainer own":"inlineContainer"}`}>
-                      <img className="inlineIcon" alt="haha" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png" />
-                      <div className={`${item.postedByUser===userId?"ownBubble own":"otherBubble other"}`}>
-                        {item.message}
-                      </div>
-                    </div>
-                    <span className={`${item.postedByUser===userId?"own":"other"}`}>{item.createdAt.substring(11,16)}</span>
+                  {item.message}
                 </div>
-              );
-            })
-          }
-          
-        </IonContent>
-        <IonFooter>
-          <IonToolbar style={{ padding: "10px 0" }}>
-            <IonButtons slot="start">
-              <IonButton onClick={() => {}}>
-                <IonIcon icon={addCircle} color="dark"></IonIcon>
+              </div>
+              <span
+                className={`${item.postedByUser === userId ? "own" : "other"}`}
+              >
+                {item.createdAt.substring(11, 16)}
+              </span>
+            </div>
+          );
+        })}
+      </IonContent>
+      <IonFooter>
+        <IonToolbar style={{ padding: "10px 0" }}>
+          <IonButtons slot="start">
+            <IonButton onClick={() => {}}>
+              <IonIcon icon={addCircle} color="dark"></IonIcon>
+            </IonButton>
+          </IonButtons>
+          <IonItem style={{ borderRadius: "50px", border: "1px solid gray" }}>
+            <IonTextarea
+              style={{ fontFamily: "Montserrat-sb", maxHeight: "15px" }}
+              autofocus={true}
+              placeholder="Enter Message..."
+              maxlength={150}
+              value={text}
+              // onKeyPress={(e) => {
+              //   if (e.key === "Enter") {
+              //     postMessage();
+              //   }
+              // }}
+              onIonChange={(e) => setText(e.detail.value!)}
+            ></IonTextarea>
+            <IonButtons slot="end">
+              <IonButton
+                onClick={() => {
+                  postMessage();
+                }}
+              >
+                <IonIcon icon={send} color="dark" size="small"></IonIcon>
               </IonButton>
             </IonButtons>
-            <IonItem style={{ borderRadius: "50px", border: "1px solid gray" }}>
-              <IonTextarea
-                style={{ fontFamily: "Montserrat-sb", maxHeight: "15px" }}
-                autofocus={true}
-                placeholder="Enter Message..."
-                maxlength={150}
-                value={text} onIonChange={e => setText(e.detail.value!)}
-              ></IonTextarea>
-              <IonButtons slot="end">
-                <IonButton onClick={() => {
-                  postMessage();
-                }}>
-                  <IonIcon icon={send} color="dark" size="small"></IonIcon>
-                </IonButton>
-              </IonButtons>
-            </IonItem>
-          </IonToolbar>
-        </IonFooter>
-        </IonPage>
-
-
-    );
-
-
+          </IonItem>
+        </IonToolbar>
+      </IonFooter>
+    </IonPage>
+  );
 };
 
 export default ChatModal;

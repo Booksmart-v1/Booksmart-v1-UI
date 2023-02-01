@@ -12,7 +12,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import Onboard from "./pages/login/Onboard";
 import PickInterests from "./pages/login/PickInterests";
 import Welcome from "./pages/login/Welcome";
-
+import * as io from "socket.io-client";
 import Home from "./Home";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -30,11 +30,13 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
-/* Theme variables */ 
+/* Theme variables */
 import "./theme/variables.css";
 import React, { useEffect, useState } from "react";
 
 setupIonicReact();
+
+var socket = io.connect();
 
 const App: React.FC = () => {
   const [refresh, setRefresh] = React.useState(false);

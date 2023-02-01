@@ -1,10 +1,25 @@
-import { IonContent, IonText, IonPage, IonButton, IonIcon, IonItem, IonInput, IonToast, IonItemDivider } from "@ionic/react";
+import {
+  IonContent,
+  IonText,
+  IonPage,
+  IonButton,
+  IonIcon,
+  IonItem,
+  IonInput,
+  IonToast,
+  IonItemDivider,
+  IonLabel,
+} from "@ionic/react";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./Onboard.css";
-import { arrowBackOutline, arrowForward, informationCircle } from "ionicons/icons";
-import { SmsRetriever } from '@ionic-native/sms-retriever';
+import {
+  arrowBackOutline,
+  arrowForward,
+  informationCircle,
+} from "ionicons/icons";
+import { SmsRetriever } from "@ionic-native/sms-retriever";
 // import OtpInput from "react-otp-input";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
@@ -13,7 +28,7 @@ import { APIURL } from "../../constants";
 interface UserDetailPageProps
   extends RouteComponentProps<{
     page: string;
-  }> { }
+  }> {}
 
 const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
   const [page, setPage] = useState("signup");
@@ -32,13 +47,11 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
     SmsRetriever.getAppHash()
       .then((res: any) => console.log(res))
       .catch((error: any) => console.error(error));
-    
   }, []);
 
   useEffect(() => {
     console.log(match.params.page);
     setPage(match.params.page);
-    
   }, [match.params.page]);
 
   const start = () => {
@@ -48,7 +61,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
         processSMS(res);
       })
       .catch((error: any) => console.error(error));
-  }
+  };
 
   const processSMS = (data: any) => {
     const message = data.Message;
@@ -59,7 +72,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
       // setOTPMessage('OTP received. Proceed to register');
       // presentToast('SMS received with correct app hash', 'bottom', 1500);
     }
-  }
+  };
 
   const handleClick = () => {
     if (!otpSent) {
@@ -144,11 +157,18 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
   return (
     <>
       <IonPage>
-        <IonContent className="md bg ion-no-padding" scrollY={false} style={{
-          "--background": "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url(https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg) no-repeat center center / cover",
-        }}>
+        <IonContent
+          className="md bg ion-no-padding"
+          scrollY={false}
+          style={{
+            "--background":
+              "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url(https://innovationinpolitics.eu/wp-content/uploads/2020/03/jaredd-craig-HH4WBGNyltc-unsplash-1024x1536.jpg) no-repeat center center / cover",
+          }}
+        >
           <div className="bod">
-            <IonButton fill="clear" color="dark"
+            <IonButton
+              fill="clear"
+              color="dark"
               slot="start"
               onClick={() => {
                 otpSent ? setOtpSent(!otpSent) : history.goBack();
@@ -163,34 +183,28 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
             >
               <IonIcon slot="icon-only" color="light" icon={arrowBackOutline} />
             </IonButton>
+
             {otpSent ? (
-              // <OtpInput
-              //   value={otp}
-              //   onChange={handleChange}
-              //   numInputs={6}
-              //   separator={<span>-</span>}
-              //   inputStyle={{
-              //     margin: "6px",
-              //     backgroundColor: "white",
-              //     height: "57px",
-              //     width: "9vw",
-              //     color: "black",
-              //     fontFamily: "Montserrat-SB !important",
-              //     fontSize: "16",
-              //   }}
-              // />
-              <IonItem style={{ marginTop: "10px", width: "70%" }}>
-                          {/* <IonLabel position="floating"> Email</IonLabel> */}
-                          <IonInput
-                            type="text"
-                            value={otp}
-                            placeholder="Enter OTP"
-                            onIonChange={(e: any) => {
-                              setOtp(e.target.value);
-                            }}
-                            required
-                          ></IonInput>
-                        </IonItem>
+              <>
+                <IonItem>
+                  <IonLabel className="login-text" position="floating">
+                    {" "}
+                    Please enter a 6 digit OTP that has been sent to your
+                    registered mobile number.
+                  </IonLabel>
+                </IonItem>
+                <IonItem style={{ marginTop: "10px", width: "70%" }}>
+                  <IonInput
+                    type="text"
+                    value={otp}
+                    placeholder="* * * * * *"
+                    onIonChange={(e: any) => {
+                      setOtp(e.target.value);
+                    }}
+                    required
+                  ></IonInput>
+                </IonItem>
+              </>
             ) : (
               <>
                 <IonText className="login-text">
