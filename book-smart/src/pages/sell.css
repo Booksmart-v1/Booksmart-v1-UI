@@ -11,14 +11,15 @@
 }
 
 .trade-card {
-    margin: 10px auto;
+    margin: 10px ;
     min-height: 160px;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    /* align-items: center; */
     text-align: center;
     border-bottom: 1px solid gray;
-    border-radius: 0;
+    border-radius: 5px;
+    width:90%;
     padding: 10px;
 }
 
@@ -58,6 +59,24 @@
 
 .trade-tick {
     width: 20%;
+    margin-top: 13%;
+}
+.delete-card{
+    margin-right: -190px;
+    /* margin-left: 90px; */
+}
+.profile-orders {
+    font-family: 'Montserrat-SB' !important;
+    color: var(--bs-pText);
+    font-size: 20px;
+    width: 20%;
+}
+.popover-ellipse{
+    margin-left: 30px;
+    height: auto; 
+}
+.popover-size{
+    margin: 30px;
 }
 
 .noBooks {

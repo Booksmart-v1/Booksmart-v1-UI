@@ -18,7 +18,13 @@ ion-content {
   margin-top: 20px;
   padding: 0 25px;
 }
-
+.otp-text{
+  font-size: 20px;
+  background: none;
+    font-family: "Montserrat-B";
+    margin-top: 20px;
+    padding: 0 25px;
+}
 ion-input {
   font-family: "Montserrat-B";
 }

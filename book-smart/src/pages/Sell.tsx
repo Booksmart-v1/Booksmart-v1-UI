@@ -35,12 +35,22 @@ import {
   IonSelect,
   IonSelectOption,
   IonAlert,
+  IonToggle,
+  IonPopover,
+  IonText,
 } from "@ionic/react";
 import "./wishlist.css";
 import "./sell.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
-import { add, camera, funnelOutline } from "ionicons/icons";
+import {
+  add,
+  camera,
+  ellipsisVertical,
+  funnelOutline,
+  trashBin,
+  trashBinOutline,
+} from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { APIURL } from "../constants";
@@ -83,6 +93,10 @@ const tempbook = {
 const Sell: React.FC = () => {
   const [info, setInfo] = useState(SellCardDettails);
 
+  const [popoverState, setShowPopover] = useState({
+    showPopover: false,
+    event: undefined,
+  });
   const [segment, setSegment] = React.useState("activeTrades");
   const [loading, setLoading] = React.useState(false);
   const [screen, setScreen] = React.useState("details");
@@ -95,10 +109,12 @@ const Sell: React.FC = () => {
   const [pincode, setPincode] = React.useState("");
   const [book, setBook] = React.useState(tempbook);
   const [showToast1, setShowToast1] = useState(false);
+  const [msg, setMsg] = useState("");
 
   const [showModal, setShowModal] = useState(false);
 
   const { photos, takePhoto } = usePhotoGallery();
+  const [showToast, setShowToast] = useState(false);
 
   const history = useHistory();
   const toaster1 = () => {
@@ -224,7 +240,7 @@ const Sell: React.FC = () => {
           bookPrice: price,
           bookAuthor: book.bookAuthor,
           bookCondition: condition,
-          // bookImageUrl: photos[0].webviewPath,
+          bookImageUrl: photos[0].webviewPath,
           tags: book.tags,
           sellerAddress: address,
           sellerPincode: pincode,
@@ -316,6 +332,21 @@ const Sell: React.FC = () => {
       });
   };
 
+  const markSold = (lim: Number) => {
+    const url = APIURL + "v2/markSold";
+    var id = "123";
+    axios
+      .post(url, {
+        bookAdId: id,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     getTradeCardDetails(60);
   }, []);
@@ -323,6 +354,7 @@ const Sell: React.FC = () => {
   // Sort by Filter
   const [presentAlert] = useIonAlert();
   const [showAlert, setShowAlert] = useState(false);
+  const [markAsSold, setMarkAsSold] = useState(false);
   const [sortByType, setSortByType] = useState({ newest: true, price: false });
   const handleSortBy = (type: string) => {
     if (type === "newest") {
@@ -402,6 +434,22 @@ const Sell: React.FC = () => {
             ></IonIcon>
           </IonToolbar>
         </IonHeader>
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={msg}
+          duration={4000}
+          translucent={true}
+          mode="ios"
+          position="top"
+          buttons={[
+            {
+              text: "Hide",
+              role: "cancel",
+              handler: () => setShowToast(false),
+            },
+          ]}
+        />
         <IonContent className="ion-no-padding">
           <IonRefresher
             slot="fixed"
@@ -486,12 +534,74 @@ const Sell: React.FC = () => {
                               </p>
                             </div>
                           </div>
-                          <div className="trade-tick">
-                            <img
-                              src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
-                              alt=""
-                            />
+
+                          <div>
+                            <IonButtons className="popover-ellipse">
+                              <IonButton
+                                slot="end"
+                                // -id="right-end"
+                                onClick={() => {
+                                  console.log("plus");
+                                  setShowPopover({
+                                    showPopover: true,
+                                    event: element,
+                                  });
+                                }}
+                              >
+                                <IonIcon
+                                  icon={ellipsisVertical}
+                                  color="dark"
+                                ></IonIcon>
+                              </IonButton>
+                            </IonButtons>
+                            <IonPopover
+                              event={popoverState.event}
+                              isOpen={popoverState.showPopover}
+                              onDidDismiss={() =>
+                                setShowPopover({
+                                  showPopover: false,
+                                  event: undefined,
+                                })
+                              }
+                            >
+                              <IonContent className="popover-size">
+                                <IonItem button>
+                                  <IonLabel className="profile-orders">
+                                    {" "}
+                                    Mark Ad as sold!
+                                  </IonLabel>
+                                </IonItem>
+                                <IonItem button>
+                                  <IonLabel className="profile-orders">
+                                    {" "}
+                                    Delete Ad
+                                  </IonLabel>
+                                </IonItem>
+                              </IonContent>
+                            </IonPopover>
                           </div>
+
+                          {/* <div className="trade-tick">
+                            <IonToggle
+                              style={{
+                                color: `${markAsSold ? "red" : "green"}`,
+                              }}
+                              checked={markAsSold}
+                              onClick={() => {
+                                if (!markAsSold) {
+                                  setMarkAsSold(true);
+                                  setMsg("Marked as sold!");
+
+                                  setShowToast(true);
+                                } else {
+                                  setMarkAsSold(false);
+                                  setMsg("Marked as unsold!");
+                                  setShowToast(true);
+                                }
+                              }}
+                              color="success"
+                            ></IonToggle>
+                          </div> */}
                         </IonCard>
                       </>
                     );
@@ -904,7 +1014,7 @@ const Sell: React.FC = () => {
               style={{
                 //marginBottom: "40px",
                 // marginRight: "10px",
-                position: "static",
+                position: "floating",
               }}
             >
               <IonIcon icon={add} />

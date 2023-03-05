@@ -11,12 +11,20 @@
 }
 
 .message-button {
-  --background: var(--bs-pBg);
-  color: var(--bs-primary);
+  --background: var(--bs-sBg);
+  color: var(--bs-secondary);
   font-family: 'Montserrat-B';
   --background-activated: transparent;
   --background-focused: transparent;
   --background-hover: transparent;
+  letter-spacing: 2px;
+  
+}
+.profile-orders {
+  font-family: 'Montserrat-SB' !important;
+  color: var(--bs-pText);
+  font-size: 20px;
+  width: 20%;
 }
 
 .profileHeader {
@@ -66,7 +74,11 @@
 .profileActionContainer {
   margin: 5px 0;
 }
-
+.profile-popover{
+  width: 60%;
+  height: auto !important;
+  margin-top: 40px;
+}
 .notifyCards-area {
   width: 100%;
   display: flex;

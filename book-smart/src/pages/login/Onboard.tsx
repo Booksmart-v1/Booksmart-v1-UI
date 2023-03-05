@@ -186,13 +186,11 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
 
             {otpSent ? (
               <>
-                <IonItem>
-                  <IonLabel className="login-text" position="floating">
-                    {" "}
-                    Please enter a 6 digit OTP that has been sent to your
-                    registered mobile number.
-                  </IonLabel>
-                </IonItem>
+                <IonText className="login-text">
+                  {" "}
+                  Please enter a 6 digit OTP that has been sent to your
+                  registered mobile number.
+                </IonText>
                 <IonItem style={{ marginTop: "10px", width: "70%" }}>
                   <IonInput
                     type="text"
