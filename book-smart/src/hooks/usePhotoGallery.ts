@@ -18,6 +18,7 @@ import { APIURL } from "../constants";
 export interface UserPhoto {
   filepath: string;
   webviewPath?: string;
+  imageUrl?: string;
 }
 
 const PHOTO_STORAGE_PATH = 'photos';
@@ -50,49 +51,64 @@ export function usePhotoGallery() {
 
     const savePicture = async (photo: Photo, fileName: string): Promise<UserPhoto> => {
       let base64Data: string;
+      let b: Blob;
+      let imgurl: string;
       if (isPlatform('hybrid')) {
         const file = await Filesystem.readFile({
           path: photo.path!,
         });
+        const r = await fetch(photo.path!)
+        b = await r.blob();
         base64Data = file.data;
         console.log(file);
         console.log(base64Data);
 
       } else {
         base64Data = await base64FromPath(photo.webPath!);
+        const r = await fetch(photo.webPath!)
+        b = await r.blob();
       }
       console.log(base64Data);
+      let image = new Image();
+      image.src = base64Data;
+      let name = new Date().getTime() + '.png';
+      // const blob =
+      // b.lastModifiedDate = new Date();
+      var file = new File([b], name , {type: 'image/png'});
       var bodyFormData = new FormData();
-      bodyFormData.append("img-upload",base64Data);
+      bodyFormData.append("img-upload",file, name);
       console.log(bodyFormData.get('img-upload'));
 
-
-      axios
+      console.log("Calling API")
+     const response = await axios
         .post(url,
           
           bodyFormData,{
     headers: {
-     'accept': 'application/json',
-     'Accept-Language': 'en-US,en;q=0.8',
+    //  'accept': 'application/json',
+    //  'Accept-Language': 'en-US,en;q=0.8',
      'Content-Type': `multipart/form-data;`,
     }
    }
-      )
-        .then(async (resp) => {
-          console.log(resp);
-          if (resp.status === 200) {
-              console.log(resp);
-              console.log(base64Data);
+      );
+        // .then(async (resp) => {
+          console.log("called api")
+          console.log(response);
+          if (response.status === 200) {
+              console.log(response);
+              console.log(file);
+              imgurl = response.data.data.location;
               // console.log(photo.webPath);
 
               // const file = require(photo.webPath?photo.webPath: '' );
               // console.log(file);
               
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+          else imgurl= '';
+        // })
+        // .catch((err) => {
+        //   console.log(err);
+        // });
 
       const savedFile = await Filesystem.writeFile({
         path: fileName,
@@ -105,12 +121,14 @@ export function usePhotoGallery() {
         return {
           filepath: savedFile.uri,
           webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+          imageUrl: imgurl,
         };
       } else {
         
         return {
           filepath: fileName,
           webviewPath: photo.webPath,
+          imageUrl: imgurl,
         };
       }
     };
@@ -137,6 +155,7 @@ export function usePhotoGallery() {
         const newPhotos = [savedFileImage, ...photos];
         setPhotos(newPhotos);
         Storage.set({ key: PHOTO_STORAGE_PATH, value: JSON.stringify(newPhotos) });
+        return savedFileImage;
 
     };
 
