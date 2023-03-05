@@ -159,6 +159,7 @@ const Sell: React.FC = () => {
       console.log(id);
       if (id === null || id === undefined) {
         const url = APIURL + "v2/addBooks";
+        console.log(imageUrl);
         axios
           .post(url, {
             bookName: book.bookName,
@@ -188,6 +189,7 @@ const Sell: React.FC = () => {
                   bookName: book.bookName,
                   bookPrice: price,
                   bookAuthor: book.bookAuthor,
+                  bookImageUrl: imageUrl,
                   bookCondition: condition,
                   tags: book.tags,
                   sellerAddress: address,
@@ -231,6 +233,8 @@ const Sell: React.FC = () => {
       }
       console.log(id);
 
+      console.log(imageUrl);
+
       axios
         .post(url, {
           bookId: id,
@@ -240,7 +244,7 @@ const Sell: React.FC = () => {
           bookPrice: price,
           bookAuthor: book.bookAuthor,
           bookCondition: condition,
-          bookImageUrl: photos[0].webviewPath,
+          bookImageUrl: imageUrl,
           tags: book.tags,
           sellerAddress: address,
           sellerPincode: pincode,
@@ -346,6 +350,7 @@ const Sell: React.FC = () => {
         console.log(err);
       });
   };
+  const [imageUrl, setImageUrl] = useState<string|undefined>('');
 
   useEffect(() => {
     getTradeCardDetails(60);
@@ -356,6 +361,19 @@ const Sell: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [markAsSold, setMarkAsSold] = useState(false);
   const [sortByType, setSortByType] = useState({ newest: true, price: false });
+  const getImage = ()=> {
+    takePhoto().then((obj:any)=>{
+      console.log(obj);
+      // obj = usePhotoGallery();
+      // console.log(obj.photos)
+      setImageUrl((old)=>{
+        console.log(obj.imageUrl)
+        console.log(old)
+        return obj.imageUrl
+      });
+      
+    })
+  }
   const handleSortBy = (type: string) => {
     if (type === "newest") {
       const sortedArray1 = activeTrades.sort((a: any, b: any) =>
@@ -958,7 +976,7 @@ const Sell: React.FC = () => {
                             marginRight: "10px",
                             marginTop: "30px",
                           }}
-                          onClick={() => takePhoto()}
+                          onClick={() => getImage()}
                         >
                           <IonIcon icon={camera}></IonIcon>
                         </IonFabButton>
