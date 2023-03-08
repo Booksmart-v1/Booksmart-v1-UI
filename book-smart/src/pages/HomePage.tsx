@@ -153,7 +153,10 @@ const Tab1: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [latitude, setLatitude] = useState(19.1239285);
   const [longitude, setLongitude] = useState(72.9094407);
-
+  const [isReadMore, setIsReadMore] = useState(true);
+  const toggleReadMore = () => {
+    setIsReadMore(!isReadMore);
+  };
   // const User = localStorage.getItem("user");
   const getCardDetails = (lim: Number) => {
     const url = APIURL + "v2/getBookAds";
@@ -207,6 +210,9 @@ const Tab1: React.FC = () => {
             const d = distance(latitude, item.lat, longitude, item.lon);
             console.log(d);
             return d < 10;
+          });
+          updateData = updateData.filter((item: any) => {
+            return item.sold === false;
           });
           console.log(updateData);
           setInfo(updateData);
@@ -441,7 +447,6 @@ const Tab1: React.FC = () => {
   const [cardSkeletonLoaded, setcardSkeletonLoaded] = useState(false);
 
   useEffect(() => {
-    
     if ("geolocation" in navigator) {
       console.log("Available");
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -773,17 +778,17 @@ const Tab1: React.FC = () => {
             <div
               className="HPModal-img"
               style={{
-                // backgroundImage: `url(${sellerDeets.bookImageUrl})`
-                backgroundImage: `url(${"https://material.angular.io/assets/img/examples/shiba1.jpg"})`,
+                borderRadius: "5px",
+                // padding: "15px",
+                backgroundImage: `url(${sellerDeets.bookImageUrl})`,
+                // backgroundImage: `url(${"https://material.angular.io/assets/img/examples/shiba1.jpg"})`,
               }}
             >
-              <img
-                src={
-                  "https://material.angular.io/assets/img/examples/shiba1.jpg"
-                }
+              {/* <img
+                src={sellerDeets.bookImageUrl}
                 style={{ width: "35%", height: "20vh" }}
                 alt="book"
-              />
+              /> */}
             </div>
           </IonHeader>
           <IonContent>
@@ -821,9 +826,15 @@ const Tab1: React.FC = () => {
             </div>
             <div className="HPModal-content">
               <p className="HPModal-desc">
-                {sellerDeets.bookDescription.length < 180
+                {/* {sellerDeets.bookDescription.length < 180
                   ? sellerDeets.bookDescription
-                  : sellerDeets.bookDescription.substring(0, 180) + "..."}
+                  : sellerDeets.bookDescription.substring(0, 180) + "..."} */}
+                {isReadMore
+                  ? sellerDeets.bookDescription.slice(0, 180)
+                  : sellerDeets.bookDescription}
+                <span onClick={toggleReadMore} className="read-or-hide">
+                  {isReadMore ? "...Read More" : " Show Less"}
+                </span>
               </p>
               <div className="HPModal-sellerInfo">
                 <p style={{ fontFamily: "Montserrat-b", fontSize: "25px" }}>
@@ -1054,7 +1065,7 @@ const Tab1: React.FC = () => {
               </span>
               <span className="chip">
                 <IonChip color="warning">
-                  <IonLabel>Popular</IonLabel>
+                  <IonLabel onClick={() => {}}>My on sale books</IonLabel>
                 </IonChip>
               </span>
             </div>

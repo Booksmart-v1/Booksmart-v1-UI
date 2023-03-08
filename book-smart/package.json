@@ -4,15 +4,15 @@
   "private": true,
   "dependencies": {
     "@awesome-cordova-plugins/lottie-splash-screen": "^5.40.0",
-    "@capacitor/android": "3.4.0",
-    "@capacitor/app": "1.1.0",
+    "@capacitor/android": "^3.4.0",
+    "@capacitor/app": "^1.1.0",
     "@capacitor/camera": "^1.3.1",
-    "@capacitor/core": "3.4.0",
+    "@capacitor/core": "4.7.0",
     "@capacitor/filesystem": "^1.1.0",
-    "@capacitor/haptics": "1.1.4",
+    "@capacitor/haptics": "^1.1.4",
     "@capacitor/ios": "3.4.0",
-    "@capacitor/keyboard": "1.2.1",
-    "@capacitor/status-bar": "1.0.7",
+    "@capacitor/keyboard": "^1.2.1",
+    "@capacitor/status-bar": "^1.0.7",
     "@capacitor/storage": "^1.2.5",
     "@ionic-native/android-permissions": "^5.36.0",
     "@ionic-native/location-accuracy": "^5.36.0",
@@ -70,7 +70,9 @@
     "dev": "concurrently \"ionic serve\"  \"cd ../../BookSmartApp-v1-backend && nodemon\"  ",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "android": "npx cap add android",
+    "electron": "npx cap add electron"
   },
   "eslintConfig": {
     "extends": [
@@ -91,7 +93,7 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.4.0",
+    "@capacitor/cli": "4.7.0",
     "@types/react-lottie": "^1.2.6",
     "react-scripts": "5.0.1"
   },

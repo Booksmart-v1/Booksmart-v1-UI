@@ -116,6 +116,26 @@ const Sell: React.FC = () => {
   const { photos, takePhoto } = usePhotoGallery();
   const [showToast, setShowToast] = useState(false);
 
+  const deleteAd = async (id: string) => {
+    const url = APIURL + "v2/deleteAd";
+
+    const resp = await axios.post(url, {
+      id: id,
+    });
+    console.log(resp);
+    getTradeCardDetails(60);
+  };
+
+  const markAsSold = async (id: string) => {
+    const url = APIURL + "v2/markAsSold";
+
+    const resp = await axios.post(url, {
+      id: id,
+    });
+    console.log(resp);
+    getTradeCardDetails(60);
+  };
+
   const history = useHistory();
   const toaster1 = () => {
     setShowToast1(true);
@@ -269,6 +289,7 @@ const Sell: React.FC = () => {
       setCondition("");
       setAddress("");
       setPincode("");
+      getTradeCardDetails(60);
     }
   };
 
@@ -350,7 +371,7 @@ const Sell: React.FC = () => {
         console.log(err);
       });
   };
-  const [imageUrl, setImageUrl] = useState<string|undefined>('');
+  const [imageUrl, setImageUrl] = useState<string | undefined>("");
 
   useEffect(() => {
     getTradeCardDetails(60);
@@ -359,21 +380,20 @@ const Sell: React.FC = () => {
   // Sort by Filter
   const [presentAlert] = useIonAlert();
   const [showAlert, setShowAlert] = useState(false);
-  const [markAsSold, setMarkAsSold] = useState(false);
+  // const [markAsSold, setMarkAsSold] = useState(false);
   const [sortByType, setSortByType] = useState({ newest: true, price: false });
-  const getImage = ()=> {
-    takePhoto().then((obj:any)=>{
+  const getImage = () => {
+    takePhoto().then((obj: any) => {
       console.log(obj);
       // obj = usePhotoGallery();
       // console.log(obj.photos)
-      setImageUrl((old)=>{
-        console.log(obj.imageUrl)
-        console.log(old)
-        return obj.imageUrl
+      setImageUrl((old) => {
+        console.log(obj.imageUrl);
+        console.log(old);
+        return obj.imageUrl;
       });
-      
-    })
-  }
+    });
+  };
   const handleSortBy = (type: string) => {
     if (type === "newest") {
       const sortedArray1 = activeTrades.sort((a: any, b: any) =>
@@ -586,10 +606,35 @@ const Sell: React.FC = () => {
                                 <IonItem button>
                                   <IonLabel className="profile-orders">
                                     {" "}
+                                    Update BookAd
+                                  </IonLabel>
+                                </IonItem>
+                                <IonItem
+                                  button
+                                  onClick={() => {
+                                    console.log("ji");
+                                    markAsSold(element._id);
+                                    setShowPopover({
+                                      showPopover: false,
+                                      event: undefined,
+                                    });
+                                  }}
+                                >
+                                  <IonLabel className="profile-orders">
+                                    {" "}
                                     Mark Ad as sold!
                                   </IonLabel>
                                 </IonItem>
-                                <IonItem button>
+                                <IonItem
+                                  button
+                                  onClick={() => {
+                                    deleteAd(element._id);
+                                    setShowPopover({
+                                      showPopover: false,
+                                      event: undefined,
+                                    });
+                                  }}
+                                >
                                   <IonLabel className="profile-orders">
                                     {" "}
                                     Delete Ad
@@ -771,7 +816,7 @@ const Sell: React.FC = () => {
                           <IonInput
                             required
                             type="number"
-                            placeholder="Enter ISBN"
+                            placeholder="Enter 10/13 digit ISBN"
                             // disabled={true}
                             value={isbn}
                             onIonChange={(e: any) => {
@@ -790,6 +835,7 @@ const Sell: React.FC = () => {
                           {loading ? <IonSpinner name="dots" /> : "Get"}
                         </IonButton>
                       </div>
+                      <a href="https://books.google.com/">Get your ISBN</a>
                       <div className="number">
                         <p
                           style={{

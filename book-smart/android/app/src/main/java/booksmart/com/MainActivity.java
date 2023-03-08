@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package booksmart.com;
 
 import com.getcapacitor.BridgeActivity;
 

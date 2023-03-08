@@ -383,38 +383,7 @@ const Profile = () => {
           >
             Profile
           </div>
-          <div>
-            <IonButtons slot="end">
-              <IonButton
-                onClick={(e: any) => {
-                  e.persist();
-                  setShowPopover({ showPopover: true, event: e });
-                }}
-                color="dark"
-              >
-                <IonPopover
-                  event={popoverState.event}
-                  isOpen={popoverState.showPopover}
-                  onDidDismiss={() =>
-                    setShowPopover({ showPopover: false, event: undefined })
-                  }
-                >
-                  <IonContent className="popover-size">
-                    <IonItem button>
-                      <IonLabel className="profile-orders">
-                        {" "}
-                        Mark Ad as sold!
-                      </IonLabel>
-                    </IonItem>
-                    <IonItem button>
-                      <IonLabel className="profile-orders"> Delete Ad</IonLabel>
-                    </IonItem>
-                  </IonContent>
-                </IonPopover>
-                <IonIcon icon={ellipsisHorizontal} />
-              </IonButton>
-            </IonButtons>
-          </div>
+          <div></div>
         </IonToolbar>
       </IonHeader>
       <IonContent scrollY={false}>
