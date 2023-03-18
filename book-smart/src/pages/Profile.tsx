@@ -61,6 +61,7 @@ import { APIURL } from "../constants";
 import axios from "axios";
 import { useHistory } from "react-router";
 import moment from "moment";
+import { usePhotoGallery } from "../hooks/usePhotoGallery";
 const Profile = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [popoverState, setShowPopover] = useState({
@@ -94,10 +95,25 @@ const Profile = () => {
 
   const [isDisabled1, setIsDisabled1] = useState(true);
   const [isDisabled2, setIsDisabled2] = useState(true);
+  const [imageUrl, setImageUrl] = useState<string | undefined>("");
+  const { photos, takePhoto } = usePhotoGallery();
 
   const handleSaveChange = () => {
     // Save data here
     setShowSettingsModal(false);
+  };
+
+  const getImage = () => {
+    takePhoto().then((obj: any) => {
+      console.log(obj);
+      // obj = usePhotoGallery();
+      // console.log(obj.photos)
+      setImageUrl((old) => {
+        console.log(obj.imageUrl);
+        console.log(old);
+        return obj.imageUrl;
+      });
+    });
   };
 
   const getProfile = (lim: Number) => {
@@ -406,7 +422,8 @@ const Profile = () => {
                         }}
                       />
                       <IonIcon
-                        onClick={() => setShowActionSheet(true)}
+                        // onClick={() => setShowActionSheet(true)}
+                        onClick={() => getImage()}
                         icon={createOutline}
                         className="set-status"
                         color="dark"
@@ -499,10 +516,13 @@ const Profile = () => {
                       </IonRow>
                     </IonCol>
                   </IonRow>
-
                   <IonRow>
                     <IonCol size="12">
-                      <IonButton className="message-button" expand="block">
+                      <IonButton
+                        routerLink="/homepage/Chat"
+                        className="message-button"
+                        expand="block"
+                      >
                         <IonIcon icon={chatboxOutline} /> &nbsp; MESSAGE
                       </IonButton>
                     </IonCol>

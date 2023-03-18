@@ -30,7 +30,6 @@ import {
 import { RefresherEventDetail } from "@ionic/core";
 import "./homePage.css";
 import { useState, useEffect } from "react";
-import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 
 import {
   heart,
@@ -756,7 +755,8 @@ const Tab1: React.FC = () => {
                   textAlign: "center",
                   fontFamily: "Montserrat-B",
                   color: "var(--bs-pText)",
-                  fontSize: "18px",
+                  fontSize: "20px",
+                  marginLeft: "50px",
                 }}
               >
                 {sellerDeets.bookName.length < 30
@@ -778,18 +778,12 @@ const Tab1: React.FC = () => {
             <div
               className="HPModal-img"
               style={{
-                borderRadius: "5px",
+                // borderRadius: "5px",
                 // padding: "15px",
                 backgroundImage: `url(${sellerDeets.bookImageUrl})`,
                 // backgroundImage: `url(${"https://material.angular.io/assets/img/examples/shiba1.jpg"})`,
               }}
-            >
-              {/* <img
-                src={sellerDeets.bookImageUrl}
-                style={{ width: "35%", height: "20vh" }}
-                alt="book"
-              /> */}
-            </div>
+            ></div>
           </IonHeader>
           <IonContent>
             <div
@@ -797,7 +791,7 @@ const Tab1: React.FC = () => {
                 maxWidth: "90%",
                 maxHeight: "10vh",
                 textAlign: "center",
-                margin: "10px auto",
+                margin: "20px auto",
               }}
             >
               <p
@@ -816,6 +810,7 @@ const Tab1: React.FC = () => {
               <p
                 style={{
                   textAlign: "center",
+
                   fontFamily: "Montserrat-SB",
                   color: "var(--bs-pText)",
                   fontSize: "18px",
@@ -830,7 +825,7 @@ const Tab1: React.FC = () => {
                   ? sellerDeets.bookDescription
                   : sellerDeets.bookDescription.substring(0, 180) + "..."} */}
                 {isReadMore
-                  ? sellerDeets.bookDescription.slice(0, 180)
+                  ? sellerDeets.bookDescription.slice(0, 170)
                   : sellerDeets.bookDescription}
                 <span onClick={toggleReadMore} className="read-or-hide">
                   {isReadMore ? "...Read More" : " Show Less"}
@@ -1160,8 +1155,8 @@ const Tab1: React.FC = () => {
                             </h2>
                             <IonCardSubtitle
                               style={{
-                                fontSize: "0.7rem",
-                                fontFamily: "Montserrat-sb",
+                                fontSize: "0.8rem",
+                                fontFamily: "Montserrat-b",
                               }}
                             >
                               {element.bookAuthor}
@@ -1181,7 +1176,7 @@ const Tab1: React.FC = () => {
                                   >
                                     <IonLabel
                                       style={{
-                                        fontFamily: "Montserrat-sb",
+                                        fontFamily: "Montserrat-B",
                                         fontSize: "12px",
                                         textTransform: "capitalize",
                                       }}

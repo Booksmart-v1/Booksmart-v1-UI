@@ -135,16 +135,19 @@ const Sell: React.FC = () => {
     console.log(resp);
     getTradeCardDetails(60);
   };
+  const markAsUnSold = async (id: string) => {
+    const url = APIURL + "v2/markAsUnsold";
+
+    const resp = await axios.post(url, {
+      id: id,
+    });
+    console.log(resp);
+    getTradeCardDetails(60);
+  };
 
   const history = useHistory();
   const toaster1 = () => {
     setShowToast1(true);
-  };
-  const handleClick = () => {
-    setScreen("upload");
-  };
-  const handleClick1 = () => {
-    setScreen("choose");
   };
 
   const getBookDetails = () => {
@@ -357,20 +360,6 @@ const Sell: React.FC = () => {
       });
   };
 
-  const markSold = (lim: Number) => {
-    const url = APIURL + "v2/markSold";
-    var id = "123";
-    axios
-      .post(url, {
-        bookAdId: id,
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   const [imageUrl, setImageUrl] = useState<string | undefined>("");
 
   useEffect(() => {
@@ -612,7 +601,6 @@ const Sell: React.FC = () => {
                                 <IonItem
                                   button
                                   onClick={() => {
-                                    console.log("ji");
                                     markAsSold(element._id);
                                     setShowPopover({
                                       showPopover: false,
@@ -628,7 +616,9 @@ const Sell: React.FC = () => {
                                 <IonItem
                                   button
                                   onClick={() => {
+                                    // console.log("hi");
                                     deleteAd(element._id);
+                                    // console.log("why");
                                     setShowPopover({
                                       showPopover: false,
                                       event: undefined,
@@ -691,15 +681,75 @@ const Sell: React.FC = () => {
                             src={element.bookImageUrl}
                           />
                         </div>
+
                         <div className="trade-card-content">
                           <IonCardTitle
                             style={{
-                              fontSize: "12px",
+                              fontSize: "14px",
                               fontFamily: "Montserrat-b",
                             }}
                           >
                             {element.bookName}
                           </IonCardTitle>
+
+                          <IonButtons className="PT-ellipse">
+                            <IonButton
+                              onClick={() => {
+                                console.log("plus");
+                                setShowPopover({
+                                  showPopover: true,
+                                  event: element,
+                                });
+                              }}
+                              slot="end"
+                            >
+                              <IonIcon
+                                icon={ellipsisVertical}
+                                color="dark"
+                              ></IonIcon>
+                            </IonButton>
+                          </IonButtons>
+                          <IonPopover
+                            event={popoverState.event}
+                            isOpen={popoverState.showPopover}
+                            onDidDismiss={() =>
+                              setShowPopover({
+                                showPopover: false,
+                                event: undefined,
+                              })
+                            }
+                          >
+                            <IonContent className="">
+                              <IonItem
+                                button
+                                onClick={() => {
+                                  deleteAd(element._id);
+                                  setShowPopover({
+                                    showPopover: true,
+                                    event: element,
+                                  });
+                                }}
+                              >
+                                <IonLabel className=""> Delete Ad</IonLabel>
+                              </IonItem>
+                              <IonItem
+                                button
+                                onClick={() => {
+                                  markAsUnSold(element._id);
+                                  setShowPopover({
+                                    showPopover: false,
+                                    event: element,
+                                  });
+                                }}
+                              >
+                                <IonLabel className="">
+                                  {" "}
+                                  Mark Ad as Unsold!
+                                </IonLabel>
+                              </IonItem>
+                            </IonContent>
+                          </IonPopover>
+
                           <IonCardSubtitle
                             style={{
                               fontSize: "10px",
@@ -744,12 +794,12 @@ const Sell: React.FC = () => {
                             </p>
                           </div>
                         </div>
-                        <div className="trade-tick">
+                        {/* <div className="trade-tick">
                           <img
                             src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
                             alt=""
                           />
-                        </div>
+                        </div> */}
                       </IonCard>
                     </>
                   );
@@ -920,14 +970,14 @@ const Sell: React.FC = () => {
                           <IonInput
                             placeholder="Locality"
                             value={address}
-                            onClick={() =>
-                              presentAlert({
-                                header: "Alert",
-                                message:
-                                  "Please enter your locality correctly as your Ads will be shown accordingly.",
-                                buttons: ["OK"],
-                              })
-                            }
+                            // onClick={() =>
+                            //   presentAlert({
+                            //     header: "Alert",
+                            //     message:
+                            //       "Please enter your locality correctly as your Ads will be shown accordingly.",
+                            //     buttons: ["OK"],
+                            //   })
+                            // }
                             onIonChange={(e: any) => {
                               setAddress(e.target.value);
                             }}

@@ -1,6 +1,11 @@
 {
-	"appId": "booksmart.com",
+	"appId": "com.reactionic.com",
 	"appName": "book-smart",
 	"webDir": "build",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 12345
+		}
+	},
 	"bundledWebRuntime": false
 }

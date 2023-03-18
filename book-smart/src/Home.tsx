@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { Route } from "react-router-dom";
 import {
   IonApp,
@@ -24,12 +24,9 @@ import Sell from "./pages/Sell";
 import Profile from "./pages/Profile";
 import Chat from "./pages/Chat";
 import ChatModal from "./pages/ChatModal";
-import axios from 'axios';
-import {APIURL} from './constants';
-import socket from './Socket';
-
-
-
+import axios from "axios";
+import { APIURL } from "./constants";
+import socket from "./Socket";
 
 setupIonicReact();
 
@@ -38,16 +35,17 @@ interface myProps {
 }
 
 const Home: React.FC<myProps> = ({ refreshPage }) => {
-
   // let socket = io.connect("http://localhost:4000");
   // let {page} = useParams();
   var selectArray: boolean[] = [true, false, false, false, false];
   const [refresh, setRefresh] = React.useState(false);
+
   const [isSelected, setIsSelected] = React.useState<boolean[]>(selectArray);
   const handleSelect = (id: number) => {
-    setIsSelected(prevState => prevState.map((item, idx) => idx === id ? true : false));
-  }
-
+    setIsSelected((prevState) =>
+      prevState.map((item, idx) => (idx === id ? true : false))
+    );
+  };
 
   const a: any[] = [];
   const chatArray = [
@@ -72,59 +70,57 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   ];
   const [chatModal, setChatModal] = useState(chatArray[0]);
   const [showChatModal, setShowChatModal] = useState(false);
+  const [filterChats, setFilterChats] = React.useState(chatArray);
   const [chats, setChats] = useState(chatArray);
   // const [selIndex, SetSelIndex] = useState(0);
   const [text, setText] = useState("");
   const [userId, setUserId] = useState("");
 
-  const getChatRoomMessages = async (id1:string, chats: any) => {
+  const getChatRoomMessages = async (id1: string, chats: any) => {
     let url = APIURL + "v2/getMessagesInChatRoom";
 
-    
-              await axios
-                .get(url + `?chatRoomId=${id1}`)
-                .then(async (resp) => {
-                  socket.emit("join_room", id1);
-                  socket.on("get_message", (data: any) => {
-                    setChats((chats)=>[...chats,data])
-                    console.log(data);
-                  });
+    await axios
+      .get(url + `?chatRoomId=${id1}`)
+      .then(async (resp) => {
+        socket.emit("join_room", id1);
+        socket.on("get_message", (data: any) => {
+          setChats((chats) => [...chats, data]);
+          setFilterChats((chats) => [...chats, data]);
+          console.log(data);
+        });
 
-                  console.log(resp);
-                  const lastMsg = resp.data.data[resp.data.data.length - 1]
-                    ? resp.data.data[resp.data.data.length - 1].message
-                    : "Say hello to your new friend!";
+        console.log(resp);
+        const lastMsg = resp.data.data[resp.data.data.length - 1]
+          ? resp.data.data[resp.data.data.length - 1].message
+          : "Say hello to your new friend!";
 
-                  const time = resp.data.data[resp.data.data.length - 1]
-                    ? resp.data.data[
-                        resp.data.data.length - 1
-                      ].createdAt.substring(11, 16)
-                    : "Say hello to your new friend!";
+        const time = resp.data.data[resp.data.data.length - 1]
+          ? resp.data.data[resp.data.data.length - 1].createdAt.substring(
+              11,
+              16
+            )
+          : "Say hello to your new friend!";
 
-                  const date = resp.data.data[resp.data.data.length - 1]
-                    ? resp.data.data[
-                        resp.data.data.length - 1
-                      ].createdAt.substring(0, 10)
-                    : "Say hello to your new friend!";
+        const date = resp.data.data[resp.data.data.length - 1]
+          ? resp.data.data[resp.data.data.length - 1].createdAt.substring(0, 10)
+          : "Say hello to your new friend!";
 
-                  let chatInfo =
-                    {
-                      name: chats.name,
-                      message: lastMsg,
-                      messages: resp.data.data,
-                      roomId: id1,
-                      time: time,
-                      date: date,
-                    };
-                  
-                  console.log(chatInfo);
-                  return chatInfo;
-                  // console.log(chatInfo.length);
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
-        
+        let chatInfo = {
+          name: chats.name,
+          message: lastMsg,
+          messages: resp.data.data,
+          roomId: id1,
+          time: time,
+          date: date,
+        };
+
+        console.log(chatInfo);
+        return chatInfo;
+        // console.log(chatInfo.length);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const getChatRooms = async () => {
@@ -181,7 +177,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 .then(async (resp) => {
                   socket.emit("join_room", id1);
                   socket.on("get_message", (data: any) => {
-                    setChats((chats)=>[...chats,data])
+                    setChats((chats) => [...chats, data]);
+                    setFilterChats((chats) => [...chats, data]);
                     console.log(data);
                   });
 
@@ -225,6 +222,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
             });
           console.log(chatInfo);
           setChats(chatInfo);
+          setFilterChats(chatInfo);
         });
       })
       .catch((e) => {
@@ -265,11 +263,6 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
       });
   };
 
-  
-
-
-
-
   return (
     <>
       <IonApp>
@@ -277,23 +270,49 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
           <IonTabs>
             <IonRouterOutlet ionPage>
               <Route exact={true} path="/homepage" component={HomePage}></Route>
-              <Route exact={true} path="/homepage/search" component={Search}
+              <Route
+                exact={true}
+                path="/homepage/search"
+                component={Search}
               ></Route>
-              <Route exact={true} path="/homepage/Chat" 
-              ><Chat chats={chats} setChats={setChats} chatModal={chatModal} setChatModal={setChatModal} showChatModal={showChatModal} setShowChatModal={setShowChatModal} text={text} setText={setText} userId={userId} setUserId={setUserId} postMessage={postMessage} getChatRooms={getChatRooms} /></Route>
-              <Route path="/homepage/Chat/:chatRoomId" 
-              ><ChatModal
-                item={chatModal}
-                setShowChatModal={setShowChatModal}
-                text={text}
-                setText={setText}
-                postMessage={postMessage}
-                userId={userId}
-                getChatRoomMessages={getChatRoomMessages}
-              /></Route>
-              <Route exact={true} path="/homepage/sell" component={Sell}
+              <Route exact={true} path="/homepage/Chat">
+                <Chat
+                  chats={chats}
+                  setChats={setChats}
+                  setFilterChats={setFilterChats}
+                  filterChats={filterChats}
+                  chatModal={chatModal}
+                  setChatModal={setChatModal}
+                  showChatModal={showChatModal}
+                  setShowChatModal={setShowChatModal}
+                  text={text}
+                  setText={setText}
+                  userId={userId}
+                  setUserId={setUserId}
+                  postMessage={postMessage}
+                  getChatRooms={getChatRooms}
+                />
+              </Route>
+              <Route path="/homepage/Chat/:chatRoomId">
+                <ChatModal
+                  item={chatModal}
+                  setShowChatModal={setShowChatModal}
+                  text={text}
+                  setText={setText}
+                  postMessage={postMessage}
+                  userId={userId}
+                  getChatRoomMessages={getChatRoomMessages}
+                />
+              </Route>
+              <Route
+                exact={true}
+                path="/homepage/sell"
+                component={Sell}
               ></Route>
-              <Route exact={true} path="/homepage/profile" component={Profile}
+              <Route
+                exact={true}
+                path="/homepage/profile"
+                component={Profile}
               ></Route>
               {/* <Route exact={true} path="/homepage/shop"
           component={Sell}
@@ -314,28 +333,68 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 boxShadow: "0px 0px 0px 0px rgba(0,0,0,0.2)",
                 height: "50px",
               }}
-            // onClick={refreshPage}
+              // onClick={refreshPage}
             >
-              <IonTabButton tab="homePage" href="/homepage" selected={isSelected[0]}>
-                <IonIcon icon={home} onClick={() => handleSelect(0)} color={"var(--bs-pText)"} />
+              <IonTabButton
+                tab="homePage"
+                href="/homepage"
+                selected={isSelected[0]}
+              >
+                <IonIcon
+                  icon={home}
+                  onClick={() => handleSelect(0)}
+                  color={"var(--bs-pText)"}
+                />
                 <IonLabel>Home</IonLabel>
               </IonTabButton>
 
-              <IonTabButton tab="search" href="/homepage/Search" selected={isSelected[1]}>
-                <IonIcon icon={bagCheck} onClick={() => handleSelect(1)} color={"var(--bs-pText)"} />
+              <IonTabButton
+                tab="search"
+                href="/homepage/Search"
+                selected={isSelected[1]}
+              >
+                <IonIcon
+                  icon={bagCheck}
+                  onClick={() => handleSelect(1)}
+                  color={"var(--bs-pText)"}
+                />
                 <IonLabel>Wishlist</IonLabel>
               </IonTabButton>
 
-              <IonTabButton tab="chat" href="/homepage/Chat" selected={isSelected[2]}>
-                <IonIcon icon={chatbubbles} onClick={() => handleSelect(2)} color={"var(--bs-pText)"} />
+              <IonTabButton
+                tab="chat"
+                href="/homepage/Chat"
+                selected={isSelected[2]}
+              >
+                <IonIcon
+                  icon={chatbubbles}
+                  onClick={() => handleSelect(2)}
+                  color={"var(--bs-pText)"}
+                />
                 <IonLabel>Chat</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="sell" href="/homepage/Sell" selected={isSelected[3]}>
-                <IonIcon icon={peopleCircle} onClick={() => handleSelect(3)} color={"var(--bs-pText)"} />
+              <IonTabButton
+                tab="sell"
+                href="/homepage/Sell"
+                selected={isSelected[3]}
+              >
+                <IonIcon
+                  icon={peopleCircle}
+                  onClick={() => handleSelect(3)}
+                  color={"var(--bs-pText)"}
+                />
                 <IonLabel>Sell</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="profile" href="/homepage/Profile" selected={isSelected[4]}>
-                <IonIcon icon={personCircle} onClick={() => handleSelect(4)} color={"var(--bs-pText)"} />
+              <IonTabButton
+                tab="profile"
+                href="/homepage/Profile"
+                selected={isSelected[4]}
+              >
+                <IonIcon
+                  icon={personCircle}
+                  onClick={() => handleSelect(4)}
+                  color={"var(--bs-pText)"}
+                />
                 <IonLabel>Profile</IonLabel>
               </IonTabButton>
               {/* <IonTabButton

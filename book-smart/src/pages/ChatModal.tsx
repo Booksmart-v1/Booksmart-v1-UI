@@ -76,7 +76,7 @@ import "@ionic/core/css/ionic.bundle.css";
 import "stream-chat-react/dist/css/index.css";
 import { APIURL } from "../constants";
 import axios from "axios";
-import socket from '../Socket';
+import socket from "../Socket";
 import { match } from "react-router-dom";
 
 interface chat {
@@ -109,30 +109,27 @@ const ChatModal = ({
   setText,
   postMessage,
   userId,
-  getChatRoomMessages
+  getChatRoomMessages,
 }: prop) => {
   const defaultProfileImg =
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
 
-
   const [chat, setChat] = useState<any>(item);
-  
 
-
-  useEffect(()=>{
+  useEffect(() => {
     // getChatRoomMessages(match.params.chatRoomId, chat);
     socket.on("get_message", (data: any) => {
-                    setChat((chat:any)=>{
-                      let a = chat;
-                      a.messages= [...chat.messages, data];
-                      a.message=data;
-                      return a;
-                    })
-                    getChatRoomMessages(chat.roomId,chat)
-                    console.log(data);
-                  });
-                console.log(chat);
-  },[]);
+      setChat((chat: any) => {
+        let a = chat;
+        a.messages = [...chat.messages, data];
+        a.message = data;
+        return a;
+      });
+      getChatRoomMessages(chat.roomId, chat);
+      console.log(data);
+    });
+    console.log(chat);
+  }, []);
 
   return (
     <IonPage>
@@ -188,7 +185,7 @@ const ChatModal = ({
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        {chat.messages.map((item:any, idx:any) => {
+        {chat.messages.map((item: any, idx: any) => {
           return (
             <div className="bubbleWrapper">
               <div

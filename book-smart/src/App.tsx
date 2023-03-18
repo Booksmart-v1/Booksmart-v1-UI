@@ -14,6 +14,7 @@ import PickInterests from "./pages/login/PickInterests";
 import Welcome from "./pages/login/Welcome";
 import * as io from "socket.io-client";
 import Home from "./Home";
+import Avatar from "./pages/login/Avatar";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -108,6 +109,9 @@ const App: React.FC = () => {
             </Route>
 
             <Route exact path="/onboard/:page" component={Onboard} />
+            <Route exact path="/avatar">
+              <Avatar />
+            </Route>
             <Route exact path="/pickinterests">
               <PickInterests />
             </Route>

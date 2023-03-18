@@ -142,8 +142,10 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
               email: res.data.data.email,
             };
             localStorage.setItem("user", JSON.stringify(user));
-            if (page === "signup") history.push("/pickinterests");
-            else history.push("/homepage");
+            if (page === "signup") {
+              history.push("/avatar");
+              
+            } else history.push("/homepage");
           }
           setShowToast1(true);
         })
