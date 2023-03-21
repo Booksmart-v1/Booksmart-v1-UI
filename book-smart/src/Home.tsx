@@ -154,7 +154,6 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
             .then(async (resp) => {
               console.log(resp);
               let name = "";
-
               var url = APIURL + "v2/getOneUser";
 
               await axios
@@ -168,55 +167,57 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                   console.log(e);
                 });
 
-              const id1 = resp["data"]["data"]["chatRoomId"];
-              console.log(id1);
+              const ids = resp["data"]["data"]["chatRoomIds"];
               url = APIURL + "v2/getMessagesInChatRoom";
+              for (let id in ids) {
+                let id1 = ids[id];
+                await axios
+                  .get(url + `?chatRoomId=${id1}`)
+                  .then(async (resp) => {
+                    socket.emit("join_room", id1);
+                    socket.on("get_message", (data: any) => {
+                      setChats((chats) => [...chats, data]);
+                      setFilterChats((chats) => [...chats, data]);
+                      console.log(data);
+                    });
 
-              await axios
-                .get(url + `?chatRoomId=${id1}`)
-                .then(async (resp) => {
-                  socket.emit("join_room", id1);
-                  socket.on("get_message", (data: any) => {
-                    setChats((chats) => [...chats, data]);
-                    setFilterChats((chats) => [...chats, data]);
-                    console.log(data);
+                    console.log(resp);
+                    const lastMsg = resp.data.data[resp.data.data.length - 1]
+                      ? resp.data.data[resp.data.data.length - 1].message
+                      : "Say hello to your new friend!";
+
+                    const time = resp.data.data[resp.data.data.length - 1]
+                      ? resp.data.data[
+                          resp.data.data.length - 1
+                        ].createdAt.substring(11, 16)
+                      : "00:00";
+
+                    const date = resp.data.data[resp.data.data.length - 1]
+                      ? resp.data.data[
+                          resp.data.data.length - 1
+                        ].createdAt.substring(0, 10)
+                      : "Say hello to your new friend!";
+
+                    chatInfo = [
+                      ...chatInfo,
+                      {
+                        name: name,
+                        message: lastMsg,
+                        messages: resp.data.data,
+                        roomId: id1,
+                        time: time,
+                        date: date,
+                      },
+                    ];
+                    console.log(chatInfo);
+                    console.log(chatInfo.length);
+                  })
+                  .catch((e) => {
+                    console.log(e);
                   });
-
-                  console.log(resp);
-                  const lastMsg = resp.data.data[resp.data.data.length - 1]
-                    ? resp.data.data[resp.data.data.length - 1].message
-                    : "Say hello to your new friend!";
-
-                  const time = resp.data.data[resp.data.data.length - 1]
-                    ? resp.data.data[
-                        resp.data.data.length - 1
-                      ].createdAt.substring(11, 16)
-                    : "Say hello to your new friend!";
-
-                  const date = resp.data.data[resp.data.data.length - 1]
-                    ? resp.data.data[
-                        resp.data.data.length - 1
-                      ].createdAt.substring(0, 10)
-                    : "Say hello to your new friend!";
-
-                  chatInfo = [
-                    ...chatInfo,
-                    {
-                      name: name,
-                      message: lastMsg,
-                      messages: resp.data.data,
-                      roomId: id1,
-                      time: time,
-                      date: date,
-                    },
-                  ];
-                  console.log(chatInfo);
-                  console.log(chatInfo.length);
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
+              }
             })
+
             .catch((e) => {
               console.log(e);
             });

@@ -144,7 +144,6 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
             localStorage.setItem("user", JSON.stringify(user));
             if (page === "signup") {
               history.push("/avatar");
-              
             } else history.push("/homepage");
           }
           setShowToast1(true);
@@ -227,14 +226,14 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                             fontSize: "18",
                           }}
                         >
-                          {"Name"}
+                          {"Full Name"}
                         </p>
                         <IonItem style={{ marginTop: "10px", width: "100%" }}>
                           {/* <IonLabel position="floating"> Email</IonLabel> */}
                           <IonInput
                             type="text"
                             value={name}
-                            placeholder="Enter name"
+                            placeholder="Enter Full Name"
                             onIonChange={(e: any) => {
                               setName(e.target.value);
                             }}
@@ -285,6 +284,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
                     {/* <IonLabel position="floating"> Email</IonLabel> */}
                     <IonInput
                       type="number"
+                      maxlength={10}
                       value={phone}
                       placeholder="Enter number"
                       onIonChange={(e: any) => {

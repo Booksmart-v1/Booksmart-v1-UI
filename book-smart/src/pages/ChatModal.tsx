@@ -27,6 +27,9 @@ import {
   IonTitle,
   IonFooter,
   IonInput,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherEventDetail,
 } from "@ionic/react";
 import "./Chat.css";
 import profile from "../images/profile-image.jpg";
@@ -115,7 +118,14 @@ const ChatModal = ({
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
 
   const [chat, setChat] = useState<any>(item);
-
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    getChatRoomMessages(chat.roomId, chat);
+    console.log("Begin async operation");
+    setTimeout(() => {
+      console.log("Async operation has ended");
+      event.detail.complete();
+    }, 2000);
+  }
   useEffect(() => {
     // getChatRoomMessages(match.params.chatRoomId, chat);
     socket.on("get_message", (data: any) => {
@@ -184,7 +194,26 @@ const ChatModal = ({
           </IonButtons>
         </IonToolbar>
       </IonHeader>
+
       <IonContent className="ion-padding">
+        <IonRefresher
+          slot="fixed"
+          placeholder="P"
+          onIonRefresh={doRefresh}
+          pullFactor={0.5}
+          pullMin={100}
+          pullMax={200}
+          style={{
+            color: "black",
+            fontFamily: "Montserrat-SB",
+            fontSize: "1.1rem",
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          <p> Refreshing Your Chats!✌️</p>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         {chat.messages.map((item: any, idx: any) => {
           return (
             <div className="bubbleWrapper">

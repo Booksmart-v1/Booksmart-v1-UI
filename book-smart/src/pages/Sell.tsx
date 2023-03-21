@@ -536,28 +536,89 @@ const Sell: React.FC = () => {
                           <div className="trade-card-content">
                             <IonCardTitle
                               style={{
-                                fontSize: "12px",
+                                fontSize: "16px",
                                 fontFamily: "Montserrat-b",
                               }}
                             >
+                              <span
+                                style={{
+                                  fontSize: "14px",
+                                  fontFamily: "Montserrat-b",
+                                  color: "gray",
+                                }}
+                              >
+                                {" "}
+                                Book Name:
+                              </span>{" "}
                               {element.bookName}
                             </IonCardTitle>
-                            <IonCardSubtitle
+                            <div
                               style={{
-                                fontSize: "10px",
-                                fontFamily: "Montserrat-sb",
+                                fontSize: "16px",
+                                fontFamily: "Montserrat-b",
+                                color: "black",
                               }}
                             >
+                              <span
+                                style={{
+                                  fontSize: "14px",
+                                  fontFamily: "Montserrat-b",
+                                  color: "gray",
+                                }}
+                              >
+                                {" "}
+                                Author:
+                              </span>{" "}
                               {element.bookAuthor}
-                            </IonCardSubtitle>
+                            </div>
                             <div>
                               <p
                                 style={{
                                   fontSize: "18px",
+                                  fontFamily: "Montserrat-b",
+                                  color: "black",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    fontSize: "14px",
+                                    fontFamily: "Montserrat-b",
+                                    color: "gray",
+                                  }}
+                                >
+                                  {" "}
+                                  Price:
+                                </span>{" "}
+                                ₹ {element.bookPrice}
+                              </p>
+                            </div>
+                            <div className="trade-card-status">
+                              <p
+                                style={{
+                                  fontSize: "14px",
                                   fontFamily: "Montserrat-sb",
                                 }}
                               >
-                                ₹ {element.bookPrice}
+                                Status:{" "}
+                                {element.sold ? (
+                                  <span
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "var(--ion-color-success)",
+                                    }}
+                                  >
+                                    SOLD
+                                  </span>
+                                ) : (
+                                  <span
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "var(--ion-color-danger)",
+                                    }}
+                                  >
+                                    UNSOLD
+                                  </span>
+                                )}
                               </p>
                             </div>
                           </div>
@@ -633,28 +694,6 @@ const Sell: React.FC = () => {
                               </IonContent>
                             </IonPopover>
                           </div>
-
-                          {/* <div className="trade-tick">
-                            <IonToggle
-                              style={{
-                                color: `${markAsSold ? "red" : "green"}`,
-                              }}
-                              checked={markAsSold}
-                              onClick={() => {
-                                if (!markAsSold) {
-                                  setMarkAsSold(true);
-                                  setMsg("Marked as sold!");
-
-                                  setShowToast(true);
-                                } else {
-                                  setMarkAsSold(false);
-                                  setMsg("Marked as unsold!");
-                                  setShowToast(true);
-                                }
-                              }}
-                              color="success"
-                            ></IonToggle>
-                          </div> */}
                         </IonCard>
                       </>
                     );
@@ -672,8 +711,15 @@ const Sell: React.FC = () => {
               ) : pastTrades.length > 0 ? (
                 pastTrades.map((element, idx) => {
                   return (
-                    <>
-                      <IonCard key={idx} className="trade-card">
+                    <div className="trading-area">
+                      <IonCard
+                        key={idx}
+                        className="trade-card"
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                        }}
+                      >
                         <div className="trade-card-img">
                           <img
                             alt="Book"
@@ -682,16 +728,83 @@ const Sell: React.FC = () => {
                           />
                         </div>
 
-                        <div className="trade-card-content">
+                        <div
+                          className="trade-card-content"
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-start",
+                          }}
+                        >
                           <IonCardTitle
                             style={{
-                              fontSize: "14px",
+                              fontSize: "16px",
                               fontFamily: "Montserrat-b",
                             }}
                           >
+                            <span
+                              style={{
+                                fontSize: "14px",
+                                fontFamily: "Montserrat-b",
+                                color: "gray",
+                              }}
+                            >
+                              {" "}
+                              Book Name:
+                            </span>{" "}
                             {element.bookName}
                           </IonCardTitle>
-
+                          <div
+                            style={{
+                              fontSize: "16px",
+                              fontFamily: "Montserrat-b",
+                              color: "black",
+                              marginTop: "20px",
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: "14px",
+                                fontFamily: "Montserrat-b",
+                                color: "gray",
+                              }}
+                            >
+                              {" "}
+                              Author:
+                            </span>{" "}
+                            {element.bookAuthor}
+                          </div>
+                          <div
+                            className="trade-card-status"
+                            style={{ marginTop: "20px" }}
+                          >
+                            <p
+                              style={{
+                                fontSize: "20px",
+                                fontFamily: "Montserrat-sb",
+                              }}
+                            >
+                              Status:{" "}
+                              {element.sold ? (
+                                <span
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "var(--ion-color-success)",
+                                  }}
+                                >
+                                  SOLD
+                                </span>
+                              ) : (
+                                <span
+                                  style={{
+                                    fontSize: "14px",
+                                    color: "var(--ion-color-danger)",
+                                  }}
+                                >
+                                  UNSOLD
+                                </span>
+                              )}
+                            </p>
+                          </div>
                           <IonButtons className="PT-ellipse">
                             <IonButton
                               onClick={() => {
@@ -730,7 +843,10 @@ const Sell: React.FC = () => {
                                   });
                                 }}
                               >
-                                <IonLabel className=""> Delete Ad</IonLabel>
+                                <IonLabel className="profile-orders">
+                                  {" "}
+                                  Delete Ad
+                                </IonLabel>
                               </IonItem>
                               <IonItem
                                 button
@@ -742,58 +858,15 @@ const Sell: React.FC = () => {
                                   });
                                 }}
                               >
-                                <IonLabel className="">
+                                <IonLabel className="profile-orders">
                                   {" "}
                                   Mark Ad as Unsold!
                                 </IonLabel>
                               </IonItem>
                             </IonContent>
                           </IonPopover>
-
-                          <IonCardSubtitle
-                            style={{
-                              fontSize: "10px",
-                              fontFamily: "Montserrat-sb",
-                            }}
-                          >
-                            {element.bookAuthor}
-                          </IonCardSubtitle>
-                          <div>
-                            <p
-                              style={{
-                                fontSize: "18px",
-                                fontFamily: "Montserrat-SB",
-                              }}
-                            >
-                              Price: ₹ {element.bookPrice}
-                            </p>
-                          </div>
-                          <div className="trade-card-status">
-                            <p
-                              style={{
-                                fontSize: "20px",
-                                fontFamily: "Montserrat-sb",
-                              }}
-                            >
-                              Status:{" "}
-                              {element.sold ? (
-                                <span
-                                  style={{
-                                    color: "var(--ion-color-success)",
-                                  }}
-                                >
-                                  SOLD
-                                </span>
-                              ) : (
-                                <span
-                                  style={{ color: "var(--ion-color-danger)" }}
-                                >
-                                  UNSOLD
-                                </span>
-                              )}
-                            </p>
-                          </div>
                         </div>
+
                         {/* <div className="trade-tick">
                           <img
                             src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"
@@ -801,7 +874,7 @@ const Sell: React.FC = () => {
                           />
                         </div> */}
                       </IonCard>
-                    </>
+                    </div>
                   );
                 })
               ) : (
@@ -867,7 +940,6 @@ const Sell: React.FC = () => {
                             required
                             type="number"
                             placeholder="Enter 10/13 digit ISBN"
-                            // disabled={true}
                             value={isbn}
                             onIonChange={(e: any) => {
                               setISBN(e.target.value);
@@ -882,10 +954,15 @@ const Sell: React.FC = () => {
                             getBookDetails();
                           }}
                         >
-                          {loading ? <IonSpinner name="dots" /> : "Get"}
+                          {loading ? <IonSpinner /> : "Get"}
                         </IonButton>
                       </div>
-                      <a href="https://books.google.com/">Get your ISBN</a>
+                      <a
+                        style={{ margin: "25px" }}
+                        href="https://books.google.com/"
+                      >
+                        Get your ISBN
+                      </a>
                       <div className="number">
                         <p
                           style={{

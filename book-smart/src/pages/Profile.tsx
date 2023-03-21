@@ -268,8 +268,10 @@ const Profile = () => {
         sellerId: userId,
         buyerId: receiverId,
         chatInitiator: username,
+        bookAdId: bookId,
       })
       .then((resp) => {
+        history.push("./Chat");
         console.log(resp);
       })
       .catch((e) => {
@@ -1087,7 +1089,10 @@ const Profile = () => {
                         <>
                           <IonToast
                             isOpen={showAcceptToast}
-                            onDidDismiss={() => setShowAcceptToast(false)}
+                            onDidDismiss={() => {
+                              setShowAcceptToast(false);
+                              setShowNotifyModal(false);
+                            }}
                             message="Accept Notification has been sent!"
                             duration={200}
                             position="top"
@@ -1098,6 +1103,7 @@ const Profile = () => {
                               onClick={() =>
                                 presentNotifyHandleAlert({
                                   header: "Are you sure you want to Accept?",
+
                                   buttons: [
                                     {
                                       text: "Cancel",

@@ -106,7 +106,8 @@ ion-label.sc-ion-select-popover-ios {
 
 .homepage-card {
   width: 95%;
-  min-height: 140px;
+  height: 170px;
+  /* max-height: 180px; */
   position: relative;
   margin: 10px 0;
   border-radius: 15px;
@@ -125,13 +126,13 @@ ion-label.sc-ion-select-popover-ios {
 
 .homepage-card-img img {
   width: 160px;
-  min-height: 140px;
+  min-height: 170px;
   border-radius: 15px 0 0 15px;
 }
 
 .homepage-card-content {
   margin-left: 15px;
-  min-height: 140px;
+  min-height: 170px;
   max-width: 60%;
   display: flex;
   flex-direction: column;
@@ -200,6 +201,7 @@ ion-label.sc-ion-select-popover-ios {
 .pic {
   border-radius: 15px;
   box-shadow: 1px 4px #888888;
+  
 }
 
 .img {
@@ -225,6 +227,7 @@ ion-label.sc-ion-select-popover-ios {
   color:darkgray;
   font-family: "Montserrat-SB" !important;
   text-decoration: underline;
+  
 }
 
 .HPModal-img {
@@ -263,10 +266,10 @@ ion-label.sc-ion-select-popover-ios {
 
 .HPModal-desc {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  display: block;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-direction: column !important;
   font-family: "Montserrat-SB";
   margin: 10px 0;
   line-height: 1.4rem;
@@ -274,6 +277,7 @@ ion-label.sc-ion-select-popover-ios {
 
 .HPModal-sellerInfo {
   width: 100%;
+  margin-top: 10px;
 }
 
 .HPModal-sellerInfo div {
@@ -281,6 +285,7 @@ ion-label.sc-ion-select-popover-ios {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  
 }
 
 .HPModal-sellerInfo div p {

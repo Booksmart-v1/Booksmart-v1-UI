@@ -760,7 +760,7 @@ const Tab1: React.FC = () => {
                 }}
               >
                 {sellerDeets.bookName.length < 30
-                  ? sellerDeets.bookName
+                  ? sellerDeets.bookName.toUpperCase()
                   : sellerDeets.bookName.substring(0, 30) + "..."}
               </h2>
               <IonButtons slot="end">
@@ -804,7 +804,7 @@ const Tab1: React.FC = () => {
                 }}
               >
                 {sellerDeets.bookName.length < 45
-                  ? sellerDeets.bookName
+                  ? sellerDeets.bookName.toUpperCase()
                   : sellerDeets.bookName.substring(0, 45) + "..."}
               </p>
               <p
@@ -826,10 +826,10 @@ const Tab1: React.FC = () => {
                   : sellerDeets.bookDescription.substring(0, 180) + "..."} */}
                 {isReadMore
                   ? sellerDeets.bookDescription.slice(0, 170)
-                  : sellerDeets.bookDescription}
-                <span onClick={toggleReadMore} className="read-or-hide">
+                  : sellerDeets.bookDescription}{" "}
+                <b onClick={toggleReadMore} className="read-or-hide">
                   {isReadMore ? "...Read More" : " Show Less"}
-                </span>
+                </b>
               </p>
               <div className="HPModal-sellerInfo">
                 <p style={{ fontFamily: "Montserrat-b", fontSize: "25px" }}>
@@ -842,7 +842,7 @@ const Tab1: React.FC = () => {
                   <b style={{ color: "goldenrod" }}>{sellerDeets.sellerName}</b>
                 </p>
                 <p style={{ margin: "10px 0" }}>
-                  City:{" "}
+                  Locality:{" "}
                   <b style={{ color: "goldenrod" }}>
                     {sellerDeets.sellerAddress}
                   </b>
@@ -879,7 +879,6 @@ const Tab1: React.FC = () => {
                 ))}
               </div>
             </div>
-            {/* <IonItemDivider> </IonItemDivider> */}
           </IonContent>
           {sellerDeets.sellerId === currUser.userId ? (
             <IonFooter
@@ -1150,12 +1149,12 @@ const Tab1: React.FC = () => {
                                 />
                               )}
                               {element.bookName.length < 30
-                                ? element.bookName
+                                ? element.bookName.toUpperCase()
                                 : element.bookName.substring(0, 30) + "..."}
                             </h2>
                             <IonCardSubtitle
                               style={{
-                                fontSize: "0.8rem",
+                                fontSize: "0.67rem",
                                 fontFamily: "Montserrat-b",
                               }}
                             >
@@ -1190,11 +1189,43 @@ const Tab1: React.FC = () => {
                             <div>
                               <p
                                 style={{
-                                  fontSize: "18px",
-                                  fontFamily: "Montserrat-SB",
+                                  fontSize: "14px",
+                                  fontFamily: "Montserrat-B",
+                                  color: "black",
                                 }}
                               >
-                                Price: ₹ {element.bookPrice}
+                                <span
+                                  style={{
+                                    fontSize: "14px",
+                                    fontFamily: "Montserrat-b",
+                                    color: "gray",
+                                  }}
+                                >
+                                  {" "}
+                                  Seller:
+                                </span>{" "}
+                                {element.sellerName.toUpperCase()}
+                              </p>
+                            </div>
+                            <div>
+                              <p
+                                style={{
+                                  fontSize: "16px",
+                                  fontFamily: "Montserrat-B",
+                                  color: "black",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    fontSize: "14px",
+                                    fontFamily: "Montserrat-b",
+                                    color: "gray",
+                                  }}
+                                >
+                                  {" "}
+                                  Price:
+                                </span>{" "}
+                                ₹ {element.bookPrice}
                               </p>
                             </div>
                           </div>
