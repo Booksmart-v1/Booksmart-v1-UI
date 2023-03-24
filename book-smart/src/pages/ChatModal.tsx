@@ -23,7 +23,6 @@ import {
   send,
 } from "ionicons/icons";
 import React, { useState, useEffect } from "react";
-import { RouteComponentProps } from "react-router-dom";
 
 import "./Chat.css";
 import "@ionic/core/css/core.css";
@@ -43,10 +42,8 @@ interface chat {
   date: string;
 }
 
-interface MatchParams {
-  chatRoomId: string;
-}
-interface prop extends RouteComponentProps<MatchParams> {
+interface prop  {
+  chatRoomId: string,
   item: chat;
   setShowChatModal: any;
   text: string;
@@ -57,7 +54,7 @@ interface prop extends RouteComponentProps<MatchParams> {
 }
 
 const ChatModal: React.FC<prop> = ({
-  match,
+  chatRoomId,
   item,
   setShowChatModal,
   text,
@@ -79,8 +76,8 @@ const ChatModal: React.FC<prop> = ({
     }, 2000);
   }
   useEffect(() => {
-    console.log(match.params.chatRoomId)
-    getChatRoomMessages(match.params.chatRoomId, chat);
+    console.log(chatRoomId)
+    getChatRoomMessages(chatRoomId, chat);
     socket.on("get_message", (data: any) => {
       setChat((chat: any) => {
         let a = chat;

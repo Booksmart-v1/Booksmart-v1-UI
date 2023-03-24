@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route } from "react-router-dom";
+import { Route, RouteComponentProps } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
@@ -33,6 +33,11 @@ setupIonicReact();
 interface myProps {
   refreshPage: any;
 }
+interface MatchParams {
+  chatRoomId: string;
+}
+
+interface prop extends RouteComponentProps<MatchParams> {}
 
 const Home: React.FC<myProps> = ({ refreshPage }) => {
   // let socket = io.connect("http://localhost:4000");
@@ -294,16 +299,21 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                   getChatRooms={getChatRooms}
                 />
               </Route>
-              <Route path="/homepage/Chat/:chatRoomId">
-                <ChatModal
-                  item={chatModal}
-                  setShowChatModal={setShowChatModal}
-                  text={text}
-                  setText={setText}
-                  postMessage={postMessage}
-                  userId={userId}
-                  getChatRoomMessages={getChatRoomMessages}
-                />
+              <Route path="/homepage/Chat/:chatRoomId" render={({match}: prop)=>{
+                return (
+                    <ChatModal
+                    chatRoomId={match.params.chatRoomId}
+                    item={chatModal}
+                    setShowChatModal={setShowChatModal}
+                    text={text}
+                    setText={setText}
+                    postMessage={postMessage}
+                    userId={userId}
+                    getChatRoomMessages={getChatRoomMessages}
+                  />
+                );
+              }}>
+               
               </Route>
               <Route
                 exact={true}
