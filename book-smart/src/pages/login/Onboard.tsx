@@ -8,7 +8,6 @@ import {
   IonInput,
   IonToast,
   IonItemDivider,
-  IonLabel,
 } from "@ionic/react";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";

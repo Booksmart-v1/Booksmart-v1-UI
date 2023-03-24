@@ -1,83 +1,21 @@
 import {
   IonButton,
-  IonPopover,
   IonButtons,
-  IonActionSheet,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonCol,
   IonContent,
-  IonGrid,
-  IonHeader,
   IonIcon,
   IonPage,
-  IonRow,
-  IonText,
   IonToolbar,
   IonItem,
-  IonLabel,
-  IonTextarea,
-  IonApp,
-  IonAvatar,
-  IonList,
-  IonModal,
-  IonTitle,
-  IonFooter,
-  IonInput,
   IonSearchbar,
 } from "@ionic/react";
 import "./Chat.css";
-import profile from "../images/profile-image.jpg";
-import {
-  arrowBackOutline,
-  addCircle,
-  arrowForward,
-  bookmarkOutline,
-  chatboxEllipsesOutline,
-  ellipsisHorizontal,
-  ellipsisVertical,
-  imageOutline,
-  personAddOutline,
-  chatboxOutline,
-  createOutline,
-  caretForwardCircle,
-  share,
-  trash,
-  heart,
-  image,
-  send,
-} from "ionicons/icons";
-import React, { useState, Component, useEffect } from "react";
-import { close } from "fs";
-import {
-  Chat,
-  Channel,
-  ChannelHeader,
-  Thread,
-  Window,
-  MessageList,
-  MessageInput,
-  useChatContext,
-  ChannelList,
-  MessageOptions,
-  QuotedMessagePreview,
-  UploadsPreview,
-  EmojiPicker,
-  SendButton,
-  useChannelTruncatedListener,
-} from "stream-chat-react";
-import { StreamChat } from "stream-chat";
+import { ellipsisVertical } from "ionicons/icons";
+import { useState, useEffect } from "react";
 
 import "./Chat.css";
 import "@ionic/core/css/core.css";
 import "@ionic/core/css/ionic.bundle.css";
 import "stream-chat-react/dist/css/index.css";
-import { APIURL } from "../constants";
-import axios from "axios";
-import ChatModal from "./ChatModal";
 // import * as io from "socket.io-client";
 import socket from "../Socket";
 

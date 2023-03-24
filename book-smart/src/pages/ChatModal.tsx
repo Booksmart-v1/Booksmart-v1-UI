@@ -1,86 +1,38 @@
 import {
   IonButton,
-  IonPopover,
   IonButtons,
-  IonActionSheet,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonCol,
   IonContent,
-  IonGrid,
   IonHeader,
   IonIcon,
   IonPage,
-  IonRow,
-  IonText,
   IonToolbar,
-  IonItem,
-  IonLabel,
   IonTextarea,
-  IonApp,
-  IonAvatar,
-  IonList,
-  IonModal,
   IonTitle,
   IonFooter,
-  IonInput,
   IonRefresher,
   IonRefresherContent,
   RefresherEventDetail,
+  IonItem,
 } from "@ionic/react";
 import "./Chat.css";
-import profile from "../images/profile-image.jpg";
+// import profile from "../images/profile-image.jpg";
 import {
   arrowBackOutline,
   addCircle,
-  arrowForward,
-  bookmarkOutline,
-  chatboxEllipsesOutline,
-  ellipsisHorizontal,
   ellipsisVertical,
-  imageOutline,
-  personAddOutline,
-  chatboxOutline,
-  createOutline,
-  caretForwardCircle,
-  share,
-  trash,
-  heart,
-  image,
   send,
 } from "ionicons/icons";
-import React, { useState, Component, useEffect } from "react";
-import { close } from "fs";
-import {
-  Chat,
-  Channel,
-  ChannelHeader,
-  Thread,
-  Window,
-  MessageList,
-  MessageInput,
-  useChatContext,
-  ChannelList,
-  MessageOptions,
-  QuotedMessagePreview,
-  UploadsPreview,
-  EmojiPicker,
-  SendButton,
-  useChannelTruncatedListener,
-} from "stream-chat-react";
-import { StreamChat } from "stream-chat";
+import React, { useState, useEffect } from "react";
+import { RouteComponentProps } from "react-router-dom";
 
 import "./Chat.css";
 import "@ionic/core/css/core.css";
 import "@ionic/core/css/ionic.bundle.css";
 import "stream-chat-react/dist/css/index.css";
-import { APIURL } from "../constants";
-import axios from "axios";
+// import { APIURL } from "../constants";
+// import axios from "axios";
 import socket from "../Socket";
-import { match } from "react-router-dom";
+// import { match } from "react-router-dom";
 
 interface chat {
   name: string;
@@ -91,10 +43,10 @@ interface chat {
   date: string;
 }
 
-interface prop {
-  // match: match<{
-  //   chatRoomId: string;
-  // }>;
+interface MatchParams {
+  chatRoomId: string;
+}
+interface prop extends RouteComponentProps<MatchParams> {
   item: chat;
   setShowChatModal: any;
   text: string;
@@ -104,8 +56,8 @@ interface prop {
   getChatRoomMessages: any;
 }
 
-const ChatModal = ({
-  // match,
+const ChatModal: React.FC<prop> = ({
+  match,
   item,
   setShowChatModal,
   text,
@@ -113,7 +65,7 @@ const ChatModal = ({
   postMessage,
   userId,
   getChatRoomMessages,
-}: prop) => {
+}) => {
   const defaultProfileImg =
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
 
@@ -127,7 +79,8 @@ const ChatModal = ({
     }, 2000);
   }
   useEffect(() => {
-    // getChatRoomMessages(match.params.chatRoomId, chat);
+    console.log(match.params.chatRoomId)
+    getChatRoomMessages(match.params.chatRoomId, chat);
     socket.on("get_message", (data: any) => {
       setChat((chat: any) => {
         let a = chat;
