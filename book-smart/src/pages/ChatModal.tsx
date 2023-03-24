@@ -42,8 +42,8 @@ interface chat {
   date: string;
 }
 
-interface prop  {
-  chatRoomId: string,
+interface prop {
+  chatRoomId: string;
   item: chat;
   setShowChatModal: any;
   text: string;
@@ -68,7 +68,7 @@ const ChatModal: React.FC<prop> = ({
 
   const [chat, setChat] = useState<any>(item);
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
-    getChatRoomMessages(chat.roomId, chat);
+    getChatRoomMessages(chatRoomId, chat);
     console.log("Begin async operation");
     setTimeout(() => {
       console.log("Async operation has ended");
@@ -76,7 +76,7 @@ const ChatModal: React.FC<prop> = ({
     }, 2000);
   }
   useEffect(() => {
-    console.log(chatRoomId)
+    console.log(chatRoomId);
     getChatRoomMessages(chatRoomId, chat);
     socket.on("get_message", (data: any) => {
       setChat((chat: any) => {
@@ -85,7 +85,7 @@ const ChatModal: React.FC<prop> = ({
         a.message = data;
         return a;
       });
-      getChatRoomMessages(chat.roomId, chat);
+      getChatRoomMessages(chatRoomId, chat);
       console.log(data);
     });
     console.log(chat);
@@ -164,7 +164,7 @@ const ChatModal: React.FC<prop> = ({
           <p> Refreshing Your Chats!✌️</p>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-        {chat.messages.map((item: any, idx: any) => {
+        {item.messages.map((item: any, idx: any) => {
           return (
             <div className="bubbleWrapper">
               <div

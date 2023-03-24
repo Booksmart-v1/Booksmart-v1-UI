@@ -55,22 +55,20 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   const a: any[] = [];
   const chatArray = [
     {
-      name: "Jonathan Perry",
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+      name: "",
+      message: "",
       messages: a,
-      roomId: "123",
-      time: "17:06",
-      date: "2023-01-22",
+      roomId: "",
+      time: "",
+      date: "",
     },
     {
-      name: "Joseph Burns",
-      message:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, assumenda.",
+      name: "",
+      message: "",
       messages: a,
-      roomId: "123",
-      time: "17:06",
-      date: "2023-01-22",
+      roomId: "",
+      time: "",
+      date: "",
     },
   ];
   const [chatModal, setChatModal] = useState(chatArray[0]);
@@ -120,7 +118,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
         };
 
         console.log(chatInfo);
-        return chatInfo;
+        // return chatInfo;
+        setChatModal(chatInfo);
         // console.log(chatInfo.length);
       })
       .catch((e) => {
@@ -299,22 +298,23 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                   getChatRooms={getChatRooms}
                 />
               </Route>
-              <Route path="/homepage/Chat/:chatRoomId" render={({match}: prop)=>{
-                return (
+              <Route
+                path="/homepage/Chat/:chatRoomId"
+                render={({ match }: prop) => {
+                  return (
                     <ChatModal
-                    chatRoomId={match.params.chatRoomId}
-                    item={chatModal}
-                    setShowChatModal={setShowChatModal}
-                    text={text}
-                    setText={setText}
-                    postMessage={postMessage}
-                    userId={userId}
-                    getChatRoomMessages={getChatRoomMessages}
-                  />
-                );
-              }}>
-               
-              </Route>
+                      chatRoomId={match.params.chatRoomId}
+                      item={chatModal}
+                      setShowChatModal={setShowChatModal}
+                      text={text}
+                      setText={setText}
+                      postMessage={postMessage}
+                      userId={userId}
+                      getChatRoomMessages={getChatRoomMessages}
+                    />
+                  );
+                }}
+              ></Route>
               <Route
                 exact={true}
                 path="/homepage/sell"

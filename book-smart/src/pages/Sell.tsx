@@ -126,20 +126,20 @@ const Sell: React.FC = () => {
     getTradeCardDetails(60);
   };
 
-  const markAsSold = async (id: string) => {
+  const markAsSold = async (idx: number) => {
     const url = APIURL + "v2/markAsSold";
-
+    console.log(activeTrades[idx]);
     const resp = await axios.post(url, {
-      id: id,
+      id: activeTrades[idx]._id,
     });
     console.log(resp);
     getTradeCardDetails(60);
   };
-  const markAsUnSold = async (id: string) => {
+  const markAsUnSold = async (idx: number) => {
     const url = APIURL + "v2/markAsUnsold";
-
+    console.log(pastTrades[idx]);
     const resp = await axios.post(url, {
-      id: id,
+      id: pastTrades[idx]._id,
     });
     console.log(resp);
     getTradeCardDetails(60);
@@ -629,7 +629,7 @@ const Sell: React.FC = () => {
                                 slot="end"
                                 // -id="right-end"
                                 onClick={() => {
-                                  console.log("plus");
+                                  console.log(element);
                                   setShowPopover({
                                     showPopover: true,
                                     event: element,
@@ -662,7 +662,8 @@ const Sell: React.FC = () => {
                                 <IonItem
                                   button
                                   onClick={() => {
-                                    markAsSold(element._id);
+                                    markAsSold(idx);
+                                    console.log(idx);
                                     setShowPopover({
                                       showPopover: false,
                                       event: undefined,
@@ -808,7 +809,7 @@ const Sell: React.FC = () => {
                           <IonButtons className="PT-ellipse">
                             <IonButton
                               onClick={() => {
-                                console.log("plus");
+                                console.log(element);
                                 setShowPopover({
                                   showPopover: true,
                                   event: element,
@@ -851,7 +852,8 @@ const Sell: React.FC = () => {
                               <IonItem
                                 button
                                 onClick={() => {
-                                  markAsUnSold(element._id);
+                                  markAsUnSold(idx);
+                                  console.log(idx);
                                   setShowPopover({
                                     showPopover: false,
                                     event: element,
