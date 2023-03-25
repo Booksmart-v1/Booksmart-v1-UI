@@ -42,8 +42,6 @@ import { RefresherEventDetail } from "@ionic/core";
 import profile from "../images/profile-image.jpg";
 import {
   chatboxEllipsesOutline,
-  ellipsisHorizontal,
-  personAddOutline,
   chatboxOutline,
   createOutline,
   caretForwardCircle,
@@ -220,7 +218,7 @@ const Profile = () => {
         console.log(e);
       });
   };
-  console.log(notifyArray);
+  // console.log(notifyArray);
   useEffect(() => {
     getNotify();
   }, []);

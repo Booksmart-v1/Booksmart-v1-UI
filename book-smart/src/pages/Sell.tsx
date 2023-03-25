@@ -5,7 +5,6 @@ import {
   IonTitle,
   IonToolbar,
   IonCard,
-  IonCardSubtitle,
   IonCardTitle,
   IonGrid,
   IonRow,
@@ -35,22 +34,13 @@ import {
   IonSelect,
   IonSelectOption,
   IonAlert,
-  IonToggle,
   IonPopover,
-  IonText,
 } from "@ionic/react";
 import "./wishlist.css";
 import "./sell.css";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
-import {
-  add,
-  camera,
-  ellipsisVertical,
-  funnelOutline,
-  trashBin,
-  trashBinOutline,
-} from "ionicons/icons";
+import { add, camera, ellipsisVertical, funnelOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { APIURL } from "../constants";
@@ -109,13 +99,14 @@ const Sell: React.FC = () => {
   const [pincode, setPincode] = React.useState("");
   const [book, setBook] = React.useState(tempbook);
   const [showToast1, setShowToast1] = useState(false);
-  const [selectedBook, setSelectedBook] = useState<any>({})
+  const [selectedBook, setSelectedBook] = useState<any>({});
   const [msg, setMsg] = useState("");
 
   const [showModal, setShowModal] = useState(false);
 
   const { photos, takePhoto } = usePhotoGallery();
   const [showToast, setShowToast] = useState(false);
+  const [isbnToast, setIsbnToast] = useState(false);
 
   const deleteAd = async (id: string) => {
     const url = APIURL + "v2/deleteAd";
@@ -152,6 +143,10 @@ const Sell: React.FC = () => {
   };
 
   const getBookDetails = () => {
+    console.log(isbn.length);
+    if (isbn.length !== 10 && isbn.length !== 13) {
+      return;
+    }
     setLoading(true);
     const url = APIURL + "v2/getBook";
 
@@ -169,6 +164,7 @@ const Sell: React.FC = () => {
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -463,6 +459,22 @@ const Sell: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonToast
+          isOpen={isbnToast}
+          onDidDismiss={() => setIsbnToast(false)}
+          message="Kindly enter valid ISBN"
+          duration={4000}
+          translucent={true}
+          mode="ios"
+          position="top"
+          buttons={[
+            {
+              text: "Hide",
+              role: "cancel",
+              handler: () => setIsbnToast(false),
+            },
+          ]}
+        />
+        <IonToast
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={msg}
@@ -631,7 +643,7 @@ const Sell: React.FC = () => {
                                 // -id="right-end"
                                 onClick={() => {
                                   console.log(element);
-                                  setSelectedBook(idx)
+                                  setSelectedBook(idx);
                                   setShowPopover({
                                     showPopover: true,
                                     event: element,
@@ -681,7 +693,7 @@ const Sell: React.FC = () => {
                                   button
                                   onClick={() => {
                                     // console.log("hi");
-                                    deleteAd(selectedBook);
+                                    deleteAd(activeTrades[selectedBook]._id);
                                     // console.log("why");
                                     setShowPopover({
                                       showPopover: false,
@@ -812,7 +824,7 @@ const Sell: React.FC = () => {
                             <IonButton
                               onClick={() => {
                                 console.log(element);
-                                setSelectedBook(idx)
+                                setSelectedBook(idx);
                                 setShowPopover({
                                   showPopover: true,
                                   event: element,
@@ -840,7 +852,7 @@ const Sell: React.FC = () => {
                               <IonItem
                                 button
                                 onClick={() => {
-                                  deleteAd(selectedBook);
+                                  deleteAd(pastTrades[selectedBook]._id);
                                   setShowPopover({
                                     showPopover: true,
                                     event: element,
@@ -956,6 +968,7 @@ const Sell: React.FC = () => {
                             isbn.length !== 10 && isbn.length !== 13 && loading
                           }
                           onClick={() => {
+                            setIsbnToast(true);
                             getBookDetails();
                           }}
                         >

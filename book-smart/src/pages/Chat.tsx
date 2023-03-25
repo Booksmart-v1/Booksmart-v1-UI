@@ -121,7 +121,7 @@ const ChatScreen = (props: Record<string, any>) => {
                   </div>
                   <div className="chat-card-time">
                     <span style={{ color: "var(--bs-sText)" }}>
-                      {item.time}
+                      {item.time} 
                     </span>
                   </div>
                 </div>

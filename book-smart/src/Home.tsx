@@ -97,16 +97,24 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
           ? resp.data.data[resp.data.data.length - 1].message
           : "Say hello to your new friend!";
 
-        const time = resp.data.data[resp.data.data.length - 1]
+        let time = resp.data.data[resp.data.data.length - 1]
           ? resp.data.data[resp.data.data.length - 1].createdAt.substring(
               11,
               16
             )
-          : "Say hello to your new friend!";
+          : "00:00";
+
+        let hour = parseInt(time.substring(0, 2));
+        let minutes = parseInt(time.substring(3, 5));
+        minutes += 30;
+        let c = minutes / 60;
+        minutes %= 60;
+        hour += (c + 5) % 24;
+        time = hour + ":" + minutes;
 
         const date = resp.data.data[resp.data.data.length - 1]
           ? resp.data.data[resp.data.data.length - 1].createdAt.substring(0, 10)
-          : "Say hello to your new friend!";
+          : "00/00";
 
         let chatInfo = {
           name: chats.name,
@@ -190,11 +198,22 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                       ? resp.data.data[resp.data.data.length - 1].message
                       : "Say hello to your new friend!";
 
-                    const time = resp.data.data[resp.data.data.length - 1]
+                    let time = resp.data.data[resp.data.data.length - 1]
                       ? resp.data.data[
                           resp.data.data.length - 1
                         ].createdAt.substring(11, 16)
                       : "00:00";
+
+                    let hour = parseInt(time.substring(0, 2));
+                    let minutes = parseInt(time.substring(3, 5));
+                    minutes += 30;
+                    let c = Math.floor(minutes / 60);
+                    minutes %= 60;
+                    hour = (hour + c + 5) % 24;
+                    time =
+                      (hour / 10 >= 1 ? hour : "0" + hour) +
+                      ":" +
+                      (minutes / 10 >= 1 ? minutes : "0" + minutes);
 
                     const date = resp.data.data[resp.data.data.length - 1]
                       ? resp.data.data[

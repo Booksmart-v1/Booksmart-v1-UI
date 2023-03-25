@@ -25,23 +25,17 @@ import {
   IonSearchbar,
   IonCheckbox,
   useIonAlert,
-  IonRow,
+  IonRippleEffect,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import "./homePage.css";
 import { useState, useEffect } from "react";
 
-import {
-  heart,
-  heartOutline,
-  ellipse,
-  close,
-  location,
-  navigateCircle,
-} from "ionicons/icons";
+import { heart, heartOutline, ellipse } from "ionicons/icons";
 import { APIURL } from "../constants";
 import axios from "axios";
 import moment from "moment";
+import { useHistory } from "react-router";
 
 const defaultImage = "https://via.placeholder.com/200/1200";
 const cardDetails = [
@@ -580,6 +574,7 @@ const Tab1: React.FC = () => {
         console.log(e);
       });
   };
+  const history = useHistory();
 
   const distance = (lat1: number, lat2: number, lon1: number, lon2: number) => {
     // The math module contains a function
@@ -881,16 +876,21 @@ const Tab1: React.FC = () => {
             </div>
           </IonContent>
           {sellerDeets.sellerId === currUser.userId ? (
-            <IonFooter
-              collapse="fade"
-              style={{
-                color: "gray",
-                textAlign: "center",
-                fontFamily: "Montserrat-b",
-                margin: "10px 0",
-              }}
-            >
-              <h3>Book On Sale</h3>
+            <IonFooter collapse="fade">
+              <button
+                onClick={() => {
+                  history.push("./homepage/Chat");
+                  setShowModal(false);
+                }}
+                className="interested-buyers"
+              >
+                {" "}
+                <p style={{ marginTop: "-6px" }}>
+                  {" "}
+                  {sellerDeets.interestedBuyers.length} Buyer/s Interested.
+                </p>
+              </button>
+              <IonRippleEffect></IonRippleEffect>
             </IonFooter>
           ) : (
             <IonFooter className="HPModal-toggle">

@@ -275,6 +275,24 @@ ion-label.sc-ion-select-popover-ios {
   line-height: 1.4rem;
 }
 
+.interested-buyers{
+    /* background: #f5f5dc !important; */
+      background: var(--bs-pText);
+      color: #ffffff;
+      font-family: 'Montserrat-SB';
+      text-align: center;
+      padding: 20px 20px;
+      border-radius: 10px;
+      display: inline;
+      /* display: flex; */
+      height: 45px;
+      width: 90%;
+      margin-left: 20px;
+
+      font-size: 18px;
+      margin-bottom: 10px;
+      
+}
 .HPModal-sellerInfo {
   width: 100%;
   margin-top: 10px;
