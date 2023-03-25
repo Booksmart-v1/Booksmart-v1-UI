@@ -109,6 +109,7 @@ const Sell: React.FC = () => {
   const [pincode, setPincode] = React.useState("");
   const [book, setBook] = React.useState(tempbook);
   const [showToast1, setShowToast1] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<any>({})
   const [msg, setMsg] = useState("");
 
   const [showModal, setShowModal] = useState(false);
@@ -630,6 +631,7 @@ const Sell: React.FC = () => {
                                 // -id="right-end"
                                 onClick={() => {
                                   console.log(element);
+                                  setSelectedBook(idx)
                                   setShowPopover({
                                     showPopover: true,
                                     event: element,
@@ -662,7 +664,7 @@ const Sell: React.FC = () => {
                                 <IonItem
                                   button
                                   onClick={() => {
-                                    markAsSold(idx);
+                                    markAsSold(selectedBook);
                                     console.log(idx);
                                     setShowPopover({
                                       showPopover: false,
@@ -679,7 +681,7 @@ const Sell: React.FC = () => {
                                   button
                                   onClick={() => {
                                     // console.log("hi");
-                                    deleteAd(element._id);
+                                    deleteAd(selectedBook);
                                     // console.log("why");
                                     setShowPopover({
                                       showPopover: false,
@@ -810,6 +812,7 @@ const Sell: React.FC = () => {
                             <IonButton
                               onClick={() => {
                                 console.log(element);
+                                setSelectedBook(idx)
                                 setShowPopover({
                                   showPopover: true,
                                   event: element,
@@ -837,7 +840,7 @@ const Sell: React.FC = () => {
                               <IonItem
                                 button
                                 onClick={() => {
-                                  deleteAd(element._id);
+                                  deleteAd(selectedBook);
                                   setShowPopover({
                                     showPopover: true,
                                     event: element,
@@ -852,7 +855,7 @@ const Sell: React.FC = () => {
                               <IonItem
                                 button
                                 onClick={() => {
-                                  markAsUnSold(idx);
+                                  markAsUnSold(selectedBook);
                                   console.log(idx);
                                   setShowPopover({
                                     showPopover: false,
