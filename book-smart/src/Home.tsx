@@ -61,6 +61,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
       roomId: "",
       time: "",
       date: "",
+      closed: false,
     },
     {
       name: "",
@@ -69,6 +70,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
       roomId: "",
       time: "",
       date: "",
+      closed: false,
     },
   ];
   const [chatModal, setChatModal] = useState(chatArray[0]);
@@ -123,6 +125,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
           roomId: id1,
           time: time,
           date: date,
+          closed: chats.closed,
         };
 
         console.log(chatInfo);
@@ -166,6 +169,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
             .then(async (resp) => {
               console.log(resp);
               let name = "";
+
+              // let closed = resp.data.data.closed;
               var url = APIURL + "v2/getOneUser";
 
               await axios
@@ -180,9 +185,11 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 });
 
               const ids = resp["data"]["data"]["chatRoomIds"];
+              const bbc: boolean[] = resp["data"]["data"]["closedRoomIds"];
               url = APIURL + "v2/getMessagesInChatRoom";
-              for (let id in ids) {
-                let id1 = ids[id];
+
+              for (let i = 0; i < bbc.length; i++) {
+                let id1 = ids[i];
                 await axios
                   .get(url + `?chatRoomId=${id1}`)
                   .then(async (resp) => {
@@ -230,6 +237,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                         roomId: id1,
                         time: time,
                         date: date,
+                        closed: bbc[i],
                       },
                     ];
                     console.log(chatInfo);

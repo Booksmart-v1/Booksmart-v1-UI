@@ -31,6 +31,9 @@ import "stream-chat-react/dist/css/index.css";
 // import { APIURL } from "../constants";
 // import axios from "axios";
 import socket from "../Socket";
+import { APIURL } from "../constants";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 // import { match } from "react-router-dom";
 
 interface chat {
@@ -40,6 +43,7 @@ interface chat {
   roomId: string;
   time: string;
   date: string;
+  closed: boolean;
 }
 
 interface prop {
@@ -65,7 +69,7 @@ const ChatModal: React.FC<prop> = ({
 }) => {
   const defaultProfileImg =
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
-
+  const [chatOpen, setChatOpen] = useState(!item.closed);
   const [chat, setChat] = useState<any>(item);
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getChatRoomMessages(chatRoomId, chat);
@@ -75,6 +79,47 @@ const ChatModal: React.FC<prop> = ({
       event.detail.complete();
     }, 2000);
   }
+
+  const markAsSold = async (id: String) => {
+    try {
+      const url = APIURL + "v2/markAsSold";
+      const resp = await axios.post(url, {
+        id: id,
+      });
+      console.log(resp);
+      const url1 = APIURL + "v2/closedChat";
+      const resp1 = await axios.post(url, {
+        chatRoomId: item.roomId,
+        value: true,
+      });
+      console.log(resp1);
+      setChatOpen(false);
+      getChatRoomMessages(chatRoomId, chat);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const markAsUnSold = async (id: String) => {
+    try {
+      const url = APIURL + "v2/markAsUnsold";
+      const resp = await axios.post(url, {
+        id: id,
+      });
+      console.log(resp);
+      const url1 = APIURL + "v2/closedChat";
+      const resp1 = await axios.post(url, {
+        chatRoomId: item.roomId,
+        value: false,
+      });
+      console.log(resp1);
+      setChatOpen(true);
+      getChatRoomMessages(chatRoomId, chat);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const history = useHistory();
   useEffect(() => {
     console.log(chatRoomId);
     getChatRoomMessages(chatRoomId, chat);
@@ -138,8 +183,12 @@ const ChatModal: React.FC<prop> = ({
             </div>
           </IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={() => {}}>
-              <IonIcon icon={ellipsisVertical} color="dark"></IonIcon>
+            <IonButton
+              onClick={() => {
+                chatOpen ? markAsSold(item.roomId) : markAsUnSold(item.roomId);
+              }}
+            >
+              <p>{chatOpen ? "Mark Sold" : "Mark Unsold"}</p>
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -212,6 +261,7 @@ const ChatModal: React.FC<prop> = ({
               placeholder="Enter Message..."
               maxlength={150}
               value={text}
+              disabled={!chatOpen}
               // onKeyPress={(e) => {
               //   if (e.key === "Enter") {
               //     postMessage();
@@ -224,6 +274,7 @@ const ChatModal: React.FC<prop> = ({
                 onClick={() => {
                   postMessage();
                 }}
+                disabled={!chatOpen}
               >
                 <IonIcon icon={send} color="dark" size="small"></IonIcon>
               </IonButton>
