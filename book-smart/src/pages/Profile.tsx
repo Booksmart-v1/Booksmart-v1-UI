@@ -90,7 +90,11 @@ const Profile = () => {
   const [showToast2, setShowToast2] = useState(false);
   const [showToast3, setShowToast3] = useState(false);
   const [showToast4, setShowToast4] = useState(false);
-
+  const [profileChange, setProfileChange] = useState<any>({
+    name: "",
+    booksSold: [],
+    booksBought: [],
+  });
   const [isDisabled1, setIsDisabled1] = useState(true);
   const [isDisabled2, setIsDisabled2] = useState(true);
   const [imageUrl, setImageUrl] = useState<string | undefined>("");
@@ -114,7 +118,7 @@ const Profile = () => {
     });
   };
 
-  const getProfile = (lim: Number) => {
+  const getProfile = () => {
     let userId = "1233";
     let username = "Aagam";
     const a = localStorage.getItem("user");
@@ -125,10 +129,11 @@ const Profile = () => {
     let url = APIURL + "v2/getUser";
 
     axios
-      .get(url + `?userId=${userId}`)
+      .get(url + `?id=${userId}`)
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
+          setProfileChange(res.data.data);
           //set profile details
         }
       })
@@ -136,19 +141,19 @@ const Profile = () => {
         console.log(e);
       });
 
-    url = APIURL + "v2/getMyBookAds";
+    // url = APIURL + "v2/getMyBookAds";
 
-    axios
-      .get(url + `?userId=${userId}&limit=${lim}`)
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          //set book details
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    // axios
+    //   .get(url + `?userId=${userId}&limit=${lim}`)
+    //   .then((res) => {
+    //     console.log(res);
+    //     if (res.status === 200) {
+    //       //set book details
+    //     }
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
   };
 
   // TOGGLE REVISED TECHNIQUE
@@ -220,6 +225,7 @@ const Profile = () => {
   };
   // console.log(notifyArray);
   useEffect(() => {
+    getProfile();
     getNotify();
   }, []);
 
@@ -481,7 +487,7 @@ const Profile = () => {
                       <IonRow className="profileInfo">
                         <IonCol size="12">
                           <IonText color="dark" className="profileName">
-                            <p>Eva Green</p>
+                            <p>{profileChange.name}</p>
                           </IonText>
                           <IonText color="medium">
                             <p>{status}</p>
@@ -497,7 +503,7 @@ const Profile = () => {
                               fontSize: "18px",
                             }}
                           >
-                            109
+                            {profileChange.booksSold.length}
                           </IonCardTitle>
                           <IonCardSubtitle>Books Sold</IonCardSubtitle>
                         </IonCol>
@@ -509,7 +515,7 @@ const Profile = () => {
                               fontSize: "18px",
                             }}
                           >
-                            1.2k
+                            {profileChange.booksBought.length}
                           </IonCardTitle>
                           <IonCardSubtitle>Books Bought</IonCardSubtitle>
                         </IonCol>

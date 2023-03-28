@@ -44,6 +44,7 @@ interface chat {
   time: string;
   date: string;
   closed: boolean;
+  bookAdId: string;
 }
 
 interface prop {
@@ -72,7 +73,7 @@ const ChatModal: React.FC<prop> = ({
   const [chatOpen, setChatOpen] = useState(!item.closed);
   const [chat, setChat] = useState<any>(item);
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
-    getChatRoomMessages(chatRoomId, chat);
+    getChatRoomMessages(chatRoomId, item);
     console.log("Begin async operation");
     setTimeout(() => {
       console.log("Async operation has ended");
@@ -88,13 +89,13 @@ const ChatModal: React.FC<prop> = ({
       });
       console.log(resp);
       const url1 = APIURL + "v2/closedChat";
-      const resp1 = await axios.post(url, {
+      const resp1 = await axios.post(url1, {
         chatRoomId: item.roomId,
         value: true,
       });
       console.log(resp1);
       setChatOpen(false);
-      getChatRoomMessages(chatRoomId, chat);
+      getChatRoomMessages(chatRoomId, item);
     } catch (err) {
       console.log(err);
     }
@@ -107,13 +108,13 @@ const ChatModal: React.FC<prop> = ({
       });
       console.log(resp);
       const url1 = APIURL + "v2/closedChat";
-      const resp1 = await axios.post(url, {
+      const resp1 = await axios.post(url1, {
         chatRoomId: item.roomId,
         value: false,
       });
       console.log(resp1);
       setChatOpen(true);
-      getChatRoomMessages(chatRoomId, chat);
+      getChatRoomMessages(chatRoomId, item);
     } catch (err) {
       console.log(err);
     }
@@ -122,7 +123,7 @@ const ChatModal: React.FC<prop> = ({
   const history = useHistory();
   useEffect(() => {
     console.log(chatRoomId);
-    getChatRoomMessages(chatRoomId, chat);
+    getChatRoomMessages(chatRoomId, item);
     socket.on("get_message", (data: any) => {
       setChat((chat: any) => {
         let a = chat;
@@ -130,7 +131,7 @@ const ChatModal: React.FC<prop> = ({
         a.message = data;
         return a;
       });
-      getChatRoomMessages(chatRoomId, chat);
+      getChatRoomMessages(chatRoomId, item);
       console.log(data);
     });
     console.log(chat);
@@ -185,7 +186,9 @@ const ChatModal: React.FC<prop> = ({
           <IonButtons slot="end">
             <IonButton
               onClick={() => {
-                chatOpen ? markAsSold(item.roomId) : markAsUnSold(item.roomId);
+                chatOpen
+                  ? markAsSold(item.bookAdId)
+                  : markAsUnSold(item.bookAdId);
               }}
             >
               <p>{chatOpen ? "Mark Sold" : "Mark Unsold"}</p>

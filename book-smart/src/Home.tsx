@@ -62,6 +62,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
       time: "",
       date: "",
       closed: false,
+      bookAdId: "",
     },
     {
       name: "",
@@ -71,6 +72,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
       time: "",
       date: "",
       closed: false,
+      bookAdId: "",
     },
   ];
   const [chatModal, setChatModal] = useState(chatArray[0]);
@@ -126,6 +128,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
           time: time,
           date: date,
           closed: chats.closed,
+          bookAdId: chats.bookAdId,
         };
 
         console.log(chatInfo);
@@ -186,6 +189,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
 
               const ids = resp["data"]["data"]["chatRoomIds"];
               const bbc: boolean[] = resp["data"]["data"]["closedRoomIds"];
+              const bId: string[] = resp["data"]["data"]["bookAdIds"];
+
               url = APIURL + "v2/getMessagesInChatRoom";
 
               for (let i = 0; i < bbc.length; i++) {
@@ -238,6 +243,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                         time: time,
                         date: date,
                         closed: bbc[i],
+                        bookAdId: bId[i],
                       },
                     ];
                     console.log(chatInfo);
