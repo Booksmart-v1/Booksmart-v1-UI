@@ -13,6 +13,8 @@ import {
   IonRefresherContent,
   RefresherEventDetail,
   IonItem,
+  IonLabel,
+  IonPopover,
 } from "@ionic/react";
 import "./Chat.css";
 // import profile from "../images/profile-image.jpg";
@@ -72,6 +74,10 @@ const ChatModal: React.FC<prop> = ({
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
   const [chatOpen, setChatOpen] = useState(!item.closed);
   const [chat, setChat] = useState<any>(item);
+  const [popoverState, setShowPopover] = useState({
+    showPopover: false,
+    event: undefined,
+  });
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getChatRoomMessages(chatRoomId, item);
     console.log("Begin async operation");
@@ -176,14 +182,14 @@ const ChatModal: React.FC<prop> = ({
                   fontFamily: "Montserrat-B",
                   color: "var(--bs-pText)",
                   fontSize: "20px",
-                  margin: "5px 0",
+                  marginRight: "20px",
                 }}
               >
                 {item.name}
               </h2>
             </div>
           </IonTitle>
-          <IonButtons slot="end">
+          {/* <IonButtons slot="end">
             <IonButton
               onClick={() => {
                 chatOpen
@@ -193,11 +199,67 @@ const ChatModal: React.FC<prop> = ({
             >
               <p>{chatOpen ? "Mark Sold" : "Mark Unsold"}</p>
             </IonButton>
+          </IonButtons> */}
+          <IonButtons className="popover-ellipse" slot="end">
+            <IonButton
+              slot="end"
+              // -id="right-end"
+              onClick={() => {
+                setShowPopover({
+                  showPopover: true,
+                  event: undefined,
+                });
+              }}
+            >
+              <IonIcon icon={ellipsisVertical} color="dark"></IonIcon>
+            </IonButton>
           </IonButtons>
+          <IonPopover
+            event={popoverState.event}
+            isOpen={popoverState.showPopover}
+            onDidDismiss={() =>
+              setShowPopover({
+                showPopover: false,
+                event: undefined,
+              })
+            }
+          >
+            <IonContent className="popover-size">
+              <IonItem
+                button
+                disabled={!chatOpen}
+                onClick={() => {
+                  markAsSold(item.bookAdId);
+                  setShowPopover({
+                    showPopover: false,
+                    event: undefined,
+                  });
+                }}
+              >
+                <IonLabel className="profile-orders"> Mark Ad as sold</IonLabel>
+              </IonItem>
+              <IonItem
+                button
+                disabled={chatOpen}
+                onClick={() => {
+                  markAsUnSold(item.bookAdId);
+                  setShowPopover({
+                    showPopover: false,
+                    event: undefined,
+                  });
+                }}
+              >
+                <IonLabel className="profile-orders">
+                  {" "}
+                  Mark Ad As Unsold
+                </IonLabel>
+              </IonItem>
+            </IonContent>
+          </IonPopover>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
+      <IonContent className="convo-body">
         <IonRefresher
           slot="fixed"
           placeholder="P"
@@ -218,34 +280,49 @@ const ChatModal: React.FC<prop> = ({
         </IonRefresher>
         {item.messages.map((item: any, idx: any) => {
           return (
-            <div className="bubbleWrapper">
-              <div
-                className={`${
-                  item.postedByUser === userId
-                    ? "inlineContainer own"
-                    : "inlineContainer"
-                }`}
-              >
-                <img
-                  className="inlineIcon"
-                  alt="haha"
-                  src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png"
-                />
+            <div className="convo-body">
+              <div className="bubbleWrapper">
                 <div
                   className={`${
                     item.postedByUser === userId
-                      ? "ownBubble own"
+                      ? "inlineContainer own"
+                      : "inlineContainer"
+                  }`}
+                >
+                  <img
+                    className="inlineIcon"
+                    alt="haha"
+                    src={defaultProfileImg}
+                  />
+                  <div className="conversation-container">
+                    <div
+                      className={`${
+                        item.postedByUser === userId
+                          ? "message sent"
+                          : "otherBubble other"
+                      }`}
+                    >
+                      {item.message}
+                    </div>
+                  </div>
+                  {/* <div
+                  className={`${
+                    item.postedByUser === userId
+                      ? "imessage"
                       : "otherBubble other"
                   }`}
                 >
-                  {item.message}
+                  <p> {item.message}</p>
+                </div> */}
                 </div>
+                <span
+                  className={`${
+                    item.postedByUser === userId ? "own" : "other"
+                  }`}
+                >
+                  {item.createdAt.substring(11, 16)}
+                </span>
               </div>
-              <span
-                className={`${item.postedByUser === userId ? "own" : "other"}`}
-              >
-                {item.createdAt.substring(11, 16)}
-              </span>
             </div>
           );
         })}

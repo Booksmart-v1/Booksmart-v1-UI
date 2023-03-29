@@ -686,23 +686,6 @@ const Sell: React.FC = () => {
                                 >
                                   <IonLabel className="profile-orders">
                                     {" "}
-                                    Mark Ad as sold!
-                                  </IonLabel>
-                                </IonItem>
-                                <IonItem
-                                  button
-                                  onClick={() => {
-                                    // console.log("hi");
-                                    deleteAd(activeTrades[selectedBook]._id);
-                                    // console.log("why");
-                                    setShowPopover({
-                                      showPopover: false,
-                                      event: undefined,
-                                    });
-                                  }}
-                                >
-                                  <IonLabel className="profile-orders">
-                                    {" "}
                                     Delete Ad
                                   </IonLabel>
                                 </IonItem>
@@ -862,22 +845,6 @@ const Sell: React.FC = () => {
                                 <IonLabel className="profile-orders">
                                   {" "}
                                   Delete Ad
-                                </IonLabel>
-                              </IonItem>
-                              <IonItem
-                                button
-                                onClick={() => {
-                                  markAsUnSold(selectedBook);
-                                  console.log(idx);
-                                  setShowPopover({
-                                    showPopover: false,
-                                    event: element,
-                                  });
-                                }}
-                              >
-                                <IonLabel className="profile-orders">
-                                  {" "}
-                                  Mark Ad as Unsold!
                                 </IonLabel>
                               </IonItem>
                             </IonContent>
