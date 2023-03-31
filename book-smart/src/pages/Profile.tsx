@@ -963,98 +963,28 @@ const Profile = () => {
                 <IonRefresherContent></IonRefresherContent>
               </IonRefresher>
               <div className="notifyCards-area">
-                {notifyArray.map((item: any, idx: number) => {
-                  return (
-                    <IonItemSliding className="notifyCard" key={idx}>
-                      <IonItem
-                        lines="none"
-                        class="ion-no-padding"
-                        onClick={() => {
-                          handlePopOverClick(idx, true);
-                        }}
-                        id={String(idx)}
-                      >
-                        <div className="notifyCard-img">
-                          {!item.isRead && (
-                            <div className="notify-unread"></div>
-                          )}
-                          <IonAvatar>
-                            <img src={defaultProfileImg} alt="abc" />
-                          </IonAvatar>
-                        </div>
-                        <div className="notify-date">{item.timeSince}</div>
-                        <div className="notifyCard-content">
-                          <h2
-                            style={{
-                              fontFamily: "Montserrat-b",
-                              fontSize: "20px",
-                            }}
-                          >
-                            {item.senderName}
-                          </h2>
-                          <p style={{ fontFamily: "Montserrat-sb" }}>
-                            {item.message.substring(0, 43)}
-                            <span style={{ color: "var(--bs-sText)" }}>
-                              {item.message.substring(43)}
-                            </span>
-                          </p>
-                        </div>
-                      </IonItem>
-                      <div
-                        style={{
-                          position: "absolute",
-                          bottom: "3px",
-                          right: "10px",
-                          zIndex: "100",
-                        }}
-                      >
-                        <IonIcon
-                          icon={trash}
-                          color="danger"
-                          slot="end"
-                          onClick={() =>
-                            presentNotifyHandleAlert({
-                              header:
-                                "Are you sure you want to delete this notification?",
-                              buttons: [
-                                {
-                                  text: "Cancel",
-                                  role: "cancel",
-                                },
-                                {
-                                  text: "Delete",
-                                  role: "confirm",
-                                  handler: () => {
-                                    handleDeleteClick(item._id);
-                                  },
-                                },
-                              ],
-                            })
-                          }
-                        />
-                      </div>
-                      <IonPopover
-                        reference="event"
-                        isOpen={notifyArray[idx].isPopOverOpen}
-                      >
-                        <IonContent class="ion-padding">
-                          <div className="notify-time">
-                            {item.date.getDate() +
-                              "-" +
-                              (item.date.getMonth() + 1) +
-                              "-" +
-                              item.date.getFullYear()}
-                            <span
-                              style={{
-                                color: "var(--bs-sText)",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              {item.time}
-                            </span>
-                            {/* <div className="notify-unread"></div> */}
+                {notifyArray.length > 0 ? (
+                  notifyArray.map((item: any, idx: number) => {
+                    return (
+                      <IonItemSliding className="notifyCard" key={idx}>
+                        <IonItem
+                          lines="none"
+                          class="ion-no-padding"
+                          onClick={() => {
+                            handlePopOverClick(idx, true);
+                          }}
+                          id={String(idx)}
+                        >
+                          <div className="notifyCard-img">
+                            {!item.isRead && (
+                              <div className="notify-unread"></div>
+                            )}
+                            <IonAvatar>
+                              <img src={defaultProfileImg} alt="abc" />
+                            </IonAvatar>
                           </div>
-                          <div style={{ padding: "0 12px" }}>
+                          <div className="notify-date">{item.timeSince}</div>
+                          <div className="notifyCard-content">
                             <h2
                               style={{
                                 fontFamily: "Montserrat-b",
@@ -1070,115 +1000,199 @@ const Profile = () => {
                               </span>
                             </p>
                           </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              margin: "15px 0",
-                            }}
-                          >
-                            <button
-                              onClick={() => {
-                                handlePopOverClick(idx, false);
-                              }}
-                              className="popover-close-btn"
-                            >
-                              Dismiss
-                            </button>
-                          </div>
-                        </IonContent>
-                      </IonPopover>
-                      {item.type === "interest" ? (
-                        <>
-                          <IonToast
-                            isOpen={showAcceptToast}
-                            onDidDismiss={() => {
-                              setShowAcceptToast(false);
-                              setShowNotifyModal(false);
-                            }}
-                            message="Accept Notification has been sent!"
-                            duration={200}
-                            position="top"
+                        </IonItem>
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: "3px",
+                            right: "10px",
+                            zIndex: "100",
+                          }}
+                        >
+                          <IonIcon
+                            icon={trash}
+                            color="danger"
+                            slot="end"
+                            onClick={() =>
+                              presentNotifyHandleAlert({
+                                header:
+                                  "Are you sure you want to delete this notification?",
+                                buttons: [
+                                  {
+                                    text: "Cancel",
+                                    role: "cancel",
+                                  },
+                                  {
+                                    text: "Delete",
+                                    role: "confirm",
+                                    handler: () => {
+                                      handleDeleteClick(item._id);
+                                    },
+                                  },
+                                ],
+                              })
+                            }
                           />
-                          <IonItemOptions side="start">
-                            <IonItemOption
-                              color="success"
-                              onClick={() =>
-                                presentNotifyHandleAlert({
-                                  header: "Are you sure you want to Accept?",
-
-                                  buttons: [
-                                    {
-                                      text: "Cancel",
-                                      role: "cancel",
-                                    },
-                                    {
-                                      text: "Accept",
-                                      role: "confirm",
-                                      handler: () => {
-                                        handleAcceptClick(notifyArray[idx]);
-                                      },
-                                    },
-                                  ],
-                                })
-                              }
-                              // onClick={() => { handleAcceptClick(notifyArray[idx]) }}
-                            >
-                              <IonIcon
-                                icon={checkmarkOutline}
-                                style={{ fontSize: "20px" }}
-                              />
+                        </div>
+                        <IonPopover
+                          reference="event"
+                          isOpen={notifyArray[idx].isPopOverOpen}
+                        >
+                          <IonContent class="ion-padding">
+                            <div className="notify-time">
+                              {item.date.getDate() +
+                                "-" +
+                                (item.date.getMonth() + 1) +
+                                "-" +
+                                item.date.getFullYear()}
+                              <span
+                                style={{
+                                  color: "var(--bs-sText)",
+                                  marginLeft: "10px",
+                                }}
+                              >
+                                {item.time}
+                              </span>
+                              {/* <div className="notify-unread"></div> */}
+                            </div>
+                            <div style={{ padding: "0 12px" }}>
+                              <h2
+                                style={{
+                                  fontFamily: "Montserrat-b",
+                                  fontSize: "20px",
+                                }}
+                              >
+                                {item.senderName}
+                              </h2>
                               <p style={{ fontFamily: "Montserrat-sb" }}>
-                                Accept
+                                {item.message.substring(0, 43)}
+                                <span style={{ color: "var(--bs-sText)" }}>
+                                  {item.message.substring(43)}
+                                </span>
                               </p>
-                            </IonItemOption>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                margin: "15px 0",
+                              }}
+                            >
+                              <button
+                                onClick={() => {
+                                  handlePopOverClick(idx, false);
+                                }}
+                                className="popover-close-btn"
+                              >
+                                Dismiss
+                              </button>
+                            </div>
+                          </IonContent>
+                        </IonPopover>
+                        {item.type === "interest" ? (
+                          <>
                             <IonToast
-                              isOpen={showRejectToast}
-                              onDidDismiss={() => setShowRejectToast(false)}
-                              message="Reject Notification has been sent!"
+                              isOpen={showAcceptToast}
+                              onDidDismiss={() => {
+                                setShowAcceptToast(false);
+                                setShowNotifyModal(false);
+                              }}
+                              message="Accept Notification has been sent!"
                               duration={200}
                               position="top"
                             />
-                          </IonItemOptions>
-                          <IonItemOptions side="end">
-                            <IonItemOption
-                              color="danger"
-                              onClick={() =>
-                                presentNotifyHandleAlert({
-                                  header: "Are you sure you want to Reject?",
-                                  buttons: [
-                                    {
-                                      text: "Cancel",
-                                      role: "cancel",
-                                    },
-                                    {
-                                      text: "Reject",
-                                      role: "confirm",
-                                      handler: () => {
-                                        handleRejectClick(notifyArray[idx]);
+                            <IonItemOptions side="start">
+                              <IonItemOption
+                                color="success"
+                                onClick={() =>
+                                  presentNotifyHandleAlert({
+                                    header: "Are you sure you want to Accept?",
+
+                                    buttons: [
+                                      {
+                                        text: "Cancel",
+                                        role: "cancel",
                                       },
-                                    },
-                                  ],
-                                })
-                              }
-                            >
-                              <IonIcon
-                                icon={closeOutline}
-                                style={{ fontSize: "20px" }}
+                                      {
+                                        text: "Accept",
+                                        role: "confirm",
+                                        handler: () => {
+                                          handleAcceptClick(notifyArray[idx]);
+                                        },
+                                      },
+                                    ],
+                                  })
+                                }
+                                // onClick={() => { handleAcceptClick(notifyArray[idx]) }}
+                              >
+                                <IonIcon
+                                  icon={checkmarkOutline}
+                                  style={{ fontSize: "20px" }}
+                                />
+                                <p style={{ fontFamily: "Montserrat-sb" }}>
+                                  Accept
+                                </p>
+                              </IonItemOption>
+                              <IonToast
+                                isOpen={showRejectToast}
+                                onDidDismiss={() => setShowRejectToast(false)}
+                                message="Reject Notification has been sent!"
+                                duration={200}
+                                position="top"
                               />
-                              <p style={{ fontFamily: "Montserrat-sb" }}>
-                                Reject
-                              </p>
-                            </IonItemOption>
-                          </IonItemOptions>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </IonItemSliding>
-                  );
-                })}
+                            </IonItemOptions>
+                            <IonItemOptions side="end">
+                              <IonItemOption
+                                color="danger"
+                                onClick={() =>
+                                  presentNotifyHandleAlert({
+                                    header: "Are you sure you want to Reject?",
+                                    buttons: [
+                                      {
+                                        text: "Cancel",
+                                        role: "cancel",
+                                      },
+                                      {
+                                        text: "Reject",
+                                        role: "confirm",
+                                        handler: () => {
+                                          handleRejectClick(notifyArray[idx]);
+                                        },
+                                      },
+                                    ],
+                                  })
+                                }
+                              >
+                                <IonIcon
+                                  icon={closeOutline}
+                                  style={{ fontSize: "20px" }}
+                                />
+                                <p style={{ fontFamily: "Montserrat-sb" }}>
+                                  Reject
+                                </p>
+                              </IonItemOption>
+                            </IonItemOptions>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </IonItemSliding>
+                    );
+                  })
+                ) : (
+                  <>
+                    <div className="noBooks">
+                      <img
+                        src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif"
+                        alt="Sorry"
+                        width={"100px"}
+                        style={{ marginTop: "-70px" }}
+                      />
+                      <p>Currently there are no notifications available .</p>
+                    </div>
+                  </>
+                )}
               </div>
             </IonContent>
           </IonModal>

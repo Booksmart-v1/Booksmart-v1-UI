@@ -7,6 +7,9 @@ import {
   IonToolbar,
   IonItem,
   IonSearchbar,
+  RefresherEventDetail,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/react";
 import "./Chat.css";
 import { ellipsisVertical } from "ionicons/icons";
@@ -45,6 +48,14 @@ const ChatScreen = (props: Record<string, any>) => {
   // const [filteredInfo, setFilteredInfo] = useState(chats);
   const [searchName, setSearchName] = useState("");
 
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    getChatRooms(60);
+    console.log("Begin async operation");
+    setTimeout(() => {
+      console.log("Async operation has ended");
+      event.detail.complete();
+    }, 2000);
+  }
   const handleSearchChat = (e: any) => {
     // setSearchBook(e.detail.value);
     const searchText = e.detail.value;
@@ -87,6 +98,24 @@ const ChatScreen = (props: Record<string, any>) => {
         ></IonSearchbar>
       </div>
       <IonContent>
+        <IonRefresher
+          slot="fixed"
+          placeholder="P"
+          onIonRefresh={doRefresh}
+          pullFactor={0.5}
+          pullMin={100}
+          pullMax={200}
+          style={{
+            color: "black",
+            fontFamily: "Montserrat-SB",
+            fontSize: "1.1rem",
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          <p> Refreshing Your Chats!✌️</p>
+          <IonRefresherContent></IonRefresherContent>
+        </IonRefresher>
         <div className="chat-area">
           {filterChats.map((item: any, idx: any) => (
             <>
@@ -121,7 +150,7 @@ const ChatScreen = (props: Record<string, any>) => {
                   </div>
                   <div className="chat-card-time">
                     <span style={{ color: "var(--bs-sText)" }}>
-                      {item.time} 
+                      {item.time}
                     </span>
                   </div>
                 </div>

@@ -879,7 +879,7 @@ const Tab1: React.FC = () => {
             <IonFooter collapse="fade">
               <button
                 onClick={() => {
-                  history.push("./homepage/Chat");
+                  history.push("./homepage/Profile");
                   setShowModal(false);
                 }}
                 className="interested-buyers"
@@ -1169,7 +1169,7 @@ const Tab1: React.FC = () => {
                                     style={{
                                       color: "black",
                                       border: "1px solid black",
-                                      margin: "0 5px",
+                                      margin: "0px",
                                       background: "var(--bs-pBg)",
                                     }}
                                   >
@@ -1204,7 +1204,7 @@ const Tab1: React.FC = () => {
                                   {" "}
                                   Seller:
                                 </span>{" "}
-                                {element.sellerName.toUpperCase()}
+                                {element.sellerName}
                               </p>
                             </div>
                             <div>
