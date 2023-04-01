@@ -80,7 +80,8 @@ const Profile = () => {
   const [changeUsername, setChangeUsername] = useState("Name");
   const [editName, setEditName] = useState(false);
   const [editUserName, setEditUserName] = useState(false);
-
+  const defaultProfileImg =
+    "https://booksmart.s3.ap-south-1.amazonaws.com/bookImage-1680352372320.jpeg";
   // Toggle Check - Ask for better technique
   const [checked1, setChecked1] = useState(false);
   const [checked2, setChecked2] = useState(false);
@@ -94,6 +95,7 @@ const Profile = () => {
     name: "",
     booksSold: [],
     booksBought: [],
+    profilePicUrl: defaultProfileImg,
   });
   const [isDisabled1, setIsDisabled1] = useState(true);
   const [isDisabled2, setIsDisabled2] = useState(true);
@@ -108,7 +110,7 @@ const Profile = () => {
   const getImage = () => {
     takePhoto().then((obj: any) => {
       console.log(obj);
-      updateProfile(obj.imageUrl)
+      updateProfile(obj.imageUrl);
       // obj = usePhotoGallery();
       // console.log(obj.photos)
       setImageUrl((old) => {
@@ -119,28 +121,27 @@ const Profile = () => {
     });
   };
 
-  const updateProfile = (imgUrl : string) => {
-    let url = APIURL + "v2/getUser";
+  const updateProfile = (imgUrl: string) => {
+    let url = APIURL + "v2/updateUser";
 
     axios
-      .post(url,{
-        userId : profileChange._id,
+      .post(url, {
+        userId: profileChange._id,
         profilePicUrl: imgUrl,
         name: profileChange.name,
-        email: profileChange.email
+        email: profileChange.email,
       })
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
-          getProfile()
+          getProfile();
           //set profile details
         }
       })
       .catch((e) => {
         console.log(e);
       });
-
-  }
+  };
 
   const getProfile = () => {
     let userId = "1233";
@@ -208,8 +209,7 @@ const Profile = () => {
   };
 
   // Notifications
-  const defaultProfileImg =
-    "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
+
   const [showNotifyModal, setShowNotifyModal] = useState(false);
 
   // PopOver Box
@@ -444,7 +444,7 @@ const Profile = () => {
                   <IonRow>
                     <IonCol size="6">
                       <img
-                        src={profile}
+                        src={profileChange.profilePicUrl}
                         alt="avatar"
                         style={{
                           borderRadius: "50%",
@@ -1004,7 +1004,10 @@ const Profile = () => {
                               <div className="notify-unread"></div>
                             )}
                             <IonAvatar>
-                              <img src={defaultProfileImg} alt="abc" />
+                              <img
+                                src={profileChange.profilePicUrl}
+                                alt="abc"
+                              />
                             </IonAvatar>
                           </div>
                           <div className="notify-date">{item.timeSince}</div>
