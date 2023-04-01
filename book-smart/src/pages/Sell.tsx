@@ -101,12 +101,42 @@ const Sell: React.FC = () => {
   const [showToast1, setShowToast1] = useState(false);
   const [selectedBook, setSelectedBook] = useState<any>({});
   const [msg, setMsg] = useState("");
+  const [updateFlag, setUpdateFlag] = useState<boolean>(false)
 
   const [showModal, setShowModal] = useState(false);
 
   const { photos, takePhoto } = usePhotoGallery();
   const [showToast, setShowToast] = useState(false);
   const [isbnToast, setIsbnToast] = useState(false);
+
+  const updateAd = (id: number) => {
+
+    const url = APIURL + "v2/updateBookAds";
+
+    axios.post(url, {
+      bookAdId: activeTrades[id]._id,
+      bookPrice: price,
+      bookImageUrl: imageUrl,
+      bookCondition: condition,
+      sellerAddress: address,
+      sellerPincode: pincode,
+      bookDescription: descr,
+
+    })
+    .then((resp) => {
+      console.log(resp);
+      if (resp.data.success) {
+        setShowModal(false);
+        setScreen("details");
+        toaster1();
+      }
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+    setUpdateFlag(false)
+    getTradeCardDetails(60);
+  }
 
   const deleteAd = async (id: string) => {
     const url = APIURL + "v2/deleteAd";
@@ -171,7 +201,7 @@ const Sell: React.FC = () => {
   const changeScreen = () => {
     console.log(screen);
     if (screen === "details") setScreen("upload");
-    else {
+    else if(!updateFlag){
       // get Book details from book name
       // const tempbook = ;
       console.log(book);
@@ -290,6 +320,9 @@ const Sell: React.FC = () => {
       setAddress("");
       setPincode("");
       getTradeCardDetails(60);
+    }
+    else {
+      updateAd(selectedBook)
     }
   };
 
@@ -667,7 +700,16 @@ const Sell: React.FC = () => {
                               }
                             >
                               <IonContent className="popover-size">
-                                <IonItem button>
+                                <IonItem button onClick={() => {
+                                  setUpdateFlag(true)
+                                  setName(activeTrades[selectedBook].bookName);
+                                  setDescr(activeTrades[selectedBook].bookDescription);
+                                  setPrice(activeTrades[selectedBook].bookPrice);
+                                  setCondition(activeTrades[selectedBook].bookCondition);
+                                  setAddress(activeTrades[selectedBook].sellerAddress);
+                                  setPincode(activeTrades[selectedBook].sellerPincode);
+                                  setShowModal(true)
+                                }}>
                                   <IonLabel className="profile-orders">
                                     {" "}
                                     Update BookAd
@@ -932,7 +974,7 @@ const Sell: React.FC = () => {
                         </IonItem>
                         <IonButton
                           disabled={
-                            isbn.length !== 10 && isbn.length !== 13 && loading
+                            updateFlag && isbn.length !== 10 && isbn.length !== 13 && loading
                           }
                           onClick={() => {
                             setIsbnToast(true);
@@ -942,12 +984,12 @@ const Sell: React.FC = () => {
                           {loading ? <IonSpinner /> : "Get"}
                         </IonButton>
                       </div>
-                      <a
+                     {updateFlag?<></>: <a
                         style={{ margin: "25px" }}
                         href="https://books.google.com/"
                       >
                         Get your ISBN
-                      </a>
+                      </a>}
                       <div className="number">
                         <p
                           style={{

@@ -108,6 +108,7 @@ const Profile = () => {
   const getImage = () => {
     takePhoto().then((obj: any) => {
       console.log(obj);
+      updateProfile(obj.imageUrl)
       // obj = usePhotoGallery();
       // console.log(obj.photos)
       setImageUrl((old) => {
@@ -117,6 +118,29 @@ const Profile = () => {
       });
     });
   };
+
+  const updateProfile = (imgUrl : string) => {
+    let url = APIURL + "v2/getUser";
+
+    axios
+      .post(url,{
+        userId : profileChange._id,
+        profilePicUrl: imgUrl,
+        name: profileChange.name,
+        email: profileChange.email
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          getProfile()
+          //set profile details
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+  }
 
   const getProfile = () => {
     let userId = "1233";
