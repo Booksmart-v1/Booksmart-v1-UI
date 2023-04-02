@@ -13,21 +13,26 @@ import { addCircle } from "ionicons/icons";
 import React, { useState, useEffect } from "react";
 import "./search.css";
 // Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Navigation, Pagination, Scrollbar, Autoplay, EffectFade } from 'swiper';
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  Autoplay,
+  EffectFade,
+} from "swiper";
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-import 'swiper/css/autoplay';
-import 'swiper/css/effect-fade';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/autoplay";
+import "swiper/css/effect-fade";
 import axios from "axios";
 import { APIURL } from "../constants";
 
-
 const Search: React.FC = () => {
-  SwiperCore.use([Autoplay])
+  SwiperCore.use([Autoplay]);
   const [info, setInfo] = useState([]);
   const [wishListData, setWishListData] = useState<any>([]);
   const getWishlistDetails = () => {
@@ -42,7 +47,7 @@ const Search: React.FC = () => {
       .then((resp) => {
         if (resp.status === 200) {
           var data = resp.data.data;
-          let wishListIds = Array.from(new Set(data[0].bookIds))
+          let wishListIds = Array.from(new Set(data[0].bookIds));
           getWishListCardDetails(wishListIds);
         }
       })
@@ -63,13 +68,13 @@ const Search: React.FC = () => {
       .then((resp) => {
         if (resp.status === 200) {
           var data = resp.data.data;
-          var arr: any = []
+          var arr: any = [];
           for (let i = 0; i < wishListIds.length; i++) {
             data.filter((item: any) => {
               if (item._id === wishListIds[i]) {
                 arr.push(item);
               }
-            })
+            });
           }
           setWishListData(arr);
           setInfo(data);
@@ -100,13 +105,13 @@ const Search: React.FC = () => {
         if (resp.status === 200) {
           let data = resp.data.data;
           console.log(data);
-          setShowAddToast(true)
+          setShowAddToast(true);
         }
       })
       .catch((e) => {
         console.log(e);
       });
-  }
+  };
   // Search for wishlist book
   const [searchBook, setSearchBook] = useState("");
   const handleSearchBook = (e: any) => {
@@ -121,7 +126,7 @@ const Search: React.FC = () => {
       setWishListData(xyz);
     } else {
       // setWishListData(info);
-      getWishlistDetails()
+      getWishlistDetails();
       // getWishListCardDetails(wishListIds);
     }
   };
@@ -142,7 +147,11 @@ const Search: React.FC = () => {
       .then((resp) => {
         if (resp.status === 200) {
           var data = resp.data.data;
-          setBookAdAvailable(data.map((item: any) => { return item.bookId }));
+          setBookAdAvailable(
+            data.map((item: any) => {
+              return item.bookId;
+            })
+          );
         }
       })
       .catch((e) => {
@@ -159,14 +168,13 @@ const Search: React.FC = () => {
               "--background": "white",
               "--placeholder-color": "black",
               width: "90%",
-              fontFamily: "Montserrat-sb"
+              fontFamily: "Montserrat-sb",
             }}
             value={searchBook}
             onIonChange={(e) => {
               handleSearchBook(e);
             }}
-          >
-          </IonSearchbar>
+          ></IonSearchbar>
           <IonToast
             // style={{ fontFamily: "Montserrat-sb" }}
             isOpen={showAddToast}
@@ -174,24 +182,65 @@ const Search: React.FC = () => {
             message="Added book to wishlist!"
             duration={1500}
           />
-          <IonIcon icon={addCircle} color="red" size="large" slot="end" onClick={() => { addToWishlist(wishListData[0]._id); }}></IonIcon>
+          <IonIcon
+            icon={addCircle}
+            color="red"
+            size="large"
+            slot="end"
+            onClick={() => {
+              addToWishlist(wishListData[0]._id);
+            }}
+          ></IonIcon>
         </div>
-        <Swiper style={{ height: "12vh" }}
+        <Swiper
+          style={{ height: "12vh" }}
           modules={[Navigation, Pagination, Scrollbar, Autoplay, EffectFade]}
           slidesPerView={1}
           pagination={{ clickable: true }}
         >
           <SwiperSlide style={{ padding: "0 15px" }}>
-            <p style={{ textAlign: "left", fontFamily: "Montserrat-sb", fontSize: "26px" }}>Fiction</p>
+            <p
+              style={{
+                textAlign: "left",
+                fontFamily: "Montserrat-sb",
+                fontSize: "26px",
+              }}
+            >
+              Fiction
+            </p>
           </SwiperSlide>
           <SwiperSlide style={{ padding: "0 15px" }}>
-            <p style={{ textAlign: "left", fontFamily: "Montserrat-sb", fontSize: "26px" }}>Horror & Thriller</p>
+            <p
+              style={{
+                textAlign: "left",
+                fontFamily: "Montserrat-sb",
+                fontSize: "26px",
+              }}
+            >
+              Horror & Thriller
+            </p>
           </SwiperSlide>
           <SwiperSlide style={{ padding: "0 15px" }}>
-            <p style={{ textAlign: "left", fontFamily: "Montserrat-sb", fontSize: "26px" }}>Love</p>
+            <p
+              style={{
+                textAlign: "left",
+                fontFamily: "Montserrat-sb",
+                fontSize: "26px",
+              }}
+            >
+              Love
+            </p>
           </SwiperSlide>
           <SwiperSlide style={{ padding: "0 15px" }}>
-            <p style={{ textAlign: "left", fontFamily: "Montserrat-sb", fontSize: "26px" }}>Health</p>
+            <p
+              style={{
+                textAlign: "left",
+                fontFamily: "Montserrat-sb",
+                fontSize: "26px",
+              }}
+            >
+              Health
+            </p>
           </SwiperSlide>
         </Swiper>
       </div>
@@ -201,51 +250,91 @@ const Search: React.FC = () => {
             return (
               <div className="wishlist-card" key={idx}>
                 <div className="wishlist-img">
-                  <img src={defaultImage} alt="wishlist-book" style={{ width: "75px", height: "100px", borderRadius: "10%" }} />
+                  <img
+                    src={defaultImage}
+                    alt="wishlist-book"
+                    style={{
+                      width: "75px",
+                      height: "100px",
+                      borderRadius: "10%",
+                    }}
+                  />
                 </div>
                 <div className="wishlist-content">
-                  <p style={{ fontSize: "14px", color: "var(--bs-sText)", fontFamily: "Montserrat-b" }}>{item.bookName}</p>
-                  <p style={{ fontSize: "12px", margin: "10px 0", fontFamily: "Montserrat-sb", color: "var(--bs-pText)" }}>{item.bookAuthor}</p>
-                  {item.tags.map(
-                    (tag: string, index: number) => (
-                      <IonChip
-                        color="warning"
-                        key={index}
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      color: "var(--bs-sText)",
+                      fontFamily: "Montserrat-b",
+                    }}
+                  >
+                    {item.bookName}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      margin: "10px 0",
+                      fontFamily: "Montserrat-sb",
+                      color: "var(--bs-pText)",
+                    }}
+                  >
+                    {item.bookAuthor}
+                  </p>
+                  {item.tags.map((tag: string, index: number) => (
+                    <IonChip
+                      color="warning"
+                      key={index}
+                      style={{
+                        color: "black",
+                        border: "1px solid black",
+                        background: "var(--bs-pBg)",
+                      }}
+                    >
+                      <IonLabel
                         style={{
-                          color: "black",
-                          border: "1px solid black",
-                          background: "var(--bs-pBg)",
+                          fontFamily: "Montserrat-sb",
+                          fontSize: "11px",
+                          textTransform: "capitalize",
                         }}
                       >
-                        <IonLabel
-                          style={{
-                            fontFamily: "Montserrat-sb",
-                            fontSize: "11px",
-                            textTransform: "capitalize",
-                          }}
-                        >
-                          {tag.toLowerCase()}
-                        </IonLabel>
-                      </IonChip>
-                    )
-                  )}
+                        {tag.toLowerCase()}
+                      </IonLabel>
+                    </IonChip>
+                  ))}
                   {bookAdAvailable.includes(item._id) ? (
                     <>
-                      <IonButtons style={{ display: "flex", justifyContent: "flex-end" }}>
-                        <IonButton className="wishlist-buybtn" style={{ fontSize: "12px" }}>
+                      <IonButtons
+                        style={{ display: "flex", justifyContent: "flex-end" }}
+                      >
+                        <IonButton
+                          className="wishlist-buybtn"
+                          style={{ fontSize: "12px" }}
+                        >
                           Buy Now
                         </IonButton>
                       </IonButtons>
                     </>
-                  ) : (<></>)}
+                  ) : (
+                    <>
+                      <div className="noBooks">
+                        <img
+                          src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif"
+                          alt="Sorry"
+                          width={"100px"}
+                        />
+                        <p>
+                          Currently there are no books available with this name.
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-            )
+            );
           })}
-
         </div>
       </IonContent>
-    </IonPage >
+    </IonPage>
   );
 };
 

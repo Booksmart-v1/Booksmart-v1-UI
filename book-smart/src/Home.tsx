@@ -27,7 +27,7 @@ import ChatModal from "./pages/ChatModal";
 import axios from "axios";
 import { APIURL } from "./constants";
 import socket from "./Socket";
-
+import "./Home.css";
 setupIonicReact();
 
 interface myProps {
@@ -79,7 +79,9 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   const [showChatModal, setShowChatModal] = useState(false);
   const [filterChats, setFilterChats] = React.useState(chatArray);
   const [chats, setChats] = useState(chatArray);
-  // const [selIndex, SetSelIndex] = useState(0);
+  const [profileChange, setProfileChange] = useState<any>({
+    profilePicUrl: "",
+  });
   const [text, setText] = useState("");
   const [userId, setUserId] = useState("");
 
@@ -301,6 +303,44 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
       });
   };
 
+  const getProfile = () => {
+    let userId = "1233";
+    let username = "Aagam";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    let url = APIURL + "v2/getUser";
+
+    axios
+      .get(url + `?id=${userId}`)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          setProfileChange(res.data.data.profilePicUrl);
+          //set profile details
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+    // url = APIURL + "v2/getMyBookAds";
+
+    // axios
+    //   .get(url + `?userId=${userId}&limit=${lim}`)
+    //   .then((res) => {
+    //     console.log(res);
+    //     if (res.status === 200) {
+    //       //set book details
+    //     }
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
+  };
+
   return (
     <>
       <IonApp>
@@ -329,6 +369,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                   setUserId={setUserId}
                   postMessage={postMessage}
                   getChatRooms={getChatRooms}
+                  getProfile={getProfile}
                 />
               </Route>
               <Route
@@ -367,22 +408,27 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
             {/* Tabs at the bottom are handled over here */}
             <IonTabBar
               slot="bottom"
-              style={{
-                backgroundColor: "#f5f5f5",
-                borderTop: "1px solid #e0e0e0",
-                borderBottom: "1px solid #e0e0e0",
-                borderRight: "1px solid #e0e0e0",
-                borderLeft: "1px solid #e0e0e0",
-                borderRadius: "0px 0px 0px 0px",
-                boxShadow: "0px 0px 0px 0px rgba(0,0,0,0.2)",
-                height: "50px",
-              }}
+              style={
+                {
+                  // backgroundColor: "#f5f5f5",
+                  // borderTop: "1px solid #e0e0e0",
+                  // borderBottom: "1px solid #e0e0e0",
+                  // borderRight: "1px solid #e0e0e0",
+                  // borderLeft: "1px solid #e0e0e0",
+                  // borderRadius: "0px 0px 0px 0px",
+                  // boxShadow: "0px 0px 0px 0px rgba(0,0,0,0.2)",
+                  // height: "50px",
+                }
+              }
+              className="tab-bar"
               // onClick={refreshPage}
             >
               <IonTabButton
                 tab="homePage"
                 href="/homepage"
                 selected={isSelected[0]}
+                layout="icon-top"
+                className="tab-button"
               >
                 <IonIcon
                   icon={home}
@@ -396,6 +442,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 tab="search"
                 href="/homepage/Search"
                 selected={isSelected[1]}
+                layout="icon-top"
+                className="tab-button"
               >
                 <IonIcon
                   icon={bagCheck}
@@ -409,6 +457,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 tab="chat"
                 href="/homepage/Chat"
                 selected={isSelected[2]}
+                layout="icon-top"
+                className="tab-button"
               >
                 <IonIcon
                   icon={chatbubbles}
@@ -421,6 +471,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 tab="sell"
                 href="/homepage/Sell"
                 selected={isSelected[3]}
+                layout="icon-top"
+                className="tab-button"
               >
                 <IonIcon
                   icon={peopleCircle}
@@ -433,6 +485,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 tab="profile"
                 href="/homepage/Profile"
                 selected={isSelected[4]}
+                layout="icon-top"
+                className="tab-button"
               >
                 <IonIcon
                   icon={personCircle}

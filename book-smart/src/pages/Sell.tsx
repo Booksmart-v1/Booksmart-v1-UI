@@ -126,6 +126,7 @@ const Sell: React.FC = () => {
         console.log(resp);
         if (resp.data.success) {
           setShowModal(false);
+
           setScreen("details");
           toaster1();
         }
@@ -934,7 +935,10 @@ const Sell: React.FC = () => {
               <IonModal
                 isOpen={showModal}
                 swipeToClose={true}
-                onDidDismiss={() => setShowModal(false)}
+                onDidDismiss={() => {
+                  setUpdateFlag(false);
+                  setShowModal(false);
+                }}
                 mode="ios"
                 title="Add Book"
                 keyboardClose={true}
@@ -956,6 +960,7 @@ const Sell: React.FC = () => {
                         <IonButton
                           onClick={() => {
                             setShowModal(false);
+                            setUpdateFlag(false);
                             setScreen("details");
                           }}
                           slot="end"
