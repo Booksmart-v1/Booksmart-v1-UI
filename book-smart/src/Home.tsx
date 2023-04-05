@@ -289,11 +289,12 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
         if (res.data.success) {
           socket.emit("send_message", res.config.data);
           console.log(res.config.data);
+          setText("");
+          getChatRoomMessages(chatModal.roomId, chatModal);
           // var a2 = JSON.parse(res.config.data)["message"];
           // console.log(a2);
           //  var a3 = { ...chatModal.messages };
           // setChatModal((list) => [...list, a2]);
-          setText("");
         }
       })
       .catch((e) => {
