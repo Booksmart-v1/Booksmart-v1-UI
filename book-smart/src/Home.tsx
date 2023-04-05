@@ -56,6 +56,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   const chatArray = [
     {
       name: "",
+      profilePic: "",
       message: "",
       messages: a,
       roomId: "",
@@ -66,6 +67,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
     },
     {
       name: "",
+      profilePic: "",
       message: "",
       messages: a,
       roomId: "",
@@ -124,6 +126,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
 
         let chatInfo = {
           name: chats.name,
+          profilePic: chats.profilePic,
           message: lastMsg,
           messages: resp.data.data,
           roomId: id1,
@@ -174,15 +177,17 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
             .then(async (resp) => {
               console.log(resp);
               let name = "";
+              let profilePic = ""
 
               // let closed = resp.data.data.closed;
-              var url = APIURL + "v2/getOneUser";
+              var url = APIURL + "v2/getUser";
 
               await axios
                 .get(url + `?userId=${id}`)
                 .then(async (resp) => {
                   console.log(resp);
                   name = resp.data.data.name;
+                  profilePic = resp.data.data.profilePicUrl;
                   console.log(name);
                 })
                 .catch((e) => {
@@ -239,6 +244,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                       ...chatInfo,
                       {
                         name: name,
+                        profilePic: profilePic,
                         message: lastMsg,
                         messages: resp.data.data,
                         roomId: id1,

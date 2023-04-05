@@ -132,7 +132,7 @@ const ChatScreen = (props: Record<string, any>) => {
               >
                 <div className="chat-card">
                   <div className="chat-card-img">
-                    <img src={defaultProfileImg} alt="abc" />
+                    <img src={item.profilePic} alt="abc" />
                   </div>
                   <div className="chat-card-content">
                     <p style={{ fontFamily: "Montserrat-b", fontSize: "18px" }}>

@@ -40,6 +40,7 @@ import { useHistory } from "react-router-dom";
 
 interface chat {
   name: string;
+  profilePic: string;
   message: string;
   messages: any[];
   roomId: string;
@@ -72,6 +73,7 @@ const ChatModal: React.FC<prop> = ({
 }) => {
   const defaultProfileImg =
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
+  const [userPic, setUserPic] = useState<string>(defaultProfileImg)
   const [chatOpen, setChatOpen] = useState(!item.closed);
   const [chat, setChat] = useState<any>(item);
   const [popoverState, setShowPopover] = useState({
@@ -126,6 +128,24 @@ const ChatModal: React.FC<prop> = ({
     }
   };
 
+  const getProfile = () => {
+    let url = APIURL + "v2/getUser";
+
+    axios
+      .get(url + `?id=${userId}`)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          setUserPic(res.data.data.profilePicUrl);
+          //set profile details
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+  };
+
   const history = useHistory();
   useEffect(() => {
     console.log(chatRoomId);
@@ -167,7 +187,7 @@ const ChatModal: React.FC<prop> = ({
               }}
             >
               <img
-                src={defaultProfileImg}
+                src={item.profilePic}
                 alt="abc"
                 style={{
                   width: "35px",
