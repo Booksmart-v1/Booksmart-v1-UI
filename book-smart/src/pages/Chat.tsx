@@ -43,6 +43,7 @@ const ChatScreen = (props: Record<string, any>) => {
     setText,
     postMessage,
     getChatRooms,
+    getProfile,
   } = props;
 
   // const [filteredInfo, setFilteredInfo] = useState(chats);
@@ -50,6 +51,7 @@ const ChatScreen = (props: Record<string, any>) => {
 
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getChatRooms(60);
+    getProfile();
     console.log("Begin async operation");
     setTimeout(() => {
       console.log("Async operation has ended");
@@ -74,6 +76,7 @@ const ChatScreen = (props: Record<string, any>) => {
 
   useEffect(() => {
     getChatRooms(60);
+    getProfile();
     console.log(chats);
   }, [socket]);
   return (

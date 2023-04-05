@@ -46,7 +46,7 @@ interface chat {
   time: string;
   date: string;
   closed: boolean;
-  bookAdId: string;
+  bookAdId: string | undefined;
 }
 
 interface prop {
@@ -87,7 +87,7 @@ const ChatModal: React.FC<prop> = ({
     }, 2000);
   }
 
-  const markAsSold = async (id: String) => {
+  const markAsSold = async (id: string | undefined) => {
     try {
       const url = APIURL + "v2/markAsSold";
       const resp = await axios.post(url, {
@@ -106,7 +106,7 @@ const ChatModal: React.FC<prop> = ({
       console.log(err);
     }
   };
-  const markAsUnSold = async (id: String) => {
+  const markAsUnSold = async (id: string | undefined) => {
     try {
       const url = APIURL + "v2/markAsUnsold";
       const resp = await axios.post(url, {

@@ -101,7 +101,7 @@ const Sell: React.FC = () => {
   const [showToast1, setShowToast1] = useState(false);
   const [selectedBook, setSelectedBook] = useState<any>({});
   const [msg, setMsg] = useState("");
-  const [updateFlag, setUpdateFlag] = useState<boolean>(false)
+  const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -110,33 +110,35 @@ const Sell: React.FC = () => {
   const [isbnToast, setIsbnToast] = useState(false);
 
   const updateAd = (id: number) => {
-
     const url = APIURL + "v2/updateBookAds";
 
-    axios.post(url, {
-      bookAdId: activeTrades[id]._id,
-      bookPrice: price,
-      bookImageUrl: imageUrl,
-      bookCondition: condition,
-      sellerAddress: address,
-      sellerPincode: pincode,
-      bookDescription: descr,
+    axios
+      .post(url, {
+        bookAdId: activeTrades[id]._id,
+        bookPrice: price,
+        bookImageUrl: imageUrl,
+        bookCondition: condition,
+        sellerAddress: address,
+        sellerPincode: pincode,
+        bookDescription: descr,
+      })
+      .then((resp) => {
+        console.log(resp);
+        if (resp.data.success) {
+          setShowModal(false);
 
-    })
-    .then((resp) => {
-      console.log(resp);
-      if (resp.data.success) {
-        setShowModal(false);
-        setScreen("details");
-        toaster1();
-      }
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-    setUpdateFlag(false)
-    getTradeCardDetails(60);
-  }
+          setScreen("details");
+          toaster1();
+        }
+        setUpdateFlag(false);
+        getTradeCardDetails(60);
+      })
+      .catch((e) => {
+        setUpdateFlag(false);
+        getTradeCardDetails(60);
+        console.log(e);
+      });
+  };
 
   const deleteAd = async (id: string) => {
     const url = APIURL + "v2/deleteAd";
@@ -201,7 +203,7 @@ const Sell: React.FC = () => {
   const changeScreen = () => {
     console.log(screen);
     if (screen === "details") setScreen("upload");
-    else if(!updateFlag){
+    else if (!updateFlag) {
       // get Book details from book name
       // const tempbook = ;
       console.log(book);
@@ -320,9 +322,8 @@ const Sell: React.FC = () => {
       setAddress("");
       setPincode("");
       getTradeCardDetails(60);
-    }
-    else {
-      updateAd(selectedBook)
+    } else {
+      updateAd(selectedBook);
     }
   };
 
@@ -700,16 +701,32 @@ const Sell: React.FC = () => {
                               }
                             >
                               <IonContent className="popover-size">
-                                <IonItem button onClick={() => {
-                                  setUpdateFlag(true)
-                                  setName(activeTrades[selectedBook].bookName);
-                                  setDescr(activeTrades[selectedBook].bookDescription);
-                                  setPrice(activeTrades[selectedBook].bookPrice);
-                                  setCondition(activeTrades[selectedBook].bookCondition);
-                                  setAddress(activeTrades[selectedBook].sellerAddress);
-                                  setPincode(activeTrades[selectedBook].sellerPincode);
-                                  setShowModal(true)
-                                }}>
+                                <IonItem
+                                  button
+                                  onClick={() => {
+                                    setUpdateFlag(true);
+                                    setISBN(activeTrades[selectedBook].isbn);
+                                    setName(
+                                      activeTrades[selectedBook].bookName
+                                    );
+                                    setDescr(
+                                      activeTrades[selectedBook].bookDescription
+                                    );
+                                    setPrice(
+                                      activeTrades[selectedBook].bookPrice
+                                    );
+                                    setCondition(
+                                      activeTrades[selectedBook].bookCondition
+                                    );
+                                    setAddress(
+                                      activeTrades[selectedBook].sellerAddress
+                                    );
+                                    setPincode(
+                                      activeTrades[selectedBook].sellerPincode
+                                    );
+                                    setShowModal(true);
+                                  }}
+                                >
                                   <IonLabel className="profile-orders">
                                     {" "}
                                     Update BookAd
@@ -918,7 +935,10 @@ const Sell: React.FC = () => {
               <IonModal
                 isOpen={showModal}
                 swipeToClose={true}
-                onDidDismiss={() => setShowModal(false)}
+                onDidDismiss={() => {
+                  setUpdateFlag(false);
+                  setShowModal(false);
+                }}
                 mode="ios"
                 title="Add Book"
                 keyboardClose={true}
@@ -940,6 +960,7 @@ const Sell: React.FC = () => {
                         <IonButton
                           onClick={() => {
                             setShowModal(false);
+                            setUpdateFlag(false);
                             setScreen("details");
                           }}
                           slot="end"
@@ -960,36 +981,50 @@ const Sell: React.FC = () => {
                             fontSize: "18",
                           }}
                         ></p>
-                        <IonItem style={{ marginTop: "10px" }}>
-                          {/* <IonLabel position="floating"> Email</IonLabel> */}
-                          <IonInput
-                            required
-                            type="number"
-                            placeholder="Enter 10/13 digit ISBN"
-                            value={isbn}
-                            onIonChange={(e: any) => {
-                              setISBN(e.target.value);
-                            }}
-                          ></IonInput>
-                        </IonItem>
-                        <IonButton
-                          disabled={
-                            updateFlag && isbn.length !== 10 && isbn.length !== 13 && loading
-                          }
-                          onClick={() => {
-                            setIsbnToast(true);
-                            getBookDetails();
-                          }}
-                        >
-                          {loading ? <IonSpinner /> : "Get"}
-                        </IonButton>
+                        {updateFlag ? (
+                          <></>
+                        ) : (
+                          <>
+                            {" "}
+                            <IonItem style={{ marginTop: "10px" }}>
+                              {/* <IonLabel position="floating"> Email</IonLabel> */}
+                              <IonInput
+                                required
+                                type="number"
+                                placeholder="Enter 10/13 digit ISBN"
+                                value={isbn}
+                                onIonChange={(e: any) => {
+                                  setISBN(e.target.value);
+                                }}
+                              ></IonInput>
+                            </IonItem>
+                            <IonButton
+                              disabled={
+                                updateFlag ||
+                                (isbn.length !== 10 && isbn.length !== 13) ||
+                                loading
+                              }
+                              onClick={() => {
+                                setIsbnToast(true);
+                                getBookDetails();
+                              }}
+                            >
+                              {loading ? <IonSpinner /> : "Get"}
+                            </IonButton>
+                          </>
+                        )}
                       </div>
-                     {updateFlag?<></>: <a
-                        style={{ margin: "25px" }}
-                        href="https://books.google.com/"
-                      >
-                        Get your ISBN
-                      </a>}
+
+                      {updateFlag ? (
+                        <></>
+                      ) : (
+                        <a
+                          style={{ margin: "25px" }}
+                          href="https://books.google.com/"
+                        >
+                          Get your ISBN
+                        </a>
+                      )}
                       <div className="number">
                         <p
                           style={{
@@ -1194,7 +1229,9 @@ const Sell: React.FC = () => {
                 <IonFooter>
                   <button
                     onClick={() => {
-                      if (isbn.length === 10 || isbn.length === 13) {
+                      if (updateFlag) {
+                        changeScreen();
+                      } else if (isbn.length === 10 || isbn.length === 13) {
                         changeScreen();
                       } else {
                         setShowAlert(true);
