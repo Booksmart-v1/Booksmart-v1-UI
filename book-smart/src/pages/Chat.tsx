@@ -44,6 +44,8 @@ const ChatScreen = (props: Record<string, any>) => {
     postMessage,
     getChatRooms,
     getProfile,
+    bookData,
+    setBookData,
   } = props;
 
   // const [filteredInfo, setFilteredInfo] = useState(chats);
@@ -132,7 +134,12 @@ const ChatScreen = (props: Record<string, any>) => {
               >
                 <div className="chat-card">
                   <div className="chat-card-img">
-                    <img src={item.profilePic} alt="abc" />
+                    <img
+                      src={
+                        item.profilePic ? item.profilePic : defaultProfileImg
+                      }
+                      alt="abc"
+                    />
                   </div>
                   <div className="chat-card-content">
                     <p style={{ fontFamily: "Montserrat-b", fontSize: "18px" }}>

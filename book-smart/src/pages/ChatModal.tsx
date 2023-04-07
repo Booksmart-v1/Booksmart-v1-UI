@@ -15,6 +15,7 @@ import {
   IonItem,
   IonLabel,
   IonPopover,
+  IonToast,
 } from "@ionic/react";
 import "./Chat.css";
 // import profile from "../images/profile-image.jpg";
@@ -59,6 +60,9 @@ interface prop {
   postMessage: any;
   userId: string;
   getChatRoomMessages: any;
+  getBookAds: any;
+  setBookData: any;
+  bookData: any;
 }
 
 const ChatModal: React.FC<prop> = ({
@@ -70,16 +74,24 @@ const ChatModal: React.FC<prop> = ({
   postMessage,
   userId,
   getChatRoomMessages,
+  getBookAds,
+  setBookData,
+  bookData,
+  // setBookdata,
+  // bookData,
 }) => {
   const defaultProfileImg =
     "https://ionicframework.com/docs/demos/api/avatar/avatar.svg";
-  const [userPic, setUserPic] = useState<string>(defaultProfileImg)
+  const [userPic, setUserPic] = useState<string>(defaultProfileImg);
   const [chatOpen, setChatOpen] = useState(!item.closed);
   const [chat, setChat] = useState<any>(item);
   const [popoverState, setShowPopover] = useState({
     showPopover: false,
     event: undefined,
   });
+  const [toast, setToast] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [ad, setAd] = useState<any>({});
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     getChatRoomMessages(chatRoomId, item);
     console.log("Begin async operation");
@@ -96,6 +108,12 @@ const ChatModal: React.FC<prop> = ({
         id: id,
       });
       console.log(resp);
+      if (resp.data.success === true) {
+        setMsg(resp.data.message);
+        setToast(true);
+      } else {
+        return;
+      }
       const url1 = APIURL + "v2/closedChat";
       const resp1 = await axios.post(url1, {
         chatRoomId: item.roomId,
@@ -114,6 +132,12 @@ const ChatModal: React.FC<prop> = ({
       const resp = await axios.post(url, {
         id: id,
       });
+      if (resp.data.success === true) {
+        setMsg(resp.data.message);
+        setToast(true);
+      } else {
+        return;
+      }
       console.log(resp);
       const url1 = APIURL + "v2/closedChat";
       const resp1 = await axios.post(url1, {
@@ -128,28 +152,36 @@ const ChatModal: React.FC<prop> = ({
     }
   };
 
-  const getProfile = () => {
-    let url = APIURL + "v2/getUser";
+  const getBookAd = async () => {
+    let userId = "1233";
+    let username = "Aagam";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
+    }
+    let url = APIURL + "v2/getBookAd";
 
-    axios
-      .get(url + `?id=${userId}`)
+    await axios
+      .get(url + `?id=${item.bookAdId}`)
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
-          setUserPic(res.data.data.profilePicUrl);
-          //set profile details
+          var data = res.data.data;
+          console.log(data);
+          setAd(data);
         }
       })
       .catch((e) => {
         console.log(e);
       });
-
   };
 
   const history = useHistory();
   useEffect(() => {
     console.log(chatRoomId);
     getChatRoomMessages(chatRoomId, item);
+    getBookAd();
     socket.on("get_message", (data: any) => {
       setChat((chat: any) => {
         let a = chat;
@@ -158,6 +190,7 @@ const ChatModal: React.FC<prop> = ({
         return a;
       });
       getChatRoomMessages(chatRoomId, item);
+      getBookAd();
       console.log(data);
     });
     console.log(chat);
@@ -187,13 +220,13 @@ const ChatModal: React.FC<prop> = ({
               }}
             >
               <img
-                src={item.profilePic}
+                src={item.profilePic ? item.profilePic : defaultProfileImg}
                 alt="abc"
                 style={{
                   width: "35px",
                   height: "35px",
                   borderRadius: "50%",
-                  marginRight: "10px",
+                  marginRight: "7px",
                 }}
               />
               <h2
@@ -206,20 +239,11 @@ const ChatModal: React.FC<prop> = ({
                 }}
               >
                 {item.name}
+                <p>{ad.bookAuthor}</p>
               </h2>
             </div>
           </IonTitle>
-          {/* <IonButtons slot="end">
-            <IonButton
-              onClick={() => {
-                chatOpen
-                  ? markAsSold(item.bookAdId)
-                  : markAsUnSold(item.bookAdId);
-              }}
-            >
-              <p>{chatOpen ? "Mark Sold" : "Mark Unsold"}</p>
-            </IonButton>
-          </IonButtons> */}
+
           <IonButtons className="popover-ellipse" slot="end">
             <IonButton
               slot="end"
@@ -245,6 +269,12 @@ const ChatModal: React.FC<prop> = ({
             }
           >
             <IonContent className="popover-size">
+              <IonToast
+                isOpen={toast}
+                onDidDismiss={() => setToast(false)}
+                message={msg}
+                duration={3000}
+              />
               <IonItem
                 button
                 disabled={!chatOpen}
@@ -298,24 +328,11 @@ const ChatModal: React.FC<prop> = ({
           <p> Refreshing Your Chats!✌️</p>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-        {item.messages.map((item: any, idx: any) => {
-          return (
-            <>
-              <div className="convo-body">
+        <div className="convo-body">
+          {item.messages.map((item: any, idx: any) => {
+            return (
+              <>
                 <div className="bubbleWrapper">
-                  {/* <div
-                    className={`${
-                      item.postedByUser === userId
-                        ? "inlineContainer own"
-                        : "inlineContainer"
-                    }`}
-                  >
-                    <img
-                      className="inlineIcon"
-                      alt="haha"
-                      src={defaultProfileImg}
-                    /> */}
-
                   <div className="conversation">
                     <div className="conversation-container">
                       <div
@@ -368,10 +385,10 @@ const ChatModal: React.FC<prop> = ({
                 </div> */}
                   </div>
                 </div>
-              </div>
-            </>
-          );
-        })}
+              </>
+            );
+          })}
+        </div>
       </IonContent>
       <IonFooter>
         <IonToolbar style={{ padding: "10px 0" }}>

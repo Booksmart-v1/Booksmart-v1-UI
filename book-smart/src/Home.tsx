@@ -86,6 +86,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   });
   const [text, setText] = useState("");
   const [userId, setUserId] = useState("");
+  const [bookData, setBookData] = useState([]);
 
   const getChatRoomMessages = async (id1: string, chats: any) => {
     let url = APIURL + "v2/getMessagesInChatRoom";
@@ -177,10 +178,10 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
             .then(async (resp) => {
               console.log(resp);
               let name = "";
-              let profilePic = ""
+              let profilePic = "";
 
               // let closed = resp.data.data.closed;
-              var url = APIURL + "v2/getUser";
+              var url = APIURL + "v2/getOneUser";
 
               await axios
                 .get(url + `?userId=${id}`)
@@ -310,7 +311,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
       });
   };
 
-  const getProfile = () => {
+  const getProfile = async () => {
     let userId = "1233";
     let username = "Aagam";
     const a = localStorage.getItem("user");
@@ -320,7 +321,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
     }
     let url = APIURL + "v2/getUser";
 
-    axios
+    await axios
       .get(url + `?id=${userId}`)
       .then((res) => {
         console.log(res);
@@ -332,20 +333,31 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
       .catch((e) => {
         console.log(e);
       });
+  };
 
-    // url = APIURL + "v2/getMyBookAds";
-
-    // axios
-    //   .get(url + `?userId=${userId}&limit=${lim}`)
-    //   .then((res) => {
-    //     console.log(res);
-    //     if (res.status === 200) {
-    //       //set book details
-    //     }
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
+  const getBookAds = (lim: number, userId: string) => {
+    {
+      const url = APIURL + "v2/getBookAds";
+      var userId = "1233";
+      var username = "Aagam";
+      const a = localStorage.getItem("user");
+      if (a) {
+        userId = JSON.parse(a).id;
+        username = JSON.parse(a).name;
+      }
+      axios
+        .get(url + `?limit=${lim}&userId=${userId}`)
+        .then((resp) => {
+          if (resp.status === 200) {
+            var data = resp.data.data;
+            setBookData(data);
+            console.log(data);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   };
 
   return (
@@ -377,6 +389,8 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                   postMessage={postMessage}
                   getChatRooms={getChatRooms}
                   getProfile={getProfile}
+                  bookData={bookData}
+                  setBookData={setBookData}
                 />
               </Route>
               <Route
@@ -392,6 +406,9 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                       postMessage={postMessage}
                       userId={userId}
                       getChatRoomMessages={getChatRoomMessages}
+                      getBookAds={getBookAds}
+                      bookData={bookData}
+                      setBookData={setBookData}
                     />
                   );
                 }}

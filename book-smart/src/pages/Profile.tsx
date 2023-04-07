@@ -572,7 +572,7 @@ const Profile = () => {
                     <IonRow>
                       <IonIcon icon={chatboxEllipsesOutline} /> &nbsp;
                       <IonCardSubtitle className="status-heading">
-                        Status
+                        About You/story
                       </IonCardSubtitle>
                     </IonRow>
                     {editStatus ? (
