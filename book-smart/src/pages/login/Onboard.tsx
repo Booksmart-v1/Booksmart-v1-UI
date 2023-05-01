@@ -107,16 +107,17 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
           })
           .then((res) => {
             console.log(res);
-            setMsg(res.data.message);
+
             if (res.status === 200) {
               setOtpSent(true);
               setID(res.data.data.userId);
               start();
+              setMsg(res.data.message);
             }
             setShowToast1(true);
           })
           .catch((e) => {
-            setMsg(e.message);
+            setMsg("Please sign up first!");
             setShowToast1(true);
             console.log(e);
           });

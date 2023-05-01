@@ -474,7 +474,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                   onClick={() => handleSelect(1)}
                   color={"var(--bs-pText)"}
                 />
-                <IonLabel>Wishlist</IonLabel>
+                <IonLabel>Book Shelf</IonLabel>
               </IonTabButton>
 
               <IonTabButton

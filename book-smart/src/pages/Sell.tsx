@@ -125,8 +125,7 @@ const Sell: React.FC = () => {
       .then((resp) => {
         console.log(resp);
         if (resp.data.success) {
-          setShowModal(false);
-
+          setShowModal(true);
           setScreen("details");
           toaster1();
         }
@@ -147,6 +146,8 @@ const Sell: React.FC = () => {
       id: id,
     });
     console.log(resp);
+    setMsg(resp.data.message);
+    setShowToast(true);
     getTradeCardDetails(60);
   };
 
@@ -156,6 +157,12 @@ const Sell: React.FC = () => {
     const resp = await axios.post(url, {
       id: activeTrades[idx]._id,
     });
+    // const url1 = APIURL + "v2/closedChat";
+    // const resp1 = await axios.post(url1, {
+    //   chatRoomId: item.roomId,
+    //   value: true,
+    // });
+    // console.log(resp1);
     console.log(resp);
     getTradeCardDetails(60);
   };
@@ -896,7 +903,7 @@ const Sell: React.FC = () => {
                                 onClick={() => {
                                   deleteAd(pastTrades[selectedBook]._id);
                                   setShowPopover({
-                                    showPopover: true,
+                                    showPopover: false,
                                     event: element,
                                   });
                                 }}

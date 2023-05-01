@@ -541,7 +541,7 @@ const Profile = () => {
                           >
                             {profileChange.booksBought.length}
                           </IonCardTitle>
-                          <IonCardSubtitle>Books Bought</IonCardSubtitle>
+                          <IonCardSubtitle>Books Bought1</IonCardSubtitle>
                         </IonCol>
                       </IonRow>
                     </IonCol>
@@ -549,7 +549,7 @@ const Profile = () => {
                   <IonRow>
                     <IonCol size="12">
                       <IonButton
-                        routerLink="/homepage/Chat"
+                        // routerLink="/homepage/Chat"
                         className="message-button"
                         expand="block"
                       >
