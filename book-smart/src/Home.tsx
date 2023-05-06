@@ -28,6 +28,8 @@ import axios from "axios";
 import { APIURL } from "./constants";
 import socket from "./Socket";
 import "./Home.css";
+import { PushNotificationSchema, PushNotifications, Token, ActionPerformed } from '@capacitor/push-notifications';
+import { Toast } from '@capacitor/toast'
 setupIonicReact();
 
 interface myProps {
@@ -44,6 +46,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   // let {page} = useParams();
   var selectArray: boolean[] = [true, false, false, false, false];
   const [refresh, setRefresh] = React.useState(false);
+  const [notifications, setNotifications] = React.useState<any[]>([]);
 
   const [isSelected, setIsSelected] = React.useState<boolean[]>(selectArray);
   const handleSelect = (id: number) => {
@@ -87,6 +90,39 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   const [text, setText] = useState("");
   const [userId, setUserId] = useState("");
   const [bookData, setBookData] = useState([]);
+
+  const register = () => {
+    console.log('Initializing HomePage');
+    PushNotifications.register();
+    PushNotifications.addListener('registration',
+        (token: Token) => {
+            showToast('Push registration success');
+        }
+    );
+    PushNotifications.addListener('registrationError',
+        (error: any) => {
+            alert('Error on registration: ' + JSON.stringify(error));
+        }
+    );
+    PushNotifications.addListener('pushNotificationReceived',
+        (notification: PushNotificationSchema) => {
+            showToast(notification.title?notification.title:"New notification");
+            setNotifications(notifications => [...notifications, { id: notification.id, title: notification.title, body: notification.body, type: 'foreground' }])
+        }
+    );
+    PushNotifications.addListener('pushNotificationActionPerformed',
+        (notification: ActionPerformed) => {
+            showToast(notification.notification.data.title);
+            setNotifications(notifications => [...notifications, { id: notification.notification.data.id, title: notification.notification.data.title, body: notification.notification.data.body, type: 'action' }])
+        }
+    );
+}
+
+const showToast = async (msg: string) => {
+    await Toast.show({
+        text: msg
+    })
+}
 
   const getChatRoomMessages = async (id1: string, chats: any) => {
     let url = APIURL + "v2/getMessagesInChatRoom";
@@ -360,6 +396,25 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
     }
   };
 
+  React.useEffect(()=>{
+    PushNotifications.checkPermissions().then((res) => {
+        if (res.receive !== 'granted') {
+          PushNotifications.requestPermissions().then((res) => {
+            if (res.receive === 'denied') {
+              showToast('Push Notification permission denied');
+            }
+            else {
+              showToast('Push Notification permission granted');
+              register();
+            }
+          });
+        }
+        else {
+          register();
+        }
+      });
+  },[])
+
   return (
     <>
       <IonApp>
@@ -421,8 +476,9 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
               <Route
                 exact={true}
                 path="/homepage/profile"
-                component={Profile}
-              ></Route>
+              >
+                <Profile notifications={notifications} />
+              </Route>
               {/* <Route exact={true} path="/homepage/shop"
           component={Sell}
           >

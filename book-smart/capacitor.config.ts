@@ -4,10 +4,13 @@ const config: CapacitorConfig = {
   appId: 'com.reactionic.com',
   appName: 'book-smart',
   webDir: 'build',
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 12345
-    }
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 12345
+    },
+    PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"],
+    },
   },
   bundledWebRuntime: false
 };

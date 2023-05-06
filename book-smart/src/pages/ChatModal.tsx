@@ -229,18 +229,18 @@ const ChatModal: React.FC<prop> = ({
                   marginRight: "7px",
                 }}
               />
-              <h2
+              <h4
                 style={{
                   textAlign: "center",
                   fontFamily: "Montserrat-B",
                   color: "var(--bs-pText)",
-                  fontSize: "20px",
-                  marginRight: "20px",
+                  fontSize: "10px",
+                  // marginRight: "20px",
                 }}
               >
                 {item.name}
                 <p>{ad.bookAuthor}</p>
-              </h2>
+              </h4>
             </div>
           </IonTitle>
 

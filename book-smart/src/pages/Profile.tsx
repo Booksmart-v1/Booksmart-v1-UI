@@ -60,7 +60,7 @@ import axios from "axios";
 import { useHistory } from "react-router";
 import moment from "moment";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
-const Profile = () => {
+const Profile = ({notifications}: {notifications: any[]}) => {
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [popoverState, setShowPopover] = useState({
     showPopover: false,
