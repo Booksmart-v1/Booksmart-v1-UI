@@ -17,7 +17,10 @@ export const get = async (url: string) => {
                 retry = true;
                 token = await getNewToken();
             }
-        } catch (err) {
+        } catch (err:any) {
+            // TODO:
+            retry = true;
+            token = await getNewToken();
             console.log(err);
         }
         if (retry === false) {
@@ -31,6 +34,7 @@ export const post = async (url: string, data: any) => {
     let token = getAccessToken();
     let retry = false;
     for (let i = 0; i < 2; i++) {
+        try{
         const resp = await axios.post(url, data, {
             headers: {
                 'Content-Type': 'application/json',
@@ -43,10 +47,14 @@ export const post = async (url: string, data: any) => {
             retry = true;
             token = await getNewToken();
         }
+    }catch (e:any) {
+        console.log(e.code);
+    }
         if (retry === false) {
             break;
         }
     }
+
     return null;
 }
 
