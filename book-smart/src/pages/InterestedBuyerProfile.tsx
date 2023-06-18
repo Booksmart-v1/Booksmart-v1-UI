@@ -68,7 +68,7 @@ const InterestedBuyerProfile = () => {
   });
 
   return (
-    <IonPage className="md">
+    <IonPage className="ios">
       <IonHeader>
         <IonToolbar>
           <div
@@ -85,6 +85,52 @@ const InterestedBuyerProfile = () => {
           <div></div>
         </IonToolbar>
       </IonHeader>
+      <IonContent scrollY={false}>
+        <IonGrid>
+          <IonRow className="ion-justify-content-center">
+            <IonCol
+              size="12"
+              className="ion-justify-content-center ion-align-items-center ion-text-center"
+            >
+              <IonCard className="profileHeader">
+                <IonCardContent>
+                  <IonRow>
+                    <IonCol size="6">
+                      <img
+                        // src={profileChange.profilePicUrl}
+                        alt="avatar"
+                        style={{
+                          borderRadius: "50%",
+                          height: "15vh",
+                        }}
+                      />
+                      <IonIcon
+                        // onClick={() => setShowActionSheet(true)}
+                        // onClick={() => getImage()}
+                        icon={createOutline}
+                        className="set-status"
+                        color="dark"
+                      ></IonIcon>
+                    </IonCol>
+                    <IonCol size="6">
+                      <IonRow className="profileInfo">
+                        <IonCol size="12">
+                          <IonText color="dark" className="profileName">
+                            <p>Name</p>
+                          </IonText>
+                          <IonText color="medium">
+                            <p>Status</p>
+                          </IonText>
+                        </IonCol>
+                      </IonRow>
+                    </IonCol>
+                  </IonRow>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+      </IonContent>
     </IonPage>
   );
 };

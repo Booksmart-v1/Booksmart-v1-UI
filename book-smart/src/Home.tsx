@@ -28,6 +28,7 @@ import axios from "axios";
 import { APIURL } from "./constants";
 import socket from "./Socket";
 import "./Home.css";
+import InterestedBuyerProfile from "./pages/InterestedBuyerProfile";
 setupIonicReact();
 
 interface myProps {
@@ -422,6 +423,11 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 exact={true}
                 path="/homepage/profile"
                 component={Profile}
+              ></Route>
+              <Route
+                exact={true}
+                path="/homepage/interestedBuyer"
+                component={InterestedBuyerProfile}
               ></Route>
               {/* <Route exact={true} path="/homepage/shop"
           component={Sell}

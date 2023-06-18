@@ -11,6 +11,8 @@ import {
   RefresherEventDetail,
   IonRefresher,
   IonRefresherContent,
+  IonHeader,
+  IonText,
 } from "@ionic/react";
 import { addCircle } from "ionicons/icons";
 import React, { useState, useEffect } from "react";
@@ -174,6 +176,18 @@ const Search: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
+        {/* <IonHeader>
+          <IonText
+            style={{
+              fontFamily: "Lucida Handwriting",
+              fontSize: "30px",
+              fontStyle: "bold",
+              color: "white",
+            }}
+          >
+            BooksMart{" "}
+          </IonText>
+        </IonHeader> */}
         <div className="swiper-area">
           <div className="searchHead">
             <IonSearchbar
@@ -189,6 +203,7 @@ const Search: React.FC = () => {
                 handleSearchBook(e);
               }}
             ></IonSearchbar>
+
             <IonToast
               isOpen={showAddToast1}
               onDidDismiss={() => setShowAddToast1(false)}
@@ -239,6 +254,7 @@ const Search: React.FC = () => {
               }}
             ></IonIcon>
           </div>
+
           <Swiper
             style={{ height: "12vh" }}
             modules={[Navigation, Pagination, Scrollbar, Autoplay, EffectFade]}
@@ -364,17 +380,19 @@ const Search: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        {/* <div className="noBooks">
-                          <img
-                            src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif"
-                            alt="Sorry"
-                            width={"100px"}
-                          />
-                          <p>
-                            Currently there are no books available with this
-                            name.
-                          </p>
-                        </div> */}
+                        <IonButtons
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <IonButton
+                            className="wishlist-buybtn"
+                            style={{ fontSize: "12px" }}
+                          >
+                            Unavailable
+                          </IonButton>
+                        </IonButtons>
                       </>
                     )}
                   </div>
