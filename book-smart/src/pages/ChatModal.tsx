@@ -38,6 +38,8 @@ import { APIURL } from "../constants";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 // import { match } from "react-router-dom";
+import { getAccessToken, getNewToken } from '../common/authToken';
+import { post } from "../common/api";
 
 interface chat {
   name: string;
@@ -104,18 +106,18 @@ const ChatModal: React.FC<prop> = ({
   const markAsSold = async (id: string | undefined) => {
     try {
       const url = APIURL + "v2/markAsSold";
-      const resp = await axios.post(url, {
+      const resp = await post(url, {
         id: id,
       });
       console.log(resp);
-      if (resp.data.success === true) {
-        setMsg(resp.data.message);
+      if (resp !== null) {
+        setMsg(resp.message);
         setToast(true);
       } else {
         return;
       }
       const url1 = APIURL + "v2/closedChat";
-      const resp1 = await axios.post(url1, {
+      const resp1 = await post(url1, {
         chatRoomId: item.roomId,
         value: true,
       });
@@ -129,18 +131,18 @@ const ChatModal: React.FC<prop> = ({
   const markAsUnSold = async (id: string | undefined) => {
     try {
       const url = APIURL + "v2/markAsUnsold";
-      const resp = await axios.post(url, {
+      const resp = await post(url, {
         id: id,
       });
-      if (resp.data.success === true) {
-        setMsg(resp.data.message);
+      if (resp !== null) {
+        setMsg(resp.message);
         setToast(true);
       } else {
         return;
       }
       console.log(resp);
       const url1 = APIURL + "v2/closedChat";
-      const resp1 = await axios.post(url1, {
+      const resp1 = await post(url1, {
         chatRoomId: item.roomId,
         value: false,
       });
@@ -161,20 +163,37 @@ const ChatModal: React.FC<prop> = ({
       username = JSON.parse(a).name;
     }
     let url = APIURL + "v2/getBookAd";
+    let token = getAccessToken();
+    let retry = false;
 
-    await axios
-      .get(url + `?id=${item.bookAdId}`)
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          var data = res.data.data;
-          console.log(data);
-          setAd(data);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    for (let i = 0; i < 2; i++) {
+      await axios
+        .get(url + `?id=${item.bookAdId}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        })
+        // eslint-disable-next-line no-loop-func
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            var data = res.data.data;
+            console.log(data);
+            setAd(data);
+          } else if (res.status === 401) {
+            console.log("unauthorized");
+            retry = true;
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+
+      if (retry) {
+        token = await getNewToken();
+      } else break;
+
+    }
   };
 
   const history = useHistory();

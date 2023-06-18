@@ -28,6 +28,7 @@ import axios from "axios";
 import { APIURL } from "./constants";
 import socket from "./Socket";
 import "./Home.css";
+import { get, post } from "./common/api";
 setupIonicReact();
 
 interface myProps {
@@ -91,8 +92,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   const getChatRoomMessages = async (id1: string, chats: any) => {
     let url = APIURL + "v2/getMessagesInChatRoom";
 
-    await axios
-      .get(url + `?chatRoomId=${id1}`)
+    await get(url + `?chatRoomId=${id1}`)
       .then(async (resp) => {
         socket.emit("join_room", id1);
         socket.on("get_message", (data: any) => {
@@ -102,12 +102,12 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
         });
 
         console.log(resp);
-        const lastMsg = resp.data.data[resp.data.data.length - 1]
-          ? resp.data.data[resp.data.data.length - 1].message
+        const lastMsg = resp.data[resp.data.length - 1]
+          ? resp.data[resp.data.length - 1].message
           : "Say hello to your new friend!";
 
-        let time = resp.data.data[resp.data.data.length - 1]
-          ? resp.data.data[resp.data.data.length - 1].createdAt.substring(
+        let time = resp.data[resp.data.length - 1]
+          ? resp.data[resp.data.length - 1].createdAt.substring(
               11,
               16
             )
@@ -121,15 +121,15 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
         hour += (c + 5) % 24;
         time = hour + ":" + minutes;
 
-        const date = resp.data.data[resp.data.data.length - 1]
-          ? resp.data.data[resp.data.data.length - 1].createdAt.substring(0, 10)
+        const date = resp.data[resp.data.length - 1]
+          ? resp.data[resp.data.length - 1].createdAt.substring(0, 10)
           : "00/00";
 
         let chatInfo = {
           name: chats.name,
           profilePic: chats.profilePic,
           message: lastMsg,
-          messages: resp.data.data,
+          messages: resp.data,
           roomId: id1,
           time: time,
           date: date,
@@ -158,11 +158,10 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
     setUserId(userId);
     var url = APIURL + "v2/getOneUser";
     let chatUsers: any[] = [];
-    await axios
-      .get(url + `?userId=${userId}`)
+    await get(url + `?userId=${userId}`)
       .then((resp) => {
         console.log(resp);
-        chatUsers = resp.data.data.usersInContact;
+        chatUsers = resp.data.usersInContact;
         console.log(chatUsers);
 
         var url = APIURL + "v2/initiateChat";
@@ -170,8 +169,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
 
         chatUsers.forEach(async (id) => {
           console.log(id);
-          await axios
-            .post(url, {
+          await post(url, {
               sellerId: userId,
               buyerId: id,
             })
@@ -183,28 +181,27 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
               // let closed = resp.data.data.closed;
               var url = APIURL + "v2/getOneUser";
 
-              await axios
-                .get(url + `?userId=${id}`)
+              await get(url + `?userId=${id}`)
                 .then(async (resp) => {
                   console.log(resp);
-                  name = resp.data.data.name;
-                  profilePic = resp.data.data.profilePicUrl;
+                  name = resp.data.name;
+                  profilePic = resp.data.profilePicUrl;
                   console.log(name);
                 })
                 .catch((e) => {
                   console.log(e);
                 });
 
-              const ids = resp["data"]["data"]["chatRoomIds"];
-              const bbc: boolean[] = resp["data"]["data"]["closedRoomIds"];
-              const bId: string[] = resp["data"]["data"]["bookAdIds"];
+              const ids = resp["data"]["chatRoomIds"];
+              const bbc: boolean[] = resp["data"]["closedRoomIds"];
+              const bId: string[] = resp["data"]["bookAdIds"];
 
               url = APIURL + "v2/getMessagesInChatRoom";
 
               for (let i = 0; i < bbc.length; i++) {
                 let id1 = ids[i];
-                await axios
-                  .get(url + `?chatRoomId=${id1}`)
+                await get(url + `?chatRoomId=${id1}`)
+                  // eslint-disable-next-line no-loop-func
                   .then(async (resp) => {
                     socket.emit("join_room", id1);
                     socket.on("get_message", (data: any) => {
@@ -214,13 +211,13 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                     });
 
                     console.log(resp);
-                    const lastMsg = resp.data.data[resp.data.data.length - 1]
-                      ? resp.data.data[resp.data.data.length - 1].message
+                    const lastMsg = resp.data[resp.data.length - 1]
+                      ? resp.data[resp.data.length - 1].message
                       : "Say hello to your new friend!";
 
-                    let time = resp.data.data[resp.data.data.length - 1]
-                      ? resp.data.data[
-                          resp.data.data.length - 1
+                    let time = resp.data[resp.data.length - 1]
+                      ? resp.data[
+                          resp.data.length - 1
                         ].createdAt.substring(11, 16)
                       : "00:00";
 
@@ -235,9 +232,9 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                       ":" +
                       (minutes / 10 >= 1 ? minutes : "0" + minutes);
 
-                    const date = resp.data.data[resp.data.data.length - 1]
-                      ? resp.data.data[
-                          resp.data.data.length - 1
+                    const date = resp.data[resp.data.length - 1]
+                      ? resp.data[
+                          resp.data.length - 1
                         ].createdAt.substring(0, 10)
                       : "Say hello to your new friend!";
 
@@ -247,7 +244,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                         name: name,
                         profilePic: profilePic,
                         message: lastMsg,
-                        messages: resp.data.data,
+                        messages: resp.data,
                         roomId: id1,
                         time: time,
                         date: date,
@@ -287,17 +284,16 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
     }
     var url = APIURL + "v2/postInChatRoom";
 
-    await axios
-      .post(url, {
+    await post(url, {
         chatRoomId: chatModal.roomId,
         message: text,
         postedByUser: userId,
       })
       .then((res) => {
         console.log(res);
-        if (res.data.success) {
-          socket.emit("send_message", res.config.data);
-          console.log(res.config.data);
+        if (res.success) {
+          // socket.emit("send_message", res.config.data);
+          // console.log(res.config.data);
           setText("");
           getChatRoomMessages(chatModal.roomId, chatModal);
           // var a2 = JSON.parse(res.config.data)["message"];
@@ -321,12 +317,11 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
     }
     let url = APIURL + "v2/getUser";
 
-    await axios
-      .get(url + `?id=${userId}`)
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          setProfileChange(res.data.data.profilePicUrl);
+    await get(url + `?id=${userId}`)
+      .then((resp) => {
+        console.log(resp);
+        if (resp !== null && resp.success === true) {
+          setProfileChange(resp.data.profilePicUrl);
           //set profile details
         }
       })
@@ -336,28 +331,26 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
   };
 
   const getBookAds = (lim: number, userId: string) => {
-    {
-      const url = APIURL + "v2/getBookAds";
-      var userId = "1233";
-      var username = "Aagam";
-      const a = localStorage.getItem("user");
-      if (a) {
-        userId = JSON.parse(a).id;
-        username = JSON.parse(a).name;
-      }
-      axios
-        .get(url + `?limit=${lim}&userId=${userId}`)
-        .then((resp) => {
-          if (resp.status === 200) {
-            var data = resp.data.data;
-            setBookData(data);
-            console.log(data);
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+    const url = APIURL + "v2/getBookAds";
+    var userId = "1233";
+    var username = "Aagam";
+    const a = localStorage.getItem("user");
+    if (a) {
+      userId = JSON.parse(a).id;
+      username = JSON.parse(a).name;
     }
+    get(url + `?limit=${lim}&userId=${userId}`)
+      .then((resp) => {
+        if (resp !== null && resp.success === true) {
+          var data = resp.data;
+          setBookData(data);
+          console.log(data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
   };
 
   return (

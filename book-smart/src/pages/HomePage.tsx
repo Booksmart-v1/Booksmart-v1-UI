@@ -36,6 +36,7 @@ import { APIURL } from "../constants";
 import axios from "axios";
 import moment from "moment";
 import { useHistory } from "react-router";
+import { get, post } from "../common/api";
 
 const defaultImage = "https://via.placeholder.com/200/1200";
 const cardDetails = [
@@ -161,11 +162,10 @@ const Tab1: React.FC = () => {
       username = JSON.parse(a).name;
       setCurrUser({ ...currUser, userId: userId, username: username });
     }
-    axios
-      .get(url + `?limit=${lim}&userId=${userId}`)
+    get(url + `?limit=${lim}&userId=${userId}`)
       .then((resp) => {
-        if (resp.status === 200) {
-          var data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          var data = resp.data;
           console.log(data);
           for (const element of data) {
             element.bookImageUrl = element.bookImageUrl
@@ -311,8 +311,7 @@ const Tab1: React.FC = () => {
         userId = JSON.parse(a).id;
         username = JSON.parse(a).name;
       }
-      axios
-        .post(url, {
+      post(url, {
           userId: userId,
           userName: username,
           receiverId: receiverId,
@@ -321,8 +320,8 @@ const Tab1: React.FC = () => {
         })
         .then((resp) => {
           console.log(resp);
-          if (resp.status === 200) {
-            let data = resp.data.data;
+          if (resp !== null && resp.success === true) {
+            let data = resp.data;
             console.log(data);
           }
         })
@@ -338,15 +337,14 @@ const Tab1: React.FC = () => {
         userId = JSON.parse(a).id;
         username = JSON.parse(a).name;
       }
-      axios
-        .post(url, {
+      post(url, {
           userId: userId,
           bookAdId: bookId,
         })
         .then((resp) => {
           console.log(resp);
-          if (resp.status === 200) {
-            let data = resp.data.data;
+          if (resp !== null && resp.success === true) {
+            let data = resp.data;
             console.log(data);
           }
         })
@@ -534,15 +532,14 @@ const Tab1: React.FC = () => {
       username = JSON.parse(a).name;
     }
     console.log(userId);
-    axios
-      .post(url, {
+    post(url, {
         userId: userId,
         bookId: bookId,
       })
       .then((resp) => {
         console.log(resp);
-        if (resp.status === 200) {
-          let data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          let data = resp.data;
           console.log(data);
         }
       })
@@ -560,11 +557,10 @@ const Tab1: React.FC = () => {
       userId = JSON.parse(a).id;
       username = JSON.parse(a).name;
     }
-    axios
-      .get(url + `?userId=${userId}`)
+    get(url + `?userId=${userId}`)
       .then((resp) => {
-        if (resp.status === 200) {
-          var data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          var data = resp.data;
           let wishListIds = Array.from(new Set(data[0].bookIds));
           setWishListHeart(wishListIds);
           getCardDetails(60);
