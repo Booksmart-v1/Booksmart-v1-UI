@@ -5,16 +5,20 @@ export const get = async (url: string) => {
     let token = getAccessToken();
     let retry = false;
     for (let i = 0; i < 2; i++) {
-        const resp = await axios.get(url, {
-            headers: {
-                authorization: `Bearer ${token}`,
-            },
-        });
-        if (resp.data.success === true) {
-            return resp.data;
-        } else if (resp.status === 401) {
-            retry = true;
-            token = await getNewToken();
+        try {
+            const resp = await axios.get(url, {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+            });
+            if (resp.data.success === true) {
+                return resp.data;
+            } else if (resp.status === 401) {
+                retry = true;
+                token = await getNewToken();
+            }
+        } catch (err) {
+            console.log(err);
         }
         if (retry === false) {
             break;
