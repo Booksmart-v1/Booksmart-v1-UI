@@ -126,11 +126,11 @@ const Profile = () => {
     let url = APIURL + "v2/updateUser";
 
     post(url, {
-        userId: profileChange._id,
-        profilePicUrl: imgUrl,
-        name: profileChange.name,
-        email: profileChange.email,
-      })
+      userId: profileChange._id,
+      profilePicUrl: imgUrl,
+      name: profileChange.name,
+      email: profileChange.email,
+    })
       .then((resp) => {
         console.log(resp);
         if (resp !== null && resp.success === true) {
@@ -255,8 +255,8 @@ const Profile = () => {
     if (action === false) {
       const url = APIURL + "v2/readNotif";
       post(url, {
-          id: notifyArray[id]._id,
-        })
+        id: notifyArray[id]._id,
+      })
         .then((resp) => {
           if (resp !== null && resp.success === true) {
             let data = resp.data;
@@ -289,11 +289,11 @@ const Profile = () => {
       username = JSON.parse(a).name;
     }
     post(url, {
-        sellerId: userId,
-        buyerId: receiverId,
-        chatInitiator: username,
-        bookAdId: bookId,
-      })
+      sellerId: userId,
+      buyerId: receiverId,
+      chatInitiator: username,
+      bookAdId: bookId,
+    })
       .then((resp) => {
         history.push("./Chat");
         console.log(resp);
@@ -318,13 +318,13 @@ const Profile = () => {
       username = JSON.parse(a).name;
     }
     post(url, {
-        userId: userId,
-        userName: username,
-        receiverId: receiverId,
-        type: "accept",
-        bookAdId: bookId,
-        notifId: notifId,
-      })
+      userId: userId,
+      userName: username,
+      receiverId: receiverId,
+      type: "accept",
+      bookAdId: bookId,
+      notifId: notifId,
+    })
       .then((resp) => {
         console.log(resp);
         if (resp !== null && resp.success === true) {
@@ -360,13 +360,13 @@ const Profile = () => {
       username = JSON.parse(a).name;
     }
     post(url, {
-        userId: userId,
-        userName: username,
-        receiverId: receiverId,
-        type: "reject",
-        bookAdId: bookId,
-        notifId: notifId,
-      })
+      userId: userId,
+      userName: username,
+      receiverId: receiverId,
+      type: "reject",
+      bookAdId: bookId,
+      notifId: notifId,
+    })
       .then((resp) => {
         console.log(resp);
         if (resp !== null && resp.success === true) {
@@ -394,8 +394,8 @@ const Profile = () => {
   const deleteNotify = (notifId: string) => {
     const url = APIURL + "v2/removeNotif";
     post(url, {
-        notifId: notifId,
-      })
+      notifId: notifId,
+    })
       .then((resp) => {
         console.log(resp);
         if (resp !== null && resp.success === true) {
@@ -1256,6 +1256,8 @@ const Profile = () => {
             onClick={() => {
               localStorage.removeItem("user");
               localStorage.removeItem("chatToken");
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
               history.push("/login");
               document.location.reload();
             }}
