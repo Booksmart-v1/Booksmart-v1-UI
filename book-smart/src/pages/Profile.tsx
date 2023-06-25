@@ -60,6 +60,7 @@ import axios from "axios";
 import { useHistory } from "react-router";
 import moment from "moment";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
+import { get, post } from "../common/api";
 const Profile = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [popoverState, setShowPopover] = useState({
@@ -124,16 +125,15 @@ const Profile = () => {
   const updateProfile = (imgUrl: string) => {
     let url = APIURL + "v2/updateUser";
 
-    axios
-      .post(url, {
-        userId: profileChange._id,
-        profilePicUrl: imgUrl,
-        name: profileChange.name,
-        email: profileChange.email,
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
+    post(url, {
+      userId: profileChange._id,
+      profilePicUrl: imgUrl,
+      name: profileChange.name,
+      email: profileChange.email,
+    })
+      .then((resp) => {
+        console.log(resp);
+        if (resp !== null && resp.success === true) {
           getProfile();
           //set profile details
         }
@@ -153,12 +153,11 @@ const Profile = () => {
     }
     let url = APIURL + "v2/getUser";
 
-    axios
-      .get(url + `?id=${userId}`)
+    get(url + `?id=${userId}`)
       .then((res) => {
         console.log(res);
-        if (res.status === 200) {
-          setProfileChange(res.data.data);
+        if (res !== null && res.success === true) {
+          setProfileChange(res.data);
           //set profile details
         }
       })
@@ -221,12 +220,11 @@ const Profile = () => {
     if (a) {
       userId = JSON.parse(a).id;
     }
-    axios
-      .get(url + `?userId=${userId}`)
+    get(url + `?userId=${userId}`)
       .then((resp) => {
         // console.log(resp);
-        if (resp.status === 200) {
-          let data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          let data = resp.data;
           let updateData = data.map((item: any) => ({
             ...item,
             isPopOverOpen: false,
@@ -256,13 +254,12 @@ const Profile = () => {
   const handlePopOverClick = (id: number, action: boolean) => {
     if (action === false) {
       const url = APIURL + "v2/readNotif";
-      axios
-        .post(url, {
-          id: notifyArray[id]._id,
-        })
+      post(url, {
+        id: notifyArray[id]._id,
+      })
         .then((resp) => {
-          if (resp.status === 200) {
-            let data = resp.data.data;
+          if (resp !== null && resp.success === true) {
+            let data = resp.data;
             console.log(data);
           }
         })
@@ -291,13 +288,12 @@ const Profile = () => {
       userId = JSON.parse(a).id;
       username = JSON.parse(a).name;
     }
-    axios
-      .post(url, {
-        sellerId: userId,
-        buyerId: receiverId,
-        chatInitiator: username,
-        bookAdId: bookId,
-      })
+    post(url, {
+      sellerId: userId,
+      buyerId: receiverId,
+      chatInitiator: username,
+      bookAdId: bookId,
+    })
       .then((resp) => {
         history.push("./Chat");
         console.log(resp);
@@ -321,19 +317,18 @@ const Profile = () => {
       userId = JSON.parse(a).id;
       username = JSON.parse(a).name;
     }
-    axios
-      .post(url, {
-        userId: userId,
-        userName: username,
-        receiverId: receiverId,
-        type: "accept",
-        bookAdId: bookId,
-        notifId: notifId,
-      })
+    post(url, {
+      userId: userId,
+      userName: username,
+      receiverId: receiverId,
+      type: "accept",
+      bookAdId: bookId,
+      notifId: notifId,
+    })
       .then((resp) => {
         console.log(resp);
-        if (resp.status === 200) {
-          let data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          let data = resp.data;
           console.log(data);
         }
       })
@@ -364,19 +359,18 @@ const Profile = () => {
       userId = JSON.parse(a).id;
       username = JSON.parse(a).name;
     }
-    axios
-      .post(url, {
-        userId: userId,
-        userName: username,
-        receiverId: receiverId,
-        type: "reject",
-        bookAdId: bookId,
-        notifId: notifId,
-      })
+    post(url, {
+      userId: userId,
+      userName: username,
+      receiverId: receiverId,
+      type: "reject",
+      bookAdId: bookId,
+      notifId: notifId,
+    })
       .then((resp) => {
         console.log(resp);
-        if (resp.status === 200) {
-          let data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          let data = resp.data;
           console.log(data);
         }
       })
@@ -399,14 +393,13 @@ const Profile = () => {
   };
   const deleteNotify = (notifId: string) => {
     const url = APIURL + "v2/removeNotif";
-    axios
-      .post(url, {
-        notifId: notifId,
-      })
+    post(url, {
+      notifId: notifId,
+    })
       .then((resp) => {
         console.log(resp);
-        if (resp.status === 200) {
-          let data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          let data = resp.data;
           console.log(data);
         }
       })
@@ -1263,6 +1256,8 @@ const Profile = () => {
             onClick={() => {
               localStorage.removeItem("user");
               localStorage.removeItem("chatToken");
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
               history.push("/login");
               document.location.reload();
             }}

@@ -35,6 +35,7 @@ import "swiper/css/autoplay";
 import "swiper/css/effect-fade";
 import axios from "axios";
 import { APIURL } from "../constants";
+import { get, post } from "../common/api";
 
 const Search: React.FC = () => {
   SwiperCore.use([Autoplay]);
@@ -47,11 +48,10 @@ const Search: React.FC = () => {
     if (a) {
       userId = JSON.parse(a).id;
     }
-    axios
-      .get(url + `?userId=${userId}`)
+    get(url + `?userId=${userId}`)
       .then((resp) => {
-        if (resp.status === 200) {
-          var data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          var data = resp.data;
           let wishListIds = Array.from(new Set(data[0].bookIds));
           getWishListCardDetails(wishListIds);
         }
@@ -68,11 +68,10 @@ const Search: React.FC = () => {
   const defaultImage = "https://via.placeholder.com/200/1200";
   const getWishListCardDetails = (wishListIds: any) => {
     const url = APIURL + "v2/getBooks";
-    axios
-      .get(url)
+    get(url)
       .then((resp) => {
-        if (resp.status === 200) {
-          var data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          var data = resp.data;
           var arr: any = [];
           for (let i = 0; i < wishListIds.length; i++) {
             data.filter((item: any) => {
@@ -102,15 +101,14 @@ const Search: React.FC = () => {
     if (a) {
       userId = JSON.parse(a).id;
     }
-    axios
-      .post(url, {
+    post(url, {
         userId: userId,
         bookId: bookId,
       })
       .then((resp) => {
         console.log(resp);
-        if (resp.status === 200) {
-          let data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          let data = resp.data;
           console.log(data);
           setShowAddToast(true);
         }
@@ -157,11 +155,10 @@ const Search: React.FC = () => {
       username = JSON.parse(a).name;
       // setCurrUser({ ...currUser, userId: userId, username: username });
     }
-    axios
-      .get(url + `?limit=${lim}&userId=${userId}`)
+    get(url + `?limit=${lim}&userId=${userId}`)
       .then((resp) => {
-        if (resp.status === 200) {
-          var data = resp.data.data;
+        if (resp !== null && resp.success === true) {
+          var data = resp.data;
           setBookAdAvailable(
             data.map((item: any) => {
               return item.bookId;

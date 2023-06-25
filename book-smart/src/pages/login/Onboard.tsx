@@ -23,6 +23,7 @@ import { SmsRetriever } from "@ionic-native/sms-retriever";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { APIURL } from "../../constants";
+import { saveTokens } from "../../common/authToken";
 
 interface UserDetailPageProps
   extends RouteComponentProps<{
@@ -141,6 +142,7 @@ const Onboard: React.FC<UserDetailPageProps> = ({ match }) => {
               name: res.data.data.name,
               email: res.data.data.email,
             };
+            saveTokens(res.data.data.authToken, res.data.data.refreshToken);
             localStorage.setItem("user", JSON.stringify(user));
             if (page === "signup") {
               history.push("/avatar");

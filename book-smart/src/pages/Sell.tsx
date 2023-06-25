@@ -47,6 +47,7 @@ import { add, camera, ellipsisVertical, funnelOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { APIURL } from "../constants";
+import { get, post } from "../common/api";
 const SellCardDettails = [
   {
     pic: "https://material.angular.io/assets/img/examples/shiba1.jpg",
@@ -120,8 +121,7 @@ const Sell: React.FC = () => {
   const updateAd = (id: number) => {
     const url = APIURL + "v2/updateBookAds";
 
-    axios
-      .post(url, {
+    post(url, {
         bookAdId: activeTrades[id]._id,
         bookPrice: price,
         bookImageUrl: imageUrl,
@@ -132,8 +132,9 @@ const Sell: React.FC = () => {
       })
       .then((resp) => {
         console.log(resp);
-        if (resp.data.success) {
-          setShowModal(true);
+        if (resp.success) {
+          setShowModal(false);
+
           setScreen("details");
           toaster1();
         }
@@ -150,7 +151,7 @@ const Sell: React.FC = () => {
   const deleteAd = async (id: string) => {
     const url = APIURL + "v2/deleteAd";
 
-    const resp = await axios.post(url, {
+    const resp = await post(url, {
       id: id,
     });
     console.log(resp);
@@ -162,7 +163,7 @@ const Sell: React.FC = () => {
   const markAsSold = async (idx: number) => {
     const url = APIURL + "v2/markAsSold";
     console.log(activeTrades[idx]);
-    const resp = await axios.post(url, {
+    const resp = await post(url, {
       id: activeTrades[idx]._id,
     });
     // const url1 = APIURL + "v2/closedChat";
@@ -177,7 +178,7 @@ const Sell: React.FC = () => {
   const markAsUnSold = async (idx: number) => {
     const url = APIURL + "v2/markAsUnsold";
     console.log(pastTrades[idx]);
-    const resp = await axios.post(url, {
+    const resp = await post(url, {
       id: pastTrades[idx]._id,
     });
     console.log(resp);
@@ -197,15 +198,14 @@ const Sell: React.FC = () => {
     setLoading(true);
     const url = APIURL + "v2/getBook";
 
-    axios
-      .get(url + `?ISBN=${isbn}`)
+    get(url + `?ISBN=${isbn}`)
       .then((resp) => {
         console.log(resp);
-        if (resp.status === 200) {
+        if (resp !== null && resp.success === true) {
           console.log(resp);
-          setName(resp.data.data.bookName);
-          setDescr(resp.data.data.bookDescription);
-          setBook(resp.data.data);
+          setName(resp.data.bookName);
+          setDescr(resp.data.bookDescription);
+          setBook(resp.data);
           setLoading(false);
         }
       })
@@ -227,8 +227,7 @@ const Sell: React.FC = () => {
       if (id === null || id === undefined) {
         const url = APIURL + "v2/addBooks";
         console.log(imageUrl);
-        axios
-          .post(url, {
+        post(url, {
             bookName: book.bookName,
             bookAuthor: book.bookAuthor,
             bookDescription: book.bookDescription,
@@ -237,8 +236,8 @@ const Sell: React.FC = () => {
           })
           .then((resp) => {
             console.log(resp);
-            if (resp.status === 200) {
-              id = resp.data.data.bookId;
+            if (resp !== null && resp.success === true) {
+              id = resp.data.bookId;
               console.log(id);
               const url = APIURL + "v2/addBookAds";
               let userId = "1233";
@@ -248,8 +247,7 @@ const Sell: React.FC = () => {
                 userId = JSON.parse(a).id;
                 username = JSON.parse(a).name;
               }
-              axios
-                .post(url, {
+              post(url, {
                   bookId: id,
                   sellerId: userId,
                   sellerName: username,
@@ -266,7 +264,7 @@ const Sell: React.FC = () => {
                 })
                 .then((resp) => {
                   console.log(resp);
-                  if (resp.data.success) {
+                  if (resp.success) {
                     setShowModal(false);
                     setScreen("details");
                     toaster1();
@@ -302,8 +300,7 @@ const Sell: React.FC = () => {
 
       console.log(imageUrl);
 
-      axios
-        .post(url, {
+      post(url, {
           bookId: id,
           sellerId: userId,
           sellerName: username,
@@ -320,7 +317,7 @@ const Sell: React.FC = () => {
         })
         .then((resp) => {
           console.log(resp);
-          if (resp.data.success) {
+          if (resp.success) {
             setShowModal(false);
             setScreen("details");
             toaster1();
@@ -368,12 +365,11 @@ const Sell: React.FC = () => {
       userId = JSON.parse(a).id;
       username = JSON.parse(a).name;
     }
-    axios
-      .get(url + `?limit=${lim}&userId=${userId}`)
+    get(url + `?limit=${lim}&userId=${userId}`)
       .then((resp) => {
-        if (resp.status === 200) {
+        if (resp !== null && resp.success === true) {
           // console.log(resp.data.data);
-          let data = resp.data.data.selling;
+          let data = resp.data.selling;
           console.log(data);
           for (const element of data) {
             element.bookImageUrl = element.bookImageUrl

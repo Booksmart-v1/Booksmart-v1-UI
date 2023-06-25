@@ -12,6 +12,7 @@ import { Storage } from '@capacitor/storage';
 import { Capacitor } from '@capacitor/core';
 import axios from "axios";
 import { APIURL } from "../constants";
+import { formPost, post } from '../common/api';
 
 
 
@@ -80,31 +81,21 @@ export function usePhotoGallery() {
       console.log(bodyFormData.get('img-upload'));
 
       console.log("Calling API")
-     const response = await axios
-        .post(url,
-          
-          bodyFormData,{
-    headers: {
-    //  'accept': 'application/json',
-    //  'Accept-Language': 'en-US,en;q=0.8',
-     'Content-Type': `multipart/form-data;`,
-    }
-   }
-      );
+     const response = await formPost(url, bodyFormData);
         // .then(async (resp) => {
-          console.log("called api")
-          console.log(response);
-          if (response.status === 200) {
-              console.log(response);
-              console.log(file);
-              imgurl = response.data.data.location;
-              // console.log(photo.webPath);
+      console.log("called api")
+      console.log(response);
+      if (response !== null && response.success === true) {
+        console.log(response);
+        console.log(file);
+        imgurl = response.data.location;
+          // console.log(photo.webPath);
 
-              // const file = require(photo.webPath?photo.webPath: '' );
-              // console.log(file);
-              
-          }
-          else imgurl= '';
+          // const file = require(photo.webPath?photo.webPath: '' );
+          // console.log(file);
+          
+      }
+      else imgurl= '';
         // })
         // .catch((err) => {
         //   console.log(err);
