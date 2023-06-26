@@ -35,10 +35,13 @@ import {
   IonSelectOption,
   IonAlert,
   IonPopover,
+  IonText,
+  IonItemDivider,
+  IonChip,
 } from "@ionic/react";
 import "./wishlist.css";
 import "./sell.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePhotoGallery } from "../hooks/usePhotoGallery";
 import { add, camera, ellipsisVertical, funnelOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
@@ -105,10 +108,15 @@ const Sell: React.FC = () => {
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
   const [showModal, setShowModal] = useState(false);
+  const [showModal1, setShowModal1] = useState(false);
 
   const { photos, takePhoto } = usePhotoGallery();
   const [showToast, setShowToast] = useState(false);
   const [isbnToast, setIsbnToast] = useState(false);
+  const [isReadMore, setIsReadMore] = useState(true);
+  const toggleReadMore = () => {
+    setIsReadMore(!isReadMore);
+  };
 
   const updateAd = (id: number) => {
     const url = APIURL + "v2/updateBookAds";
@@ -147,6 +155,8 @@ const Sell: React.FC = () => {
       id: id,
     });
     console.log(resp);
+    setMsg(resp.data.message);
+    setShowToast(true);
     getTradeCardDetails(60);
   };
 
@@ -156,6 +166,12 @@ const Sell: React.FC = () => {
     const resp = await post(url, {
       id: activeTrades[idx]._id,
     });
+    // const url1 = APIURL + "v2/closedChat";
+    // const resp1 = await axios.post(url1, {
+    //   chatRoomId: item.roomId,
+    //   value: true,
+    // });
+    // console.log(resp1);
     console.log(resp);
     getTradeCardDetails(60);
   };
@@ -337,6 +353,7 @@ const Sell: React.FC = () => {
   // const [tradeInfo, setTradeInfo] = useState<any[]>([]);
   const [activeTrades, setActiveTrades] = useState<any[]>([]);
   const [pastTrades, setPastTrades] = useState<any[]>([]);
+  const modal = useRef<HTMLIonModalElement>(null);
 
   const defaultImage = "https://via.placeholder.com/200/1200";
   const getTradeCardDetails = (lim: Number) => {
@@ -487,6 +504,7 @@ const Sell: React.FC = () => {
             ></IonIcon>
           </IonToolbar>
         </IonHeader>
+
         {/* <IonToast
           isOpen={isbnToast}
           onDidDismiss={() => setIsbnToast(false)}
@@ -825,6 +843,7 @@ const Sell: React.FC = () => {
                             </span>{" "}
                             {element.bookAuthor}
                           </div>
+
                           <div
                             className="trade-card-status"
                             style={{ marginTop: "20px" }}
@@ -875,6 +894,7 @@ const Sell: React.FC = () => {
                               ></IonIcon>
                             </IonButton>
                           </IonButtons>
+
                           <IonPopover
                             event={popoverState.event}
                             isOpen={popoverState.showPopover}
@@ -891,7 +911,7 @@ const Sell: React.FC = () => {
                                 onClick={() => {
                                   deleteAd(pastTrades[selectedBook]._id);
                                   setShowPopover({
-                                    showPopover: true,
+                                    showPopover: false,
                                     event: element,
                                   });
                                 }}
@@ -901,10 +921,185 @@ const Sell: React.FC = () => {
                                   Delete Ad
                                 </IonLabel>
                               </IonItem>
+                              <IonItem
+                                onClick={() => {
+                                  setShowPopover({
+                                    showPopover: false,
+                                    event: element,
+                                  });
+                                  setShowModal1(true);
+                                }}
+                                button
+                              >
+                                <IonLabel
+                                  // expand="block"
+                                  className="profile-orders"
+                                >
+                                  {" "}
+                                  View Details{" "}
+                                </IonLabel>
+                              </IonItem>
                             </IonContent>
                           </IonPopover>
                         </div>
+                        <IonModal
+                          isOpen={showModal1}
+                          swipeToClose={true}
+                          mode="ios"
+                          // initialBreakpoint={1}
+                          // breakpoints={[0.8, 1]}
+                          title="View Details"
+                          keyboardClose={true}
+                          onDidDismiss={() => setShowModal1(false)}
+                        >
+                          <IonHeader>
+                            <IonToolbar style={{ minHeight: "7vh" }}>
+                              <h2
+                                style={{
+                                  textAlign: "center",
+                                  fontFamily: "Montserrat-B",
+                                  color: "var(--bs-pText)",
+                                  fontSize: "20px",
+                                  marginLeft: "50px",
+                                }}
+                              >
+                                View Details
+                              </h2>
+                              <IonButtons slot="end">
+                                <IonButton
+                                  onClick={() => {
+                                    setShowModal1(false);
+                                  }}
+                                  slot="end"
+                                  mode="ios"
+                                >
+                                  Close
+                                </IonButton>
+                              </IonButtons>
+                            </IonToolbar>
+                            <div
+                              className="HPModal-img"
+                              style={{
+                                // borderRadius: "5px",
+                                // padding: "15px",
+                                backgroundImage: `url(${element.bookImageUrl})`,
+                                // backgroundImage: `url(${"https://material.angular.io/assets/img/examples/shiba1.jpg"})`,
+                              }}
+                            ></div>
+                          </IonHeader>
 
+                          <IonContent>
+                            <div
+                              style={{
+                                maxWidth: "90%",
+                                maxHeight: "10vh",
+                                textAlign: "center",
+                                margin: "20px auto",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  textAlign: "center",
+                                  fontFamily: "Montserrat-B",
+                                  color: "goldenrod",
+                                  fontSize: "22px",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                {element.bookName.length < 45
+                                  ? element.bookName.toUpperCase()
+                                  : element.bookName.substring(0, 45) + "..."}
+                              </p>
+                              <p
+                                style={{
+                                  textAlign: "center",
+
+                                  fontFamily: "Montserrat-SB",
+                                  color: "var(--bs-pText)",
+                                  fontSize: "18px",
+                                }}
+                              >
+                                {element.bookAuthor}
+                              </p>
+                              <p
+                                style={{
+                                  fontSize: "18px",
+                                  fontFamily: "Montserrat-sb",
+                                }}
+                              >
+                                Status:{" "}
+                                {element.sold ? (
+                                  <span
+                                    style={{
+                                      fontSize: "20px",
+                                      color: "var(--ion-color-success)",
+                                    }}
+                                  >
+                                    SOLD
+                                  </span>
+                                ) : (
+                                  <span
+                                    style={{
+                                      fontSize: "20px",
+                                      color: "var(--ion-color-danger)",
+                                    }}
+                                  >
+                                    UNSOLD
+                                  </span>
+                                )}
+                              </p>
+                            </div>
+                            <div className="HPModal-content">
+                              <p className="HPModal-desc">
+                                {/* {sellerDeets.bookDescription.length < 180
+                  ? sellerDeets.bookDescription
+                  : sellerDeets.bookDescription.substring(0, 180) + "..."} */}
+                                {isReadMore
+                                  ? element.bookDescription.slice(0, 170)
+                                  : element.bookDescription}{" "}
+                                <b
+                                  onClick={toggleReadMore}
+                                  className="read-or-hide"
+                                >
+                                  {isReadMore ? "...Read More" : " Show Less"}
+                                </b>
+                              </p>
+                              <div className="HPModal-sellerInfo">
+                                <p
+                                  style={{
+                                    fontFamily: "Montserrat-b",
+                                    fontSize: "25px",
+                                  }}
+                                >
+                                  Seller Details
+                                </p>
+                                <IonItemDivider
+                                  style={{ marginLeft: "0" }}
+                                ></IonItemDivider>
+                                <br />
+                                <p>
+                                  Name:{" "}
+                                  <b style={{ color: "goldenrod" }}>
+                                    {element.sellerName}
+                                  </b>
+                                </p>
+                                <p style={{ margin: "10px 0" }}>
+                                  Locality:{" "}
+                                  <b style={{ color: "goldenrod" }}>
+                                    {element.sellerAddress}
+                                  </b>
+                                </p>
+                                <p>
+                                  Price:{" "}
+                                  <b style={{ color: "goldenrod" }}>
+                                    ₹ {element.bookPrice}
+                                  </b>
+                                </p>
+                                <p></p>
+                              </div>
+                            </div>
+                          </IonContent>
+                        </IonModal>
                         {/* <div className="trade-tick">
                           <img
                             src="https://thumbs.dreamstime.com/b/unsold-red-rubber-stamp-over-white-background-88004947.jpg"

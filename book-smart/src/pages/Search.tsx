@@ -8,6 +8,11 @@ import {
   IonButtons,
   IonToast,
   IonButton,
+  RefresherEventDetail,
+  IonRefresher,
+  IonRefresherContent,
+  IonHeader,
+  IonText,
 } from "@ionic/react";
 import { addCircle } from "ionicons/icons";
 import React, { useState, useEffect } from "react";
@@ -87,6 +92,8 @@ const Search: React.FC = () => {
   // console.log(wishListData);
   // console.log(info);
   const [showAddToast, setShowAddToast] = useState(false);
+  const [showAddToast1, setShowAddToast1] = useState(false);
+
   const addToWishlist = (bookId: string) => {
     var url = APIURL + "v2/addBookToWishlist";
     var userId = "";
@@ -128,6 +135,14 @@ const Search: React.FC = () => {
       // getWishListCardDetails(wishListIds);
     }
   };
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    getWishlistDetails();
+    console.log("Begin async operation");
+    setTimeout(() => {
+      console.log("Async operation has ended");
+      event.detail.complete();
+    }, 2000);
+  }
   const [bookAdAvailable, setBookAdAvailable] = useState<any>();
   // console.log(wishListData.map((value: any) => bookAdAvailable.includes(value._id))); // to check whether bookads are in common with database
   const getCardDetails = (lim: Number) => {
@@ -157,56 +172,102 @@ const Search: React.FC = () => {
   };
   return (
     <IonPage>
-      <div className="swiper-area">
-        <div className="searchHead">
-          <IonSearchbar
-            placeholder="Add your favourite books"
+      <IonContent>
+        {/* <IonHeader>
+          <IonText
             style={{
-              "--background": "white",
-              "--placeholder-color": "black",
-              width: "90%",
-              fontFamily: "Montserrat-sb",
+              fontFamily: "Lucida Handwriting",
+              fontSize: "30px",
+              fontStyle: "bold",
+              color: "white",
             }}
-            value={searchBook}
-            onIonChange={(e) => {
-              handleSearchBook(e);
-            }}
-          ></IonSearchbar>
-          <IonToast
-            // style={{ fontFamily: "Montserrat-sb" }}
-            isOpen={showAddToast}
-            onDidDismiss={() => setShowAddToast(false)}
-            message="Added book to wishlist!"
-            duration={1500}
-          />
-          <IonIcon
-            icon={addCircle}
-            color="red"
-            size="large"
-            slot="end"
-            onClick={() => {
-              addToWishlist(wishListData[0]._id);
-            }}
-          ></IonIcon>
-        </div>
-        <Swiper
-          style={{ height: "12vh" }}
-          modules={[Navigation, Pagination, Scrollbar, Autoplay, EffectFade]}
-          slidesPerView={1}
-          pagination={{ clickable: true }}
-        >
-          <SwiperSlide style={{ padding: "0 15px" }}>
-            <p
+          >
+            BooksMart{" "}
+          </IonText>
+        </IonHeader> */}
+        <div className="swiper-area">
+          <div className="searchHead">
+            <IonSearchbar
+              placeholder="Add your favourite books"
               style={{
-                textAlign: "left",
+                "--background": "white",
+                "--placeholder-color": "black",
+                width: "90%",
                 fontFamily: "Montserrat-sb",
-                fontSize: "26px",
+              }}
+              value={searchBook}
+              onIonChange={(e) => {
+                handleSearchBook(e);
+              }}
+            ></IonSearchbar>
+
+            <IonToast
+              isOpen={showAddToast1}
+              onDidDismiss={() => setShowAddToast1(false)}
+              message="Pull to Refresh"
+              duration={200}
+              translucent={true}
+              mode="ios"
+              buttons={[
+                {
+                  text: "Hide",
+                  role: "cancel",
+                  handler: () => setShowAddToast1(false),
+                },
+              ]}
+            />
+            <IonRefresher
+              slot="fixed"
+              placeholder="P"
+              onIonRefresh={doRefresh}
+              pullFactor={0.5}
+              pullMin={100}
+              pullMax={200}
+              style={{
+                color: "black",
+                fontFamily: "Montserrat-SB",
+                fontSize: "1.1rem",
+                fontWeight: "bold",
+                textAlign: "center",
               }}
             >
-              Fiction
-            </p>
-          </SwiperSlide>
-          <SwiperSlide style={{ padding: "0 15px" }}>
+              <p> Refreshing Your Favourite Content!✌️</p>
+              <IonRefresherContent></IonRefresherContent>
+            </IonRefresher>
+            <IonToast
+              // style={{ fontFamily: "Montserrat-sb" }}
+              isOpen={showAddToast}
+              onDidDismiss={() => setShowAddToast(false)}
+              message="Added book to wishlist!"
+              duration={1500}
+            />
+            <IonIcon
+              icon={addCircle}
+              color="red"
+              size="large"
+              slot="end"
+              onClick={() => {
+                addToWishlist(wishListData[0]._id);
+              }}
+            ></IonIcon>
+          </div>
+
+          <Swiper
+            style={{ height: "12vh" }}
+            modules={[Navigation, Pagination, Scrollbar, Autoplay, EffectFade]}
+            slidesPerView={1}
+            pagination={{ clickable: true }}
+          >
+            <SwiperSlide style={{ padding: "0 15px" }}>
+              <p
+                style={{
+                  textAlign: "left",
+                  fontFamily: "Montserrat-sb",
+                  fontSize: "26px",
+                }}
+              ></p>
+            </SwiperSlide>
+            {/* <SwiperSlide style={{ padding: "0 15px" }}>
             <p
               style={{
                 textAlign: "left",
@@ -238,98 +299,105 @@ const Search: React.FC = () => {
             >
               Health
             </p>
-          </SwiperSlide>
-        </Swiper>
-      </div>
-      <IonContent className="wishlist-area">
-        <div className="wishlist-books">
-          {wishListData.map((item: any, idx: number) => {
-            return (
-              <div className="wishlist-card" key={idx}>
-                <div className="wishlist-img">
-                  <img
-                    src={defaultImage}
-                    alt="wishlist-book"
-                    style={{
-                      width: "75px",
-                      height: "100px",
-                      borderRadius: "10%",
-                    }}
-                  />
-                </div>
-                <div className="wishlist-content">
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      color: "var(--bs-sText)",
-                      fontFamily: "Montserrat-b",
-                    }}
-                  >
-                    {item.bookName}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: "12px",
-                      margin: "10px 0",
-                      fontFamily: "Montserrat-sb",
-                      color: "var(--bs-pText)",
-                    }}
-                  >
-                    {item.bookAuthor}
-                  </p>
-                  {item.tags.map((tag: string, index: number) => (
-                    <IonChip
-                      color="warning"
-                      key={index}
+          </SwiperSlide> */}
+          </Swiper>
+        </div>
+        <IonContent className="wishlist-area">
+          <div className="wishlist-books">
+            {wishListData.map((item: any, idx: number) => {
+              return (
+                <div className="wishlist-card" key={idx}>
+                  <div className="wishlist-img">
+                    <img
+                      src={defaultImage}
+                      alt="wishlist-book"
                       style={{
-                        color: "black",
-                        border: "1px solid black",
-                        background: "var(--bs-pBg)",
+                        width: "75px",
+                        height: "100px",
+                        borderRadius: "10%",
+                      }}
+                    />
+                  </div>
+                  <div className="wishlist-content">
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        color: "var(--bs-sText)",
+                        fontFamily: "Montserrat-b",
                       }}
                     >
-                      <IonLabel
+                      {item.bookName}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        margin: "10px 0",
+                        fontFamily: "Montserrat-sb",
+                        color: "var(--bs-pText)",
+                      }}
+                    >
+                      {item.bookAuthor}
+                    </p>
+                    {item.tags.map((tag: string, index: number) => (
+                      <IonChip
+                        color="warning"
+                        key={index}
                         style={{
-                          fontFamily: "Montserrat-sb",
-                          fontSize: "11px",
-                          textTransform: "capitalize",
+                          color: "black",
+                          border: "1px solid black",
+                          background: "var(--bs-pBg)",
                         }}
                       >
-                        {tag.toLowerCase()}
-                      </IonLabel>
-                    </IonChip>
-                  ))}
-                  {bookAdAvailable.includes(item._id) ? (
-                    <>
-                      <IonButtons
-                        style={{ display: "flex", justifyContent: "flex-end" }}
-                      >
-                        <IonButton
-                          className="wishlist-buybtn"
-                          style={{ fontSize: "12px" }}
+                        <IonLabel
+                          style={{
+                            fontFamily: "Montserrat-sb",
+                            fontSize: "11px",
+                            textTransform: "capitalize",
+                          }}
                         >
-                          Buy Now
-                        </IonButton>
-                      </IonButtons>
-                    </>
-                  ) : (
-                    <>
-                      <div className="noBooks">
-                        <img
-                          src="https://i.pinimg.com/originals/4c/6c/69/4c6c693465e89a914c40ba485cc721b4.gif"
-                          alt="Sorry"
-                          width={"100px"}
-                        />
-                        <p>
-                          Currently there are no books available with this name.
-                        </p>
-                      </div>
-                    </>
-                  )}
+                          {tag.toLowerCase()}
+                        </IonLabel>
+                      </IonChip>
+                    ))}
+                    {bookAdAvailable.includes(item._id) ? (
+                      <>
+                        <IonButtons
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <IonButton
+                            className="wishlist-buybtn"
+                            style={{ fontSize: "12px" }}
+                          >
+                            Buy Now
+                          </IonButton>
+                        </IonButtons>
+                      </>
+                    ) : (
+                      <>
+                        <IonButtons
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <IonButton
+                            className="wishlist-buybtn"
+                            style={{ fontSize: "12px" }}
+                          >
+                            Unavailable
+                          </IonButton>
+                        </IonButtons>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </IonContent>
       </IonContent>
     </IonPage>
   );

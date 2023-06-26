@@ -29,6 +29,7 @@ import { APIURL } from "./constants";
 import socket from "./Socket";
 import "./Home.css";
 import { get, post } from "./common/api";
+import InterestedBuyerProfile from "./pages/InterestedBuyerProfile";
 setupIonicReact();
 
 interface myProps {
@@ -416,6 +417,11 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                 path="/homepage/profile"
                 component={Profile}
               ></Route>
+              <Route
+                exact={true}
+                path="/homepage/interestedBuyer"
+                component={InterestedBuyerProfile}
+              ></Route>
               {/* <Route exact={true} path="/homepage/shop"
           component={Sell}
           >
@@ -467,7 +473,7 @@ const Home: React.FC<myProps> = ({ refreshPage }) => {
                   onClick={() => handleSelect(1)}
                   color={"var(--bs-pText)"}
                 />
-                <IonLabel>Wishlist</IonLabel>
+                <IonLabel>Book Shelf</IonLabel>
               </IonTabButton>
 
               <IonTabButton

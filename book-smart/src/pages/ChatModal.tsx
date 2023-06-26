@@ -292,7 +292,17 @@ const ChatModal: React.FC<prop> = ({
                 isOpen={toast}
                 onDidDismiss={() => setToast(false)}
                 message={msg}
+                position="top"
                 duration={3000}
+                translucent={true}
+                mode="ios"
+                buttons={[
+                  {
+                    text: "Hide",
+                    role: "cancel",
+                    handler: () => setToast(false),
+                  },
+                ]}
               />
               <IonItem
                 button

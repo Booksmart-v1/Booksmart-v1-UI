@@ -26,6 +26,7 @@ import {
   IonCheckbox,
   useIonAlert,
   IonRippleEffect,
+  IonText,
 } from "@ionic/react";
 import { RefresherEventDetail } from "@ionic/core";
 import "./homePage.css";
@@ -658,6 +659,16 @@ const Tab1: React.FC = () => {
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
         <IonHeader style={{ margin: "10px auto 25px auto", width: "95%" }}>
+          <IonText
+            style={{
+              fontFamily: "Lucida Handwriting",
+              fontSize: "30px",
+              fontStyle: "bold",
+              color: "white",
+            }}
+          >
+            BooksMart{" "}
+          </IonText>
           <div className="homesearch">
             <IonSearchbar
               placeholder="Search for a book"
